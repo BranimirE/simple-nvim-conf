@@ -1,49 +1,41 @@
 call plug#begin()
-"Theme
+" Theme
 Plug 'ayu-theme/ayu-vim'
-"Plug 'JoosepAlviste/palenightfall.nvim'
 
-"Powerline
+" Powerline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 "NerdTree
-Plug 'preservim/nerdtree'
+"Plug 'preservim/nerdtree'
 
-Plug 'ryanoasis/vim-devicons'
+"Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 
 "Move with Ctrl+[h|j|k|l] in splited panes
 Plug 'christoomey/vim-tmux-navigator'
 
-"Auto pairs plugin(TODO: Check this pluging. It seems that is adding a bug
-"when we remove chars)
-"Plug 'jiangmiao/auto-pairs'
-"Check if the next one doesn't have that bug
+" Auto pairs 
 Plug 'windwp/nvim-autopairs'
 
-autocmd VimEnter * call s:load_nvim_autopairs()
+" LSP plugins
+Plug 'neovim/nvim-lspconfig'
 
-function! s:load_nvim_autopairs()
-lua << EOF
-  require("nvim-autopairs").setup {}
-EOF
-endfunction
 
 "Indents plugin
-Plug 'Yggdroot/indentLine'
+"Plug 'Yggdroot/indentLine'
 
 "Intellisense autocomplete
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "Telescope to have fuzy search on files
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
-Plug 'nvim-telescope/telescope-ui-select.nvim'
+"Plug 'nvim-lua/plenary.nvim'
+"Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+"Plug 'nvim-telescope/telescope-ui-select.nvim'
+"
+"Plug 'nvim-treesitter/nvim-treesitter'
+"Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
-
-Plug 'neovim/nvim-lspconfig'
 
 call plug#end()
 
@@ -70,13 +62,13 @@ set cursorline
 
 set number
 
+
 "Setting the theme
 set termguicolors
 let ayucolor="dark"
 colorscheme ayu
-"colorscheme palenightfall
 
-"airline
+" vim-airline/vim-airline
 "show the buffers name at the top
 let g:airline#extensions#tabline#enabled = 1
 "show only the files names without the path in buffer names
@@ -84,12 +76,34 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 "Enable powerline fonts, the border are shown as arrows(triangles)
 let g:airline_powerline_fonts = 1
 
+
+" kyazdani42/nvim-web-devicons
+"lua << EOF
+"  require("nvim-web-devicons").setup {}
+"EOF
+
+"
+" windwp/nvim-autopairs
+"autocmd VimEnter * call s:load_nvim_autopairs()
+"function! s:load_nvim_autopairs()
+lua << EOF
+  require("nvim-autopairs").setup {}
+EOF
+"endfunction
+
+
+" neovim/nvim-lspconfig
+lua require('mylspconfig')
+" Needed:
+" npm install -g typescript typescript-language-server
+
+
 "Open NerdTree at starting up
 "autocmd vimenter * NERDTree
 
 "Open/Close NerdTree with Ctrl+n
-map <C-n> :NERDTreeToggle<CR>
-let NERDTreeQuitOnOpen = 1
+"map <C-n> :NERDTreeToggle<CR>
+"let NERDTreeQuitOnOpen = 1
 "let g:NERDTreeDirArrowExpandable = '>'
 "let g:NERDTreeDirArrowCollapsible = 'v'
 
@@ -103,17 +117,17 @@ let NERDTreeQuitOnOpen = 1
 ":CocInstall coc-markdownlint
 ":CocInstall coc-tsserver
 "
-let mapleader=" "
-"Telescope keybindings
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-
-map <leader>ff <cmd>Telescope find_files<cr>
-map <leader>fg <cmd>Telescope live_grep<cr>
-map <leader>fb <cmd>Telescope buffers<cr>
-map <leader>fh <cmd>Telescope help_tags<cr>
+"let mapleader=" "
+""Telescope keybindings
+"nnoremap <leader>ff <cmd>Telescope find_files<cr>
+"nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+"nnoremap <leader>fb <cmd>Telescope buffers<cr>
+"nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+"
+"map <leader>ff <cmd>Telescope find_files<cr>
+"map <leader>fg <cmd>Telescope live_grep<cr>
+"map <leader>fb <cmd>Telescope buffers<cr>
+"map <leader>fh <cmd>Telescope help_tags<cr>
 
 
 "Remove Alacritty padding when nvim is opened
@@ -137,12 +151,5 @@ EOF
 autocmd VimEnter * lua DecreasePadding()
 autocmd VimLeavePre * lua IncreasePadding()
 
-"vim.cmd[[
-"  augroup ChangeAlacrittyPadding
-"    au!
-"    au VimEnter * lua DecreasePadding()
-"    au VimLeavePre * lua IncreasePadding()
-"  augroup END
-"]]
-
+" Remove background colors
 hi Normal guibg=NONE ctermbg=NONE
