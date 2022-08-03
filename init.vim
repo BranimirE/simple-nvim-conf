@@ -94,11 +94,12 @@ EOF
 lua << EOF
   function _G.nvchadstatusline()
     return require("nvchad_ui.statusline").run({
-      separator_style = "block", -- default/round/block/arrow
+      separator_style = "arrow", -- default/round/block/arrow
       --overriden_modules = nil,
     })
   end
   vim.opt.statusline = "%!v:lua.nvchadstatusline()"
+  vim.opt.laststatus = 3 -- show only a global statusline
 EOF
 "set statusline=%!v:lua.nvchadstatusline()
 
@@ -198,9 +199,9 @@ lua << EOF
     },
   }
   -- Set background transparent
-  require("notify").setup({
-    background_colour = "#000000",
-  })
+  -- require("notify").setup({
+  --   background_colour = "#000000",
+  -- })
 EOF
 map <C-n> :NvimTreeToggle<CR>
 
