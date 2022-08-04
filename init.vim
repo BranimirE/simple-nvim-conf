@@ -89,6 +89,16 @@ lua << EOF
     }
   }
 EOF
+nnoremap <silent><A-1> <cmd>lua require("bufferline").go_to_buffer(1, true)<cr>
+nnoremap <silent><A-2> <cmd>lua require("bufferline").go_to_buffer(2, true)<cr>
+nnoremap <silent><A-3> <cmd>lua require("bufferline").go_to_buffer(3, true)<cr>
+nnoremap <silent><A-4> <cmd>lua require("bufferline").go_to_buffer(4, true)<cr>
+nnoremap <silent><A-5> <cmd>lua require("bufferline").go_to_buffer(5, true)<cr>
+nnoremap <silent><A-6> <cmd>lua require("bufferline").go_to_buffer(6, true)<cr>
+nnoremap <silent><A-7> <cmd>lua require("bufferline").go_to_buffer(7, true)<cr>
+nnoremap <silent><A-8> <cmd>lua require("bufferline").go_to_buffer(8, true)<cr>
+nnoremap <silent><A-9> <cmd>lua require("bufferline").go_to_buffer(9, true)<cr>
+nnoremap <silent><A-$> <cmd>lua require("bufferline").go_to_buffer(-1, true)<cr>
 
 " NvChad/ui
 lua << EOF
@@ -228,3 +238,5 @@ autocmd VimLeavePre * lua IncreasePadding()
 " Remove background colors
 hi Normal guibg=NONE ctermbg=NONE
 
+" Change split lines color
+hi VertSplit guifg=#00afff
