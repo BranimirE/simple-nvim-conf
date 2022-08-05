@@ -105,6 +105,7 @@ nnoremap <silent><A-$> <cmd>lua require("bufferline").go_to_buffer(-1, true)<cr>
 
 " NvChad/base46
 lua << EOF
+  vim.g.nvchad_theme = "onedark"
   require("base46").load_theme()
 EOF
 
@@ -112,7 +113,7 @@ EOF
 lua << EOF
   function _G.nvchadstatusline()
     return require("nvchad_ui.statusline").run({
-      separator_style = "arrow", -- default/round/block/arrow
+      separator_style = "default", -- default/round/block/arrow
       --overriden_modules = nil,
     })
   end
