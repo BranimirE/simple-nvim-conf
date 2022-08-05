@@ -5,6 +5,9 @@ Plug 'ayu-theme/ayu-vim'
 " Tabline
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
+
+Plug 'NvChad/NvChad'
+Plug 'NvChad/base46'
 Plug 'NvChad/ui'
 
 " Powerline
@@ -99,6 +102,11 @@ nnoremap <silent><A-7> <cmd>lua require("bufferline").go_to_buffer(7, true)<cr>
 nnoremap <silent><A-8> <cmd>lua require("bufferline").go_to_buffer(8, true)<cr>
 nnoremap <silent><A-9> <cmd>lua require("bufferline").go_to_buffer(9, true)<cr>
 nnoremap <silent><A-$> <cmd>lua require("bufferline").go_to_buffer(-1, true)<cr>
+
+" NvChad/base46
+lua << EOF
+  require("base46").load_theme()
+EOF
 
 " NvChad/ui
 lua << EOF
