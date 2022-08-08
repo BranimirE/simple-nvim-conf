@@ -1,25 +1,18 @@
 call plug#begin()
+
 " Theme
 Plug 'ayu-theme/ayu-vim'
 
 " Tabline
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
-
+" NvChad's status line
 Plug 'NvChad/NvChad'
 Plug 'NvChad/base46'
 Plug 'NvChad/ui'
 
-" Powerline
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
-
-"Plug 'ryanoasis/vim-devicons'
+" Icons
 Plug 'kyazdani42/nvim-web-devicons'
-
-"Move with Ctrl+[h|j|k|l] in splited panes
-"Plug 'christoomey/vim-tmux-navigator'
-"It is possible to use Ctrl + w + [h|j|k|l]
 
 " Auto pairs 
 Plug 'windwp/nvim-autopairs'
@@ -59,7 +52,7 @@ set showmatch
 set sw=2
 
 "as we are going to install a pluging we dont need to show the mode
-"set noshowmode
+set noshowmode
 
 "highlight the current line
 set cursorline
@@ -105,8 +98,10 @@ nnoremap <silent><A-$> <cmd>lua require("bufferline").go_to_buffer(-1, true)<cr>
 
 " NvChad/base46
 lua << EOF
-  vim.g.nvchad_theme = "onedark"
-  require("base46").load_theme()
+  --vim.g.nvchad_theme = "onedark"
+  vim.g.nvchad_theme = "ayu-dark"
+  --require("base46").load_theme()
+  require("base46").load_highlight("statusline")
 EOF
 
 " NvChad/ui
@@ -120,30 +115,17 @@ lua << EOF
   vim.opt.statusline = "%!v:lua.nvchadstatusline()"
   vim.opt.laststatus = 3 -- show only a global statusline
 EOF
-"set statusline=%!v:lua.nvchadstatusline()
-
-" vim-airline/vim-airline
-"show the buffers name at the top
-"let g:airline#extensions#tabline#enabled = 1
-"show only the files names without the path in buffer names
-"let g:airline#extensions#tabline#formatter = 'unique_tail'
-"Enable powerline fonts, the border are shown as arrows(triangles)
-"let g:airline_powerline_fonts = 1
 
 " windwp/nvim-autopairs
-"autocmd VimEnter * call s:load_nvim_autopairs()
-"function! s:load_nvim_autopairs()
-lua << EOF
-  require("nvim-autopairs").setup {}
-EOF
-"endfunction
-
+lua require("nvim-autopairs").setup {}
 
 " neovim/nvim-lspconfig
 lua require('mylspconfig')
 " Needed:
-" npm install -g typescript typescript-language-server
-
+" npm i -g typescript typescript-language-server
+" npm i -g pyright
+" sudo pacman -S lua-language-server
+" npm install -g vim-language-server
 
 " kyazdani42/nvim-tree.lua
 lua << EOF
@@ -249,3 +231,13 @@ hi Normal guibg=NONE ctermbg=NONE
 
 " Change split lines color
 hi VertSplit guifg=#00afff
+
+" Use blue colors in NvimTree
+hi NvimTreeEmptyFolderName guifg=#00afff
+hi NvimTreeFolderIcon guifg=#00afff
+hi NvimTreeFolderName guifg=#00afff
+hi NvimTreeOpenedFolderName guifg=#00afff
+
+" Overwrite base46 colors for statusline
+hi St_NormalMode guibg=#00afff
+hi St_NormalModeSep guifg=#00afff

@@ -37,12 +37,15 @@ local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
 }
-require('lspconfig')['tsserver'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
+
+local lspconfig = require('lspconfig');
+
+lspconfig['tsserver'].setup{
+  on_attach = on_attach,
+  flags = lsp_flags,
 }
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
-require('lspconfig')['sumneko_lua'].setup{
+lspconfig['sumneko_lua'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
     settings = {
@@ -67,7 +70,15 @@ require('lspconfig')['sumneko_lua'].setup{
   },
 }
 
+lspconfig['pyright'].setup {
+  on_attach = on_attach,
+  flags = lsp_flags,
+}
 
+lspconfig['vimls'].setup {
+  on_attach = on_attach,
+  flags = lsp_flags,
+}
 -- Highlight line numbers for diagnostics
 vim.fn.sign_define('DiagnosticSignError', { numhl = 'LspDiagnosticsLineNrError', text = '' })
 vim.fn.sign_define('DiagnosticSignWarn', { numhl = 'LspDiagnosticsLineNrWarning', text = '' })
