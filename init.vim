@@ -23,6 +23,11 @@ Plug 'neovim/nvim-lspconfig'
 " Navigation Tree
 Plug 'kyazdani42/nvim-tree.lua'
 
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'tanvirtin/vgit.nvim'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 "Indents plugin
 "Plug 'Yggdroot/indentLine'
 
@@ -44,7 +49,9 @@ syntax enable
 set showcmd
 "show the row and col
 set ruler
+
 set encoding=utf-8
+
 "show pair of a parenthesis
 set showmatch
 
@@ -117,7 +124,12 @@ lua << EOF
 EOF
 
 " windwp/nvim-autopairs
-lua require("nvim-autopairs").setup {}
+lua << EOF
+  require("nvim-autopairs").setup {
+    check_ts = true, -- check treesitter for autopairing
+    enable_moveright = true,
+  }
+EOF
 
 " neovim/nvim-lspconfig
 lua require('mylspconfig')
@@ -206,6 +218,48 @@ lua << EOF
 EOF
 map <C-n> :NvimTreeToggle<CR>
 
+" Plug 'tanvirtin/vgit.nvim'
+"lua << EOF
+"  require('vgit').setup()
+"
+"  vim.o.updatetime = 300
+"  vim.o.incsearch = false
+"  vim.wo.signcolumn = 'yes'
+"EOF
+lua << EOF
+  require'nvim-treesitter.configs'.setup {
+    -- A list of parser names, or "all"
+    ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx'},
+    sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
+    auto_install = true, -- Automatically install missing parsers when entering buffer
+    -- ignore_install = { "javascript" }, -- List of parsers to ignore installing (for "all")
+    highlight = {
+      enable = true, -- `false` will disable the whole extension
+      use_languagetree = true, -- use this to enable language injection
+      -- disable = { "c", "rust" }, -- list of language that will be disabled
+
+      -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+      -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+      -- Using this option may slow down your editor, and you may see some duplicate highlights.
+      -- Instead of true it can also be a list of languages
+      additional_vim_regex_highlighting = false,
+    },
+    indent = {
+      enable = true, -- Indent with = using treesitter
+    },
+   autotag = {
+    enable = true,
+    },
+    autopairs = {
+      enable = true,
+    },
+    context_commentstring = {
+      enable = true,
+      enable_autocmd = false,
+    },
+  }
+EOF
+
 "Remove Alacritty padding when nvim is opened
 lua << EOF
 function Sad(line_nr, from, to, fname)
@@ -241,3 +295,5 @@ hi NvimTreeOpenedFolderName guifg=#00afff
 " Overwrite base46 colors for statusline
 hi St_NormalMode guibg=#00afff
 hi St_NormalModeSep guifg=#00afff
+
+"set statusline+=%{get(b:,'vgit_status','')}
