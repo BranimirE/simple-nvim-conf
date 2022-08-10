@@ -281,6 +281,7 @@ lua << EOF
   end
 EOF
 
+
 " lewis6991/gitsigns.nvim
 lua << EOF
 require('gitsigns').setup {
@@ -291,6 +292,17 @@ require('gitsigns').setup {
     topdelete = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr' },
     changedelete = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr' },
   },
+  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay = 100,
+    ignore_whitespace = false,
+  },
+  --current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> ⏺ <summary>',
+  current_line_blame_formatter = '<author>, <author_time:%R> ⏺ <summary>',
+  current_line_blame_formatter_nc = 'You, <author_time:%R> ⏺ Uncommitted changes',
   preview_config = {
     border = 'rounded',
   },
@@ -329,7 +341,11 @@ require('gitsigns').setup {
     map('n', '<leader>hu', gs.undo_stage_hunk)
     map('n', '<leader>hR', gs.reset_buffer)
     map('n', '<leader>hp', gs.preview_hunk)
+    map('n', 'gp', gs.preview_hunk)
     map('n', '<leader>hb', function()
+      gs.blame_line { full = true }
+    end)
+    map('n', 'gb', function()
       gs.blame_line { full = true }
     end)
     map('n', '<leader>hd', gs.diffthis)
@@ -426,8 +442,9 @@ hi St_NormalModeSep guifg=#00afff
 
 hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34'
 
-hi GitSignsAddNr    gui=bold guibg=NONE ctermbg=NONE
-hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
-hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
-hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
-hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
+"hi GitSignsAddNr    gui=bold guibg=NONE ctermbg=NONE
+"hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
+"hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
+"hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
+"hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
+highlight SignColumn guibg=NONE
