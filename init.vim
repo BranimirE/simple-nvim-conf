@@ -345,9 +345,6 @@ require('gitsigns').setup {
     map('n', '<leader>hb', function()
       gs.blame_line { full = true }
     end)
-    map('n', 'gb', function()
-      gs.blame_line { full = true }
-    end)
     map('n', '<leader>hd', gs.diffthis)
     map('n', '<leader>hD', function()
       gs.diffthis '~'
