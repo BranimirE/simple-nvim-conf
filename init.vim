@@ -36,6 +36,12 @@ Plug 'dsznajder/vscode-es7-javascript-react-snippets', { 'do': 'yarn install --f
 " Navigation Tree
 Plug 'kyazdani42/nvim-tree.lua'
 
+" Notifications
+Plug 'rcarriga/nvim-notify'
+
+" Git
+Plug 'lewis6991/gitsigns.nvim'
+
 " Plug 'nvim-lua/plenary.nvim'
 " Plug 'tanvirtin/vgit.nvim'
 
@@ -49,7 +55,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 "Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 "Plug 'nvim-telescope/telescope-ui-select.nvim'
 "
-"Plug 'nvim-treesitter/nvim-treesitter'
 "Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
 call plug#end()
@@ -251,12 +256,93 @@ lua << EOF
       },
     },
   }
-  -- Set background transparent
-  -- require("notify").setup({
-  --   background_colour = "#000000",
-  -- })
+  
 EOF
 map <C-n> :NvimTreeToggle<CR>
+
+" rcarriga/nvim-notify
+lua << EOF
+  require("notify").setup({
+    background_colour = "#000000",
+  })
+  vim.notify = require 'notify'
+
+  local notify = vim.notify
+  vim.notify = function(msg, ...)
+    if type(msg) == 'string' then
+      local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available'
+      if is_suppressed_message then
+	-- Do not show some messages
+	return
+      end
+    end
+
+    notify(msg, ...)
+  end
+EOF
+
+" lewis6991/gitsigns.nvim
+lua << EOF
+require('gitsigns').setup {
+  signs = {
+    add = { hl = 'GitSignsAdd', text = '│', numhl = 'GitSignsAddNr' },
+    change = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr' },
+    delete = { hl = 'GitSignsDelete', text = '_', numhl = 'GitSignsDeleteNr' },
+    topdelete = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr' },
+    changedelete = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr' },
+  },
+  preview_config = {
+    border = 'rounded',
+  },
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then
+        return ']c'
+      end
+      vim.schedule(function()
+        gs.next_hunk()
+      end)
+      return '<Ignore>'
+    end, { expr = true })
+    map('n', '[c', function()
+      if vim.wo.diff then
+        return '[c'
+      end
+      vim.schedule(function()
+        gs.prev_hunk()
+      end)
+      return '<Ignore>'
+    end, { expr = true })
+
+    -- Actions
+    map({ 'n', 'v' }, '<leader>hs', gs.stage_hunk)
+    map({ 'n', 'v' }, '<leader>hr', gs.reset_hunk)
+    map('n', '<leader>hS', gs.stage_buffer)
+    map('n', '<leader>hu', gs.undo_stage_hunk)
+    map('n', '<leader>hR', gs.reset_buffer)
+    map('n', '<leader>hp', gs.preview_hunk)
+    map('n', '<leader>hb', function()
+      gs.blame_line { full = true }
+    end)
+    map('n', '<leader>hd', gs.diffthis)
+    map('n', '<leader>hD', function()
+      gs.diffthis '~'
+    end)
+    map('n', '<leader>td', gs.toggle_deleted)
+
+    -- Text object
+    map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end,
+}
+EOF
 
 " Plug 'tanvirtin/vgit.nvim'
 "lua << EOF
@@ -302,19 +388,19 @@ EOF
 
 "Remove Alacritty padding when nvim is opened
 lua << EOF
-function Sad(line_nr, from, to, fname)
-  vim.cmd(string.format("silent !sed -i '%ss/%s/%s/' %s", line_nr, from, to, fname))
-end
+  function Sad(line_nr, from, to, fname)
+    vim.cmd(string.format("silent !sed -i '%ss/%s/%s/' %s", line_nr, from, to, fname))
+  end
 
-function IncreasePadding()
-  Sad('52', 0, 8, '~/.config/alacritty/alacritty.yml')
-  Sad('53', 0, 8, '~/.config/alacritty/alacritty.yml')
-end
+  function IncreasePadding()
+    Sad('52', 0, 8, '~/.config/alacritty/alacritty.yml')
+    Sad('53', 0, 8, '~/.config/alacritty/alacritty.yml')
+  end
 
-function DecreasePadding()
-  Sad('52', 8, 0, '~/.config/alacritty/alacritty.yml')
-  Sad('53', 8, 0, '~/.config/alacritty/alacritty.yml')
-end
+  function DecreasePadding()
+    Sad('52', 8, 0, '~/.config/alacritty/alacritty.yml')
+    Sad('53', 8, 0, '~/.config/alacritty/alacritty.yml')
+  end
 EOF
 
 autocmd VimEnter * lua DecreasePadding()
@@ -337,3 +423,11 @@ hi St_NormalMode guibg=#00afff
 hi St_NormalModeSep guifg=#00afff
 
 "set statusline+=%{get(b:,'vgit_status','')}
+
+hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34'
+
+hi GitSignsAddNr    gui=bold guibg=NONE ctermbg=NONE
+hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
+hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
+hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
+hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
