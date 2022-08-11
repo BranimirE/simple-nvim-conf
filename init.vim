@@ -57,6 +57,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 "
 "Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
+Plug 'norcalli/nvim-colorizer.lua'
+
 call plug#end()
 
 "Enable mouse
@@ -302,8 +304,8 @@ require('gitsigns').setup {
     ignore_whitespace = false,
   },
   --current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> ⏺ <summary>',
-  current_line_blame_formatter = '<author>, <author_time:%R> ⏺ <summary>',
-  current_line_blame_formatter_nc = 'You, <author_time:%R> ⏺ Uncommitted changes',
+  current_line_blame_formatter = '<author>, <author_time:%R> ● <summary>',
+  current_line_blame_formatter_nc = 'You, <author_time:%R> ● Uncommitted changes',
   preview_config = {
     border = 'rounded',
   },
@@ -358,14 +360,8 @@ require('gitsigns').setup {
 }
 EOF
 
-" Plug 'tanvirtin/vgit.nvim'
-"lua << EOF
-"  require('vgit').setup()
-"
-"  vim.o.updatetime = 300
-"  vim.o.incsearch = false
-"  vim.wo.signcolumn = 'yes'
-"EOF
+" nvim-treesitter/nvim-treesitter
+
 lua << EOF
   require'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all"
@@ -399,6 +395,10 @@ lua << EOF
     },
   }
 EOF
+
+
+" norcalli/nvim-colorizer.lua
+lua require'colorizer'.setup()
 
 "Remove Alacritty padding when nvim is opened
 lua << EOF
