@@ -102,6 +102,7 @@ lua << EOF
       numbers = "none",
       color_icons = true,
       separator_style = "slant",
+      always_show_bufferline = false,
       offsets = {
 	{
 	  filetype = "NvimTree"
