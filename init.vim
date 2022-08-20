@@ -42,13 +42,17 @@ Plug 'rcarriga/nvim-notify'
 " Git
 Plug 'lewis6991/gitsigns.nvim'
 
-" Plug 'nvim-lua/plenary.nvim'
-" Plug 'tanvirtin/vgit.nvim'
-
+" Improve highlighting
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Autoclose and autorename tags in html(using treesitter)
+Plug 'windwp/nvim-ts-autotag'
+
+" Finder
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
 "Indents plugin
-"Plug 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine'
 
 "Telescope to have fuzy search on files
 "Plug 'nvim-lua/plenary.nvim'
@@ -57,6 +61,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 "
 "Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
+" Show background colors in colors string like #FF0000
 Plug 'norcalli/nvim-colorizer.lua'
 
 call plug#end()
@@ -363,7 +368,7 @@ EOF
 " nvim-treesitter/nvim-treesitter
 
 lua << EOF
-  require'nvim-treesitter.configs'.setup {
+  require('nvim-treesitter.configs').setup {
     -- A list of parser names, or "all"
     ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx'},
     sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -383,8 +388,8 @@ lua << EOF
     indent = {
       enable = true, -- Indent with = using treesitter
     },
-   autotag = {
-    enable = true,
+    autotag = {
+      enable = true,
     },
     autopairs = {
       enable = true,
@@ -395,6 +400,16 @@ lua << EOF
     },
   }
 EOF
+
+" nvim-telescope/telescope.nvim
+"nnoremap <leader>ff <cmd>Telescope find_files<cr>
+"nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+"nnoremap <leader>fb <cmd>Telescope buffers<cr>
+"nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 
 " norcalli/nvim-colorizer.lua
@@ -446,3 +461,7 @@ hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34'
 "hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
 "hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
 highlight SignColumn guibg=NONE
+
+" Set space as Leader key
+nnoremap <SPACE> <Nop>
+let mapleader=" "

@@ -188,6 +188,12 @@ lspconfig['vimls'].setup {
   capabilities = capabilities,
   flags = lsp_flags,
 }
+
+lspconfig['marksman'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  flags = lsp_flags,
+}
 -- ######################## END LANGUAGE SERVERS CONFIG ######################## 
 
 -- ######################## BEGIN VSNIP CONFIG ######################## 
