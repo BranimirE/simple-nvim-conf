@@ -52,7 +52,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
 "Indents plugin
-Plug 'Yggdroot/indentLine'
+" Plug 'Yggdroot/indentLine'
 
 "Telescope to have fuzy search on files
 "Plug 'nvim-lua/plenary.nvim'
@@ -63,6 +63,9 @@ Plug 'Yggdroot/indentLine'
 
 " Show background colors in colors string like #FF0000
 Plug 'norcalli/nvim-colorizer.lua'
+
+" Detect indentation in the file
+Plug 'tpope/vim-sleuth'
 
 call plug#end()
 
@@ -81,7 +84,7 @@ set encoding=utf-8
 set showmatch
 
 "use two spaces instead of tabs
-set sw=2
+"set sw=2
 
 "as we are going to install a pluging we dont need to show the mode
 set noshowmode
@@ -453,7 +456,7 @@ hi St_NormalModeSep guifg=#00afff
 
 "set statusline+=%{get(b:,'vgit_status','')}
 
-hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34'
+hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34
 
 "hi GitSignsAddNr    gui=bold guibg=NONE ctermbg=NONE
 "hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
@@ -465,3 +468,10 @@ highlight SignColumn guibg=NONE
 " Set space as Leader key
 nnoremap <SPACE> <Nop>
 let mapleader=" "
+
+" Show tabs and trailing spaces as visible characters
+"set showbreak=↪
+"set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨,space:•
+"hi Whitespace guifg=#000000
+set list listchars+=tab:→\ ,trail:•
+set list
