@@ -141,7 +141,7 @@ lua << EOF
       --mode = "tabs",
       numbers = "none",
       color_icons = true,
-      separator_style = "slant",
+      --separator_style = "slant",
       always_show_bufferline = false,
       offsets = {
 	{
