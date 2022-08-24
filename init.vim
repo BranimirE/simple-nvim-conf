@@ -1,7 +1,11 @@
 call plug#begin()
 
 " Theme
-Plug 'ayu-theme/ayu-vim'
+"Plug 'ayu-theme/ayu-vim'
+"Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+"Plug 'ful1e5/onedark.nvim'
+"Plug 'olimorris/onedarkpro.nvim' 
+Plug 'cpea2506/one_monokai.nvim'
 
 " Tabline
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
@@ -67,7 +71,20 @@ Plug 'norcalli/nvim-colorizer.lua'
 " Detect indentation in the file
 Plug 'tpope/vim-sleuth'
 
+" (Un)Install language server protocols Automatically
+Plug 'williamboman/mason.nvim'
+
 call plug#end()
+
+" Set space as Leader key
+"nnoremap <SPACE> <Nop>
+"let mapleader=" "
+"
+"map <Space> <Leader>
+"
+"lua vim.g.mapleader = "<Space>"
+"
+let mapleader = "\<Space>"
 
 "Enable mouse
 set mouse=a
@@ -101,8 +118,21 @@ set fillchars+=eob:\
 
 "Setting the theme
 set termguicolors
-let ayucolor="dark"
-colorscheme ayu
+"let ayucolor="dark"
+"colorscheme ayu
+"
+"let g:tokyonight_style = 'nigth'
+"let g:tokyonight_transparent = 1
+"let g:tokyonight_transparent_sidebar = 1
+"colorscheme tokyonight
+"
+"colorscheme onedarkpro
+"lua << EOF
+"  require("onedarkpro").setup({
+"    theme = "onedark_dark",
+"    dark_theme = "onedark_dark", -- The default dark Theme
+"  })
+"EOF
 
 " akinsho/bufferline.nvim
 lua << EOF
@@ -131,6 +161,42 @@ nnoremap <silent><A-7> <cmd>lua require("bufferline").go_to_buffer(7, true)<cr>
 nnoremap <silent><A-8> <cmd>lua require("bufferline").go_to_buffer(8, true)<cr>
 nnoremap <silent><A-9> <cmd>lua require("bufferline").go_to_buffer(9, true)<cr>
 nnoremap <silent><A-$> <cmd>lua require("bufferline").go_to_buffer(-1, true)<cr>
+
+lua << EOF
+require("one_monokai").setup({
+  transparent = true,
+  colors = {
+    gray = "#676e7b",
+    --pink = "#e06c75",
+    pink = "#F92672",
+    --green = "#98c379",
+    green = "#A6E22E",
+    --cyan = "#56b6c2",
+    cyan = "#00afff",
+    aqua = "#61afef",
+    --yellow = "#e5c07b",
+    yellow = "#E6DB74",
+    --purple = "#c678dd",
+    purple = "#AE81FF",
+    peanut = "#f6d5a4",
+    --orange = "#d19a66",
+    orange = "#FD971F",
+    none = "NONE",
+
+    -- support colors
+    red = "#ff0000",
+    --white = "#d7d7ff",
+    white = "#ffffff",
+    light_gray = "#9ca3b2",
+    dark_gray = "#4b5261",
+    --vulcan = "#383a3e",
+    vulcan = "#080a0e",
+    dark_green = "#2d2e27",
+    dark_blue = "#26292f",
+    black = "#1e2024",
+  }
+})
+EOF
 
 " NvChad/base46
 lua << EOF
@@ -283,8 +349,8 @@ lua << EOF
     if type(msg) == 'string' then
       local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available'
       if is_suppressed_message then
-	-- Do not show some messages
-	return
+        -- Do not show some messages
+        return
       end
     end
 
@@ -418,6 +484,9 @@ nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 " norcalli/nvim-colorizer.lua
 lua require'colorizer'.setup()
 
+" williamboman/mason.nvim
+lua require("mason").setup()
+
 "Remove Alacritty padding when nvim is opened
 lua << EOF
   function Sad(line_nr, from, to, fname)
@@ -435,11 +504,11 @@ lua << EOF
   end
 EOF
 
-autocmd VimEnter * lua DecreasePadding()
-autocmd VimLeavePre * lua IncreasePadding()
+"autocmd VimEnter * lua DecreasePadding()
+"autocmd VimLeavePre * lua IncreasePadding()
 
 " Remove background colors
-hi Normal guibg=NONE ctermbg=NONE
+" hi Normal guibg=NONE ctermbg=NONE
 
 " Change split lines color
 hi VertSplit guifg=#00afff
@@ -464,10 +533,6 @@ hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34
 "hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
 "hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
 highlight SignColumn guibg=NONE
-
-" Set space as Leader key
-nnoremap <SPACE> <Nop>
-let mapleader=" "
 
 " Show tabs and trailing spaces as visible characters
 "set showbreak=↪

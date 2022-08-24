@@ -74,7 +74,7 @@ cmp.setup({
     },
     --documentation = cmp.config.window.bordered(),
     documentation = {
-      border = border "CmpDocBorder",
+      --border = border "CmpDocBorder",
       winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
     },
   },
