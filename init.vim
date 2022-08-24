@@ -74,6 +74,10 @@ Plug 'tpope/vim-sleuth'
 " (Un)Install language server protocols Automatically
 Plug 'williamboman/mason.nvim'
 
+" context_commentstring
+Plug 'numToStr/Comment.nvim'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+
 call plug#end()
 
 " Set space as Leader key
@@ -486,6 +490,13 @@ lua require'colorizer'.setup()
 
 " williamboman/mason.nvim
 lua require("mason").setup()
+
+" numToStr/Comment.nvim
+lua << EOF
+  require('Comment').setup {
+    pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+  }
+EOF
 
 "Remove Alacritty padding when nvim is opened
 lua << EOF
