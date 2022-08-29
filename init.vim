@@ -51,21 +51,17 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Autoclose and autorename tags in html(using treesitter)
 Plug 'windwp/nvim-ts-autotag'
 
-" Finder
+" Telescope configs
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
-"Indents plugin
-" Plug 'Yggdroot/indentLine'
+" fzf for Telescope
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
-"Telescope to have fuzy search on files
-"Plug 'nvim-lua/plenary.nvim'
-"Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
-"Plug 'nvim-telescope/telescope-ui-select.nvim'
-"
-"Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+" Use Telescope to manage vim show options to choose
+Plug 'nvim-telescope/telescope-ui-select.nvim'
 
-" Show background colors in colors string like #FF0000
+" Show background colors in color strings like #FF0000
 Plug 'norcalli/nvim-colorizer.lua'
 
 " Detect indentation in the file
@@ -77,6 +73,12 @@ Plug 'williamboman/mason.nvim'
 " context_commentstring
 Plug 'numToStr/Comment.nvim'
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+
+" Gitdiff view
+"Plug 'sindrets/diffview.nvim'
+
+"Show indent lines
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 call plug#end()
 
@@ -148,9 +150,9 @@ lua << EOF
       --separator_style = "slant",
       always_show_bufferline = false,
       offsets = {
-	{
-	  filetype = "NvimTree"
-	}
+        {
+          filetype = "NvimTree"
+        }
       }
     }
   }
@@ -279,33 +281,36 @@ lua << EOF
     renderer = {
       highlight_git = false,
       highlight_opened_files = "all",
+      indent_markers = {
+        enable = true
+      },
       icons = {
-	git_placement = "after",
-	show = {
-	  file = true,
-	  folder = true,
-	  folder_arrow = false, 
-	  git = false,
-	},
-	glyphs = {
-	  default = "",
-	  symlink = "",
-	  --folder = {
-	  --  --arrow_open = "ﯰ",
-	  --  --arrow_open = "",
-	  --  --arrow_closed = "ﰂ",
-	  --  --arrow_closed = "樂",
-	  --},
-	  --git = {
-	  --  unstaged = "✗",
-	  --  staged = "✓",
-	  --  unmerged = "",
-	  --  renamed = "➜",
-	  --  untracked = "★",
-	  --  deleted = "",
-	  --  ignored = "◌",
-	  --},
-	},
+        git_placement = "after",
+        show = {
+          file = true,
+          folder = true,
+          folder_arrow = false, 
+          git = false,
+        },
+        glyphs = {
+          default = "",
+          symlink = "",
+          --folder = {
+          --  --arrow_open = "ﯰ",
+          --  --arrow_open = "",
+          --  --arrow_closed = "ﰂ",
+          --  --arrow_closed = "樂",
+          --},
+          --git = {
+          --  unstaged = "✗",
+          --  staged = "✓",
+          --  unmerged = "",
+          --  renamed = "➜",
+          --  untracked = "★",
+          --  deleted = "",
+          --  ignored = "◌",
+          --},
+        },
       },
     },
     git = {
@@ -316,12 +321,12 @@ lua << EOF
     },
     view = {
       mappings = {
-	custom_only = false,
-	list = {
-	  { key = {"l", "<CR>", "o"}, cb = tree_cb "edit" },
-	  { key = "h", cb = tree_cb "close_node" },
-	  { key = "v", cb = tree_cb "vsplit" },
-	}
+        custom_only = false,
+        list = {
+          { key = {"l", "<CR>", "o"}, cb = tree_cb "edit" },
+          { key = "h", cb = tree_cb "close_node" },
+          { key = "v", cb = tree_cb "vsplit" },
+        }
       },
       adaptive_size = true,
       side = "left",
@@ -333,11 +338,10 @@ lua << EOF
     },
     actions = {
       open_file = {
-	resize_window = true,
+        resize_window = true,
       },
     },
   }
-  
 EOF
 map <C-n> :NvimTreeToggle<CR>
 
@@ -449,6 +453,14 @@ lua << EOF
     -- ignore_install = { "javascript" }, -- List of parsers to ignore installing (for "all")
     highlight = {
       enable = true, -- `false` will disable the whole extension
+      disable = function(lang, bufnr)
+        if vim.fn.expand("%:t") == "lsp.log" or vim.bo.filetype == "help" then
+          return false
+        end
+        local n_lines = vim.api.nvim_buf_line_count(bufnr)
+        -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
+        return  n_lines > 5000 or (n_lines > 0 and  vim.fn.getfsize(vim.fn.expand("%")) / n_lines > 10000)
+      end,
       use_languagetree = true, -- use this to enable language injection
       -- disable = { "c", "rust" }, -- list of language that will be disabled
 
@@ -475,15 +487,46 @@ lua << EOF
 EOF
 
 " nvim-telescope/telescope.nvim
-"nnoremap <leader>ff <cmd>Telescope find_files<cr>
-"nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-"nnoremap <leader>fb <cmd>Telescope buffers<cr>
-"nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+lua << EOF
+require("telescope").setup {
+  defaults = {
+    file_ignore_patterns = {
+      "ext.js",
+      "ext-modern.js",
+      "ext-modern-all.js",
+      "ext-modern-all-sandbox.js",
+      "ext-all.js",
+      "ext-all-sandbox.js",
+      "ext-all-rtl.js",
+      "ext-all-rtl-sandbox.js"
+    }
+  },
+  extensions = {
+    fzf = {
+      fuzzy = false,                   -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    },
+
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown { }
+    }
+  }
+}
+EOF
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown({}))<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
+
+"nvim-telescope/telescope-fzf-native.nvim
+lua require('telescope').load_extension('fzf')
+
+"nvim-telescope/telescope-ui-select.nvim
+lua require("telescope").load_extension("ui-select")
 
 " norcalli/nvim-colorizer.lua
 lua require'colorizer'.setup()
@@ -497,6 +540,157 @@ lua << EOF
     pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
   }
 EOF
+
+
+" sindrets/diffview.nvim
+lua << EOF
+--local actions = require("diffview.actions")
+--require("diffview").setup({
+  -- diff_binaries = false,    -- Show diffs for binaries
+  -- enhanced_diff_hl = false, -- See ':h diffview-config-enhanced_diff_hl'
+  -- git_cmd = { "git" },      -- The git executable followed by default args.
+  -- use_icons = true,         -- Requires nvim-web-devicons
+  -- icons = {                 -- Only applies when use_icons is true.
+  --   folder_closed = "",
+  --   folder_open = "",
+  -- },
+  -- signs = {
+  --   fold_closed = "",
+  --   fold_open = "",
+  -- },
+  -- file_panel = {
+  --   listing_style = "tree",             -- One of 'list' or 'tree'
+  --   tree_options = {                    -- Only applies when listing_style is 'tree'
+  --     flatten_dirs = true,              -- Flatten dirs that only contain one single dir
+  --     folder_statuses = "only_folded",  -- One of 'never', 'only_folded' or 'always'.
+  --   },
+  --   win_config = {                      -- See ':h diffview-config-win_config'
+  --     position = "left",
+  --     width = 35,
+  --   },
+  -- },
+  -- file_history_panel = {
+  --   log_options = {   -- See ':h diffview-config-log_options'
+  --     single_file = {
+  --       diff_merges = "combined",
+  --     },
+  --     multi_file = {
+  --       diff_merges = "first-parent",
+  --     },
+  --   },
+  --   win_config = {    -- See ':h diffview-config-win_config'
+  --     position = "bottom",
+  --     height = 16,
+  --   },
+  -- },
+  -- commit_log_panel = {
+  --   win_config = {},  -- See ':h diffview-config-win_config'
+  -- },
+  -- default_args = {    -- Default args prepended to the arg-list for the listed commands
+  --   DiffviewOpen = {},
+  --   DiffviewFileHistory = {},
+  -- },
+  -- hooks = {},         -- See ':h diffview-config-hooks'
+  -- keymaps = {
+  --   disable_defaults = false, -- Disable the default keymaps
+  --   view = {
+  --     -- The `view` bindings are active in the diff buffers, only when the current
+  --     -- tabpage is a Diffview.
+  --     ["<tab>"]      = actions.select_next_entry, -- Open the diff for the next file
+  --     ["<s-tab>"]    = actions.select_prev_entry, -- Open the diff for the previous file
+  --     ["gf"]         = actions.goto_file,         -- Open the file in a new split in the previous tabpage
+  --     ["<C-w><C-f>"] = actions.goto_file_split,   -- Open the file in a new split
+  --     ["<C-w>gf"]    = actions.goto_file_tab,     -- Open the file in a new tabpage
+  --     ["<leader>e"]  = actions.focus_files,       -- Bring focus to the files panel
+  --     ["<leader>b"]  = actions.toggle_files,      -- Toggle the files panel.
+  --   },
+  --   file_panel = {
+  --     ["j"]             = actions.next_entry,         -- Bring the cursor to the next file entry
+  --     ["<down>"]        = actions.next_entry,
+  --     ["k"]             = actions.prev_entry,         -- Bring the cursor to the previous file entry.
+  --     ["<up>"]          = actions.prev_entry,
+  --     ["<cr>"]          = actions.select_entry,       -- Open the diff for the selected entry.
+  --     ["o"]             = actions.select_entry,
+  --     ["<2-LeftMouse>"] = actions.select_entry,
+  --     ["-"]             = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+  --     ["S"]             = actions.stage_all,          -- Stage all entries.
+  --     ["U"]             = actions.unstage_all,        -- Unstage all entries.
+  --     ["X"]             = actions.restore_entry,      -- Restore entry to the state on the left side.
+  --     ["R"]             = actions.refresh_files,      -- Update stats and entries in the file list.
+  --     ["L"]             = actions.open_commit_log,    -- Open the commit log panel.
+  --     ["<c-b>"]         = actions.scroll_view(-0.25), -- Scroll the view up
+  --     ["<c-f>"]         = actions.scroll_view(0.25),  -- Scroll the view down
+  --     ["<tab>"]         = actions.select_next_entry,
+  --     ["<s-tab>"]       = actions.select_prev_entry,
+  --     ["gf"]            = actions.goto_file,
+  --     ["<C-w><C-f>"]    = actions.goto_file_split,
+  --     ["<C-w>gf"]       = actions.goto_file_tab,
+  --     ["i"]             = actions.listing_style,        -- Toggle between 'list' and 'tree' views
+  --     ["f"]             = actions.toggle_flatten_dirs,  -- Flatten empty subdirectories in tree listing style.
+  --     ["<leader>e"]     = actions.focus_files,
+  --     ["<leader>b"]     = actions.toggle_files,
+  --   },
+  --   file_history_panel = {
+  --     ["g!"]            = actions.options,          -- Open the option panel
+  --     ["<C-A-d>"]       = actions.open_in_diffview, -- Open the entry under the cursor in a diffview
+  --     ["y"]             = actions.copy_hash,        -- Copy the commit hash of the entry under the cursor
+  --     ["L"]             = actions.open_commit_log,
+  --     ["zR"]            = actions.open_all_folds,
+  --     ["zM"]            = actions.close_all_folds,
+  --     ["j"]             = actions.next_entry,
+  --     ["<down>"]        = actions.next_entry,
+  --     ["k"]             = actions.prev_entry,
+  --     ["<up>"]          = actions.prev_entry,
+  --     ["<cr>"]          = actions.select_entry,
+  --     ["o"]             = actions.select_entry,
+  --     ["<2-LeftMouse>"] = actions.select_entry,
+  --     ["<c-b>"]         = actions.scroll_view(-0.25),
+  --     ["<c-f>"]         = actions.scroll_view(0.25),
+  --     ["<tab>"]         = actions.select_next_entry,
+  --     ["<s-tab>"]       = actions.select_prev_entry,
+  --     ["gf"]            = actions.goto_file,
+  --     ["<C-w><C-f>"]    = actions.goto_file_split,
+  --     ["<C-w>gf"]       = actions.goto_file_tab,
+  --     ["<leader>e"]     = actions.focus_files,
+  --     ["<leader>b"]     = actions.toggle_files,
+  --   },
+  --   option_panel = {
+  --     ["<tab>"] = actions.select_entry,
+  --     ["q"]     = actions.close,
+  --   },
+  -- },
+--})
+EOF
+
+
+" lukas-reineke/indent-blankline.nvim
+" let g:indent_blankline_char = ''
+lua << EOF
+require("indent_blankline").setup {
+  -- for example, context is off by default, use this to turn it on
+  --char = '',
+  show_current_context = true,
+  --show_current_context_start = true,
+  use_treesitter = true,
+  show_trailing_blankline_indent = false,
+  show_first_indent_level = false, -- so we can detect if the line is only composed by trailing whitespaces
+  max_indent_increase = 1
+}
+
+-- Disable the plugin in very big files
+-- https://github.com/lukas-reineke/indent-blankline.nvim/issues/440#issuecomment-1165399724
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("IndentBlanklineBigFile", {}),
+  pattern = "*",
+  callback = function()
+    if vim.api.nvim_buf_line_count(0) > 5000 then
+      require("indent_blankline.commands").disable()
+    end
+  end,
+})
+EOF
+highlight IndentBlanklineContextChar guifg=#2f2f2f gui=nocombine
+highlight IndentBlanklineChar guifg=#101010  gui=nocombine
 
 "Remove Alacritty padding when nvim is opened
 lua << EOF

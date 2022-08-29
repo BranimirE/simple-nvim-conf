@@ -135,6 +135,7 @@ cmp.setup.cmdline(':', {
 
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 -- ######################## END COMPLETITION CONFIG ######################## 
 
 -- ######################## BEGIN LANGUAGE SERVERS CONFIG ######################## 
@@ -145,11 +146,6 @@ local lsp_flags = {
 
 local lspconfig = require('lspconfig');
 
-lspconfig['tsserver'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
 lspconfig['sumneko_lua'].setup{
   on_attach = on_attach,
@@ -177,6 +173,13 @@ lspconfig['sumneko_lua'].setup{
   },
 }
 
+lspconfig['tsserver'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  flags = lsp_flags,
+}
+
+
 lspconfig['pyright'].setup {
   on_attach = on_attach,
   capabilities = capabilities,
@@ -194,6 +197,19 @@ lspconfig['marksman'].setup{
   capabilities = capabilities,
   flags = lsp_flags,
 }
+
+lspconfig['cssls'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  flags = lsp_flags,
+}
+
+lspconfig['cssmodules_ls'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  flags = lsp_flags,
+}
+
 -- ######################## END LANGUAGE SERVERS CONFIG ######################## 
 
 -- ######################## BEGIN VSNIP CONFIG ######################## 
