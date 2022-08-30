@@ -91,7 +91,6 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'vsnip' }, -- For vsnip users.
     { name = 'path' },
-  }, {
     { name = 'buffer' },
   }),
   formatting = {
@@ -173,12 +172,20 @@ lspconfig['sumneko_lua'].setup{
   },
 }
 
-lspconfig['tsserver'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
+-- lspconfig['tsserver'].setup{
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   flags = lsp_flags,
+-- }
 
+require("typescript").setup({
+  disable_commands = false, -- prevent the plugin from creating Vim commands
+  debug = true, -- enable debug logging for commands
+  server = { -- pass options to lspconfig's setup method
+    on_attach = on_attach,
+    capabilities = capabilities,
+  },
+})
 
 lspconfig['pyright'].setup {
   on_attach = on_attach,

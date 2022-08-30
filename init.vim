@@ -28,6 +28,8 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+" Specific features for typescript
+Plug 'jose-elias-alvarez/typescript.nvim'
 
 " For snippets
 Plug 'hrsh7th/cmp-vsnip'
@@ -314,7 +316,7 @@ lua << EOF
       },
     },
     git = {
-      ignore = true
+      ignore = false
     },
     diagnostics = {
       enable = true,
