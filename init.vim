@@ -28,8 +28,10 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+" Show help when we are passing arguments to a function
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 " Specific features for typescript
-Plug 'jose-elias-alvarez/typescript.nvim'
+" Plug 'jose-elias-alvarez/typescript.nvim'
 
 " For snippets
 Plug 'hrsh7th/cmp-vsnip'
@@ -316,7 +318,7 @@ lua << EOF
       },
     },
     git = {
-      ignore = false
+      ignore = false -- hide files/dirs in gitignore?
     },
     diagnostics = {
       enable = true,

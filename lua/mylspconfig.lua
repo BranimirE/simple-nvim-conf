@@ -32,6 +32,28 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+
+  -- Highlight references under the cursor
+  -- Commented because it is taking too much time to respond(But it is working)
+  -- TODO: Fix the previous comment
+  -- if client.resolved_capabilities.document_highlight then
+  --   vim.cmd [[
+  --     hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
+  --     hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
+  --     hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
+  --   ]]
+  --   vim.api.nvim_create_augroup('lsp_document_highlight', {})
+  --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+  --     group = 'lsp_document_highlight',
+  --     buffer = 0,
+  --     callback = vim.lsp.buf.document_highlight,
+  --   })
+  --   vim.api.nvim_create_autocmd('CursorMoved', {
+  --     group = 'lsp_document_highlight',
+  --     buffer = 0,
+  --     callback = vim.lsp.buf.clear_references,
+  --   })
+  -- end
 end
 -- ######################## END LSPCONFIG ######################## 
 
@@ -92,6 +114,7 @@ cmp.setup({
     { name = 'vsnip' }, -- For vsnip users.
     { name = 'path' },
     { name = 'buffer' },
+    { name = 'nvim_lsp_signature_help' },
   }),
   formatting = {
     format = function(_, vim_item)
@@ -172,20 +195,21 @@ lspconfig['sumneko_lua'].setup{
   },
 }
 
--- lspconfig['tsserver'].setup{
---   on_attach = on_attach,
---   capabilities = capabilities,
---   flags = lsp_flags,
--- }
+lspconfig['tsserver'].setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  flags = lsp_flags,
+}
 
-require("typescript").setup({
-  disable_commands = false, -- prevent the plugin from creating Vim commands
-  debug = true, -- enable debug logging for commands
-  server = { -- pass options to lspconfig's setup method
-    on_attach = on_attach,
-    capabilities = capabilities,
-  },
-})
+--  Enabling this plugin is generatirng duplicated autocompletion options due to it install typscript in ~/.cache/typescript
+-- require("typescript").setup({
+--   disable_commands = false, -- prevent the plugin from creating Vim commands
+--   debug = true, -- enable debug logging for commands
+--   server = { -- pass options to lspconfig's setup method
+--     on_attach = on_attach,
+--     capabilities = capabilities,
+--   },
+-- })
 
 lspconfig['pyright'].setup {
   on_attach = on_attach,
