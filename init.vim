@@ -84,6 +84,8 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 "Show indent lines
 Plug 'lukas-reineke/indent-blankline.nvim'
 
+Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+
 call plug#end()
 
 " Set space as Leader key
