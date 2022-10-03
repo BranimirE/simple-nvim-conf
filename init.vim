@@ -81,10 +81,14 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 " Gitdiff view
 "Plug 'sindrets/diffview.nvim'
 
-"Show indent lines
+" Show indent lines
 Plug 'lukas-reineke/indent-blankline.nvim'
 
+" Add extra functionality to LSP
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+
+" Git plugin
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
