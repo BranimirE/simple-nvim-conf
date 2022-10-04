@@ -117,10 +117,18 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
+    ['<Esc>'] = cmp.mapping(function (fallback)
+      if cmp.visible() then
+        cmp.abort()
+      else
+        fallback()
+      end
+    end, {'i', 's'}),
     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_next_item()
+        -- cmp.select_next_item()
+        cmp.confirm({ select = true })
       elseif vim.fn['vsnip#available']() == 1 then
         feedkey('<Plug>(vsnip-expand-or-jump)', '')
       elseif has_words_before() then
@@ -183,6 +191,13 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline' }
   })
 })
+
+-- If you want insert `(` after select function or method item
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
