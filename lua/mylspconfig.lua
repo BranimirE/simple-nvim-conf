@@ -124,15 +124,15 @@ cmp.setup({
         fallback()
       end
     end, {'i', 's'}),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    -- ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         -- cmp.select_next_item()
         cmp.confirm({ select = true })
       elseif vim.fn['vsnip#available']() == 1 then
         feedkey('<Plug>(vsnip-expand-or-jump)', '')
-      elseif has_words_before() then
-        cmp.complete()
+      -- elseif has_words_before() then
+      --   cmp.complete()
       else
         fallback()
       end
