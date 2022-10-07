@@ -134,21 +134,6 @@ set fillchars+=eob:\
 
 "Setting the theme
 set termguicolors
-"let ayucolor="dark"
-"colorscheme ayu
-"
-"let g:tokyonight_style = 'nigth'
-"let g:tokyonight_transparent = 1
-"let g:tokyonight_transparent_sidebar = 1
-"colorscheme tokyonight
-"
-"colorscheme onedarkpro
-"lua << EOF
-"  require("onedarkpro").setup({
-"    theme = "onedark_dark",
-"    dark_theme = "onedark_dark", -- The default dark Theme
-"  })
-"EOF
 
 " akinsho/bufferline.nvim
 lua << EOF
@@ -260,11 +245,11 @@ imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l
 smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
 
 " Jump forward or backward
-imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
+" imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+" smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+" imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+" smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+"
 " Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
 " See https://github.com/hrsh7th/vim-vsnip/pull/50
 nmap        s   <Plug>(vsnip-select-text)
