@@ -740,3 +740,6 @@ highlight SignColumn guibg=NONE
 "hi Whitespace guifg=#000000
 set list listchars+=tab:→\ ,trail:•
 set list
+
+
+lua require('mymappings')

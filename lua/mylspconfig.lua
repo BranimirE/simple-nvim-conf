@@ -126,18 +126,18 @@ cmp.setup({
     end, {'i', 's'}),
     -- ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        -- cmp.select_next_item()
-        cmp.confirm({ select = true })
-      elseif vim.fn['vsnip#available']() == 1 then
-        feedkey('<Plug>(vsnip-expand-or-jump)', '')
-      -- elseif has_words_before() then
-      --   cmp.complete()
-      else
-        fallback()
-      end
-    end, {'i', 's'}),
+    -- ['<Tab>'] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     -- cmp.select_next_item()
+    --     cmp.confirm({ select = true })
+    --   elseif vim.fn['vsnip#available']() == 1 then
+    --     feedkey('<Plug>(vsnip-expand-or-jump)', '')
+    --   -- elseif has_words_before() then
+    --   --   cmp.complete()
+    --   else
+    --     fallback()
+    --   end
+    -- end, {'i', 's'}),
     ['<S-Tab>'] = cmp.mapping(function()
       if cmp.visible() then
         cmp.select_prev_item()
@@ -362,7 +362,7 @@ saga.init_lsp_saga()
 -- Lsp finder find the symbol definition implement reference
 -- when you use action in finder like open vsplit then you can
 -- use <C-t> to jump back
-keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { silent = true })
+-- keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { silent = true })
 
 -- Code action
 keymap("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { silent = true })
