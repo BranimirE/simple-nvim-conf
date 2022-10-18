@@ -1,11 +1,24 @@
+local my_lsp_servers = {
+  'sumneko_lua',
+  'tsserver',
+  'bashls',
+  'pyright',
+  'vimls',
+  'marksman',
+  'cssls',
+  'cssmodules_ls',
+  'clangd',
+  'yamlls'
+}
+
 -- ######################## BEGIN LSPCONFIG ######################## 
 -- Default conf from: https://github.com/neovim/nvim-lspconfig#suggested-configuration
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+-- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+-- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+-- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
@@ -31,55 +44,14 @@ local on_attach = function(client, bufnr)
   --vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
   --vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
-
-  -- Highlight references under the cursor
-  -- Commented because it is taking too much time to respond(But it is working)
-  -- TODO: Fix the previous comment
-  -- if client.resolved_capabilities.document_highlight then
-  --   vim.cmd [[
-  --     hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
-  --     hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
-  --     hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
-  --   ]]
-  --   vim.api.nvim_create_augroup('lsp_document_highlight', {})
-  --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-  --     group = 'lsp_document_highlight',
-  --     buffer = 0,
-  --     callback = vim.lsp.buf.document_highlight,
-  --   })
-  --   vim.api.nvim_create_autocmd('CursorMoved', {
-  --     group = 'lsp_document_highlight',
-  --     buffer = 0,
-  --     callback = vim.lsp.buf.clear_references,
-  --   })
-  -- end
+  -- vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
 end
 -- ######################## END LSPCONFIG ######################## 
 
 -- ######################## BEGIN COMPLETITION CONFIG ######################## 
 vim.g.completeopt = "menu,menuone,noselect,noinsert"
-local has_words_before = function()
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0
-             and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s")
-             == nil
-end
-
-local feedkey = function(key, mode)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-end
-
 local function border(hl_name)
   return {
-    --{ "╭", hl_name },
-    --{ "─", hl_name },
-    --{ "╮", hl_name },
-    --{ "│", hl_name },
-    --{ "╯", hl_name },
-    --{ "─", hl_name },
-    --{ "╰", hl_name },
-    --{ "│", hl_name },
     { "┌", hl_name },
     { "─", hl_name },
     { "┐", hl_name },
@@ -124,27 +96,7 @@ cmp.setup({
         fallback()
       end
     end, {'i', 's'}),
-    -- ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    -- ['<Tab>'] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     -- cmp.select_next_item()
-    --     cmp.confirm({ select = true })
-    --   elseif vim.fn['vsnip#available']() == 1 then
-    --     feedkey('<Plug>(vsnip-expand-or-jump)', '')
-    --   -- elseif has_words_before() then
-    --   --   cmp.complete()
-    --   else
-    --     fallback()
-    --   end
-    -- end, {'i', 's'}),
-    ['<S-Tab>'] = cmp.mapping(function()
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-        feedkey('<Plug>(vsnip-jump-prev)', '')
-      end
-    end, {'i', 's'})
   }),
   sources = cmp.config.sources({
     { name = 'git' },
@@ -201,8 +153,9 @@ cmp.event:on(
 )
 
 -- Setup lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-capabilities.textDocument.completion.completionItem.snippetSupport = true
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 -- ######################## END COMPLETITION CONFIG ######################## 
 
 -- ######################## BEGIN LANGUAGE SERVERS CONFIG ######################## 
@@ -213,129 +166,80 @@ local lsp_flags = {
 
 local lspconfig = require('lspconfig');
 
--- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
-lspconfig['sumneko_lua'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-  settings = {
-    Lua = {
-      runtime = {
-	-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-	version = 'LuaJIT',
-      },
-      diagnostics = {
-	-- Get the language server to recognize the `vim` global
-	globals = {'vim'},
-      },
-      workspace = {
-	-- Make the server aware of Neovim runtime files
-	library = vim.api.nvim_get_runtime_file("", true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = {
-	enable = false,
+local my_lsp_server_config = {
+  sumneko_lua = {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = lsp_flags,
+    settings = {
+      Lua = {
+        runtime = {
+          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+          version = 'LuaJIT',
+        },
+        diagnostics = {
+          -- Get the language server to recognize the `vim` global
+          globals = {'vim'},
+        },
+        workspace = {
+          -- Make the server aware of Neovim runtime files
+          library = vim.api.nvim_get_runtime_file("", true),
+        },
+        -- Do not send telemetry data containing a randomized but unique identifier
+        telemetry = {
+          enable = false,
+        },
       },
     },
   },
-}
-
-lspconfig['tsserver'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['bashls'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
---  Enabling this plugin is generatirng duplicated autocompletion options due to it install typscript in ~/.cache/typescript
--- require("typescript").setup({
---   disable_commands = false, -- prevent the plugin from creating Vim commands
---   debug = true, -- enable debug logging for commands
---   server = { -- pass options to lspconfig's setup method
---     on_attach = on_attach,
---     capabilities = capabilities,
---   },
--- })
-
-lspconfig['pyright'].setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['vimls'].setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['marksman'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['cssls'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['cssmodules_ls'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['clangd'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-}
-
-lspconfig['yamlls'].setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = lsp_flags,
-  settings = {
-    yaml = {
-      format = {
-        enable = true,
+  yamlls = {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = lsp_flags,
+    settings = {
+      yaml = {
+        format = {
+          enable = true,
+        },
+        hover = true,
+        completion = true,
+        customTags = {
+          "!fn",
+          "!And",
+          "!If",
+          "!Not",
+          "!Equals",
+          "!Or",
+          "!FindInMap sequence",
+          "!Base64",
+          "!Cidr",
+          "!Ref",
+          "!Ref Scalar",
+          "!Sub",
+          "!GetAtt",
+          "!GetAZs",
+          "!ImportValue",
+          "!Select",
+          "!Split",
+          "!Join sequence"
+        },
       },
-      hover = true,
-      completion = true,
-
-      customTags = {
-        "!fn",
-        "!And",
-        "!If",
-        "!Not",
-        "!Equals",
-        "!Or",
-        "!FindInMap sequence",
-        "!Base64",
-        "!Cidr",
-        "!Ref",
-        "!Ref Scalar",
-        "!Sub",
-        "!GetAtt",
-        "!GetAZs",
-        "!ImportValue",
-        "!Select",
-        "!Split",
-        "!Join sequence"
-      },
-    },
+    }
   }
 }
 
+for index, server_name in ipairs(my_lsp_servers) do
+  if my_lsp_server_config[server_name] ~= nil then
+    lspconfig[server_name].setup(my_lsp_server_config[server_name])
+  else
+    lspconfig[server_name].setup({
+      on_attach = on_attach,
+      capabilities = capabilities,
+      flags = lsp_flags,
+    })
+  end
+end
 -- ######################## END LANGUAGE SERVERS CONFIG ######################## 
-
 
 -- Highlight line numbers for diagnostics
 vim.fn.sign_define('DiagnosticSignError', { numhl = 'LspDiagnosticsLineNrError', text = '' })

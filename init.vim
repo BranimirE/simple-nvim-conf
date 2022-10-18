@@ -73,6 +73,7 @@ Plug 'tpope/vim-sleuth'
 
 " (Un)Install language server protocols Automatically
 Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
 
 " context_commentstring
 Plug 'numToStr/Comment.nvim'
@@ -140,7 +141,7 @@ lua << EOF
   require("bufferline").setup {
     options = {
       --mode = "tabs",
-      numbers = "none",
+      numbers = "ordinal",
       color_icons = true,
       --separator_style = "slant",
       always_show_bufferline = false,
@@ -152,19 +153,10 @@ lua << EOF
     }
   }
 EOF
-nnoremap <silent><A-1> <cmd>lua require("bufferline").go_to_buffer(1, true)<cr>
-nnoremap <silent><A-2> <cmd>lua require("bufferline").go_to_buffer(2, true)<cr>
-nnoremap <silent><A-3> <cmd>lua require("bufferline").go_to_buffer(3, true)<cr>
-nnoremap <silent><A-4> <cmd>lua require("bufferline").go_to_buffer(4, true)<cr>
-nnoremap <silent><A-5> <cmd>lua require("bufferline").go_to_buffer(5, true)<cr>
-nnoremap <silent><A-6> <cmd>lua require("bufferline").go_to_buffer(6, true)<cr>
-nnoremap <silent><A-7> <cmd>lua require("bufferline").go_to_buffer(7, true)<cr>
-nnoremap <silent><A-8> <cmd>lua require("bufferline").go_to_buffer(8, true)<cr>
-nnoremap <silent><A-9> <cmd>lua require("bufferline").go_to_buffer(9, true)<cr>
-nnoremap <silent><A-$> <cmd>lua require("bufferline").go_to_buffer(-1, true)<cr>
 
 lua << EOF
 require("one_monokai").setup({
+  use_cmd = true,
   transparent = true,
   colors = {
     gray = "#676e7b",
@@ -199,16 +191,13 @@ require("one_monokai").setup({
 })
 EOF
 
-" NvChad/base46
+" NvChad/base46 && NvChad/ui
 lua << EOF
   --vim.g.nvchad_theme = "onedark"
   vim.g.nvchad_theme = "ayu-dark"
   --require("base46").load_theme()
   require("base46").load_highlight("statusline")
-EOF
 
-" NvChad/ui
-lua << EOF
   function _G.nvchadstatusline()
     return require("nvchad_ui.statusline").run({
       separator_style = "default", -- default/round/block/arrow
@@ -227,36 +216,15 @@ lua << EOF
   }
 EOF
 
+" williamboman/mason.nvim
+lua require("mason").setup()
+" Automatically install lsp configured servers(it needs to be setup before lsp-config)
+lua require("mason-lspconfig").setup({automatic_installation=true})
+
 " neovim/nvim-lspconfig
 lua require('mylspconfig')
-" Needed:
-" npm i -g typescript typescript-language-server
-" npm i -g pyright
-" sudo pacman -S lua-language-server
-" npm install -g vim-language-server
 
 " hrsh7th/vim-vsnip
-" Expand
-imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-
-" Expand or jump
-imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-
-" Jump forward or backward
-" imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-" smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-" imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-" smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-"
-" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
-" See https://github.com/hrsh7th/vim-vsnip/pull/50
-nmap        s   <Plug>(vsnip-select-text)
-xmap        s   <Plug>(vsnip-select-text)
-nmap        S   <Plug>(vsnip-cut-text)
-xmap        S   <Plug>(vsnip-cut-text)
-
 " If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
 let g:vsnip_filetypes = {}
 let g:vsnip_filetypes.javascriptreact = ['javascript']
@@ -338,7 +306,7 @@ lua << EOF
     },
   }
 EOF
-map <C-n> :NvimTreeToggle<CR>
+" map <C-n> :NvimTreeToggle<CR>
 
 " rcarriga/nvim-notify
 lua << EOF
@@ -360,7 +328,6 @@ lua << EOF
     notify(msg, ...)
   end
 EOF
-
 
 " lewis6991/gitsigns.nvim
 lua << EOF
@@ -525,9 +492,6 @@ lua require("telescope").load_extension("ui-select")
 
 " norcalli/nvim-colorizer.lua
 lua require'colorizer'.setup()
-
-" williamboman/mason.nvim
-lua require("mason").setup()
 
 " numToStr/Comment.nvim
 lua << EOF
