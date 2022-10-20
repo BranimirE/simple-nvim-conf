@@ -1,3 +1,4 @@
+lua require('mysettings')
 call plug#begin()
 
 " Theme
