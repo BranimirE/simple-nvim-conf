@@ -19,7 +19,7 @@ Plug 'NvChad/ui'
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
 
-" Auto pairs 
+" Auto pairs
 Plug 'windwp/nvim-autopairs'
 
 " Language-Server-Protocol(LSP) completion plugins
@@ -708,7 +708,6 @@ highlight SignColumn guibg=NONE
 "hi Whitespace guifg=#000000
 set list listchars+=tab:→\ ,trail:•
 set list
-
 
 lua require('mymappings')
 
