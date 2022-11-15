@@ -8,7 +8,9 @@ local my_lsp_servers = {
   'cssls',
   'cssmodules_ls',
   'clangd',
-  'yamlls'
+  'yamlls',
+  'html',
+  'sqlls'
 }
 
 -- ######################## BEGIN LSPCONFIG ######################## 
@@ -155,6 +157,7 @@ cmp.event:on(
 -- Setup lspconfig.
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- ######################## END COMPLETITION CONFIG ######################## 
 
@@ -225,6 +228,13 @@ local my_lsp_server_config = {
         },
       },
     }
+  },
+  tsserver = {
+    capabilities = capabilities,
+    on_attach = function(client)
+        -- client.resolved_capabilities.document_formatting = false
+        client.server_capabilities.documentFormattingProvider = false
+    end,
   }
 }
 
@@ -314,3 +324,16 @@ keymap("n", "<A-d>", "<cmd>Lspsaga open_floaterm<CR>", { silent = true })
 keymap("t", "<A-d>", [[<C-\><C-n><cmd>Lspsaga close_floaterm<CR>]], { silent = true })
 
 -- ######################## END LSP SAGA CONFIG ######################## 
+
+-- ######################## BEGIN NULL-LS CONFIG ######################## 
+require("null-ls").setup({
+  sources = {
+    require("null-ls").builtins.formatting.prettier,
+    -- require("null-ls").builtins.formatting.shfmt.with({ -- shell script formatting
+    --   extra_args = function(params)
+    --     return { "-i", vim.api.nvim_buf_get_option(params.bufnr, "shiftwidth") }
+    --   end,
+    -- })
+  },
+})
+-- ######################## END NULL-LS CONFIG ######################## 

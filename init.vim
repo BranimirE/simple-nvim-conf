@@ -91,6 +91,9 @@ Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 " Git plugin
 Plug 'tpope/vim-fugitive'
 
+" Null-ls
+Plug 'jose-elias-alvarez/null-ls.nvim'
+
 call plug#end()
 
 " Set space as Leader key
@@ -707,3 +710,6 @@ set list
 
 
 lua require('mymappings')
+
+au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks	setf sql
+
