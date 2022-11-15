@@ -53,6 +53,4 @@ vim.keymap.set({'i', 'n', 'v'}, '<A-9>', M.go_to_buffer_fun(-1))
 
 vim.keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
 
-
-
 return M
