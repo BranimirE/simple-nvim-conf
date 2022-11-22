@@ -42,15 +42,18 @@ function M.go_to_buffer_fun(destination)
 end
 
 -- MAPPINGS --
+local keymap = vim.keymap
 
-vim.keymap.set({'i', 's'}, '<Tab>', M.smart_tab)
-vim.keymap.set({'i', 's'}, '<S-Tab>', M.shift_smart_tab)
+keymap.set('i', 'jk', '<esc>') -- Press jk to go normal mode in insert mode
+keymap.set({'i', 's'}, '<Tab>', M.smart_tab)
+keymap.set({'i', 's'}, '<S-Tab>', M.shift_smart_tab)
+keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
+keymap.set('n', '<leader>bd', '<esc>:bd<cr>')
 
+-- Change current buffer
 for index = 1,8 do
-  vim.keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', M.go_to_buffer_fun(index))
+  keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', M.go_to_buffer_fun(index))
 end
-vim.keymap.set({'i', 'n', 'v'}, '<A-9>', M.go_to_buffer_fun(-1))
-
-vim.keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
+keymap.set({'i', 'n', 'v'}, '<A-9>', M.go_to_buffer_fun(-1))
 
 return M

@@ -91,13 +91,13 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<Esc>'] = cmp.mapping(function (fallback)
-      if cmp.visible() then
-        cmp.abort()
-      else
-        fallback()
-      end
-    end, {'i', 's'}),
+    -- ['<Esc>'] = cmp.mapping(function (fallback)
+    --   if cmp.visible() then
+    --     cmp.abort()
+    --   else
+    --     fallback()
+    --   end
+    -- end, {'i', 's'}),
     ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   }),
   sources = cmp.config.sources({
@@ -325,15 +325,19 @@ keymap("t", "<A-d>", [[<C-\><C-n><cmd>Lspsaga close_floaterm<CR>]], { silent = t
 
 -- ######################## END LSP SAGA CONFIG ######################## 
 
--- ######################## BEGIN NULL-LS CONFIG ######################## 
-require("null-ls").setup({
+-- ######################## BEGIN NULL-LS CONFIG ########################
+local setup, null_ls = pcall(require, 'null-ls')
+if not setup then
+  return
+end
+
+local formatting = null_ls.builtins.formatting
+-- local diagnostic = null_ls.builtins.diagnostics
+
+null_ls.setup({
   sources = {
-    require("null-ls").builtins.formatting.prettier,
-    -- require("null-ls").builtins.formatting.shfmt.with({ -- shell script formatting
-    --   extra_args = function(params)
-    --     return { "-i", vim.api.nvim_buf_get_option(params.bufnr, "shiftwidth") }
-    --   end,
-    -- })
-  },
+    formatting.prettier
+  }
 })
+
 -- ######################## END NULL-LS CONFIG ######################## 

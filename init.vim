@@ -76,6 +76,10 @@ Plug 'tpope/vim-sleuth'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 
+" Formatters and linting
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jayp0521/mason-null-ls.nvim'
+
 " context_commentstring
 Plug 'numToStr/Comment.nvim'
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
@@ -91,9 +95,6 @@ Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 
 " Git plugin
 Plug 'tpope/vim-fugitive'
-
-" Null-ls
-Plug 'jose-elias-alvarez/null-ls.nvim'
 
 call plug#end()
 
@@ -224,6 +225,12 @@ EOF
 lua require("mason").setup()
 " Automatically install lsp configured servers(it needs to be setup before lsp-config)
 lua require("mason-lspconfig").setup({automatic_installation=true})
+
+lua << EOF
+  require("mason-null-ls").setup({
+    ensure_installed = {'prettier'}
+  })
+EOF
 
 " neovim/nvim-lspconfig
 lua require('mylspconfig')
@@ -712,4 +719,3 @@ set list
 lua require('mymappings')
 
 au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks	setf sql
-
