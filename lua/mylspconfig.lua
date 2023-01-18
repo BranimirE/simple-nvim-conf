@@ -210,8 +210,11 @@ local my_lsp_server_config = {
           "!fn",
           "!And",
           "!If",
+          "!If sequence",
           "!Not",
+          "!Not sequence",
           "!Equals",
+          "!Equals sequence",
           "!Or",
           "!FindInMap sequence",
           "!Base64",
@@ -269,9 +272,8 @@ vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312
 
 -- ######################## BEGIN LSP SAGA CONFIG ######################## 
 local keymap = vim.keymap.set
-local saga = require('lspsaga')
+require('lspsaga').setup({})
 
-saga.init_lsp_saga()
 
 -- Lsp finder find the symbol definition implement reference
 -- when you use action in finder like open vsplit then you can
