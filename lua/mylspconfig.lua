@@ -272,7 +272,12 @@ vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312
 
 -- ######################## BEGIN LSP SAGA CONFIG ######################## 
 local keymap = vim.keymap.set
-require('lspsaga').setup({})
+require('lspsaga').setup({
+  ui = {
+    title = false,
+    border = 'solid'
+  }
+})
 
 
 -- Lsp finder find the symbol definition implement reference
@@ -280,6 +285,7 @@ require('lspsaga').setup({})
 -- use <C-t> to jump back
 -- keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { silent = true })
 
+-- FROM HERE --
 -- Code action
 keymap("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { silent = true })
 keymap("v", "<leader>ca", "<cmd>Lspsaga range_code_action<CR>", { silent = true })
