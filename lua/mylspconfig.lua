@@ -222,6 +222,7 @@ local my_lsp_server_config = {
           "!Ref",
           "!Ref Scalar",
           "!Sub",
+          "!Sub sequence",
           "!GetAtt",
           "!GetAZs",
           "!ImportValue",
@@ -274,9 +275,16 @@ vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312
 local keymap = vim.keymap.set
 require('lspsaga').setup({
   ui = {
-    title = false,
-    border = 'solid'
-  }
+    title = true,
+    -- border = 'solid'
+  },
+  lightbulb = {
+    enable = true,
+    enable_in_insert = true,
+    sign = false,
+    sign_priority = 40,
+    virtual_text = true,
+  },
 })
 
 
