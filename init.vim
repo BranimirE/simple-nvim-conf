@@ -3,18 +3,20 @@ call plug#begin()
 
 " Theme
 "Plug 'ayu-theme/ayu-vim'
-"Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'folke/gcctokyonight.nvim', { 'branch': 'main' }
 "Plug 'ful1e5/onedark.nvim'
 "Plug 'olimorris/onedarkpro.nvim' 
-Plug 'cpea2506/one_monokai.nvim'
+" Plug 'cpea2506/one_monokai.nvim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 " Tabline
-Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+Plug 'crispgm/nvim-tabline'
+" Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
 " NvChad's status line
-Plug 'NvChad/NvChad'
-Plug 'NvChad/base46'
-Plug 'NvChad/ui'
+" Plug 'NvChad/NvChad'
+" Plug 'NvChad/base46'
+" Plug 'NvChad/ui'
 
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
@@ -91,7 +93,7 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'lukas-reineke/indent-blankline.nvim'
 
 " Add extra functionality to LSP
-Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+" Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 
 " Git plugin
 Plug 'tpope/vim-fugitive'
@@ -142,75 +144,87 @@ set fillchars+=eob:\
 set termguicolors
 
 " akinsho/bufferline.nvim
+" lua << EOF
+"   require("bufferline").setup {
+"     options = {
+"       --mode = "tabs",
+"       -- numbers = "ordinal",
+"       color_icons = true,
+"       --separator_style = "slant",
+"       always_show_bufferline = false,
+"       offsets = {
+"         {
+"           filetype = "NvimTree",
+"         }
+"       }
+"     }
+"   }
+" EOF
+
+" crispgm/nvim-tabline
 lua << EOF
-  require("bufferline").setup {
-    options = {
-      --mode = "tabs",
-      numbers = "ordinal",
-      color_icons = true,
-      --separator_style = "slant",
-      always_show_bufferline = false,
-      offsets = {
-        {
-          filetype = "NvimTree"
-        }
-      }
-    }
-  }
+  require('tabline').setup({
+      show_index = false,        -- show tab index
+      show_modify = true,       -- show buffer modification indicator
+      show_icon = true,        -- show file extension icon
+      modify_indicator = 'M', -- modify indicator
+      no_name = 'No name',      -- no name buffer name
+      brackets = { '', '' },  -- file name brackets surrounding
+  })
 EOF
 
-lua << EOF
-require("one_monokai").setup({
-  use_cmd = true,
-  transparent = true,
-  colors = {
-    gray = "#676e7b",
-    --pink = "#e06c75",
-    pink = "#F92672",
-    --green = "#98c379",
-    green = "#A6E22E",
-    --cyan = "#56b6c2",
-    cyan = "#00afff",
-    aqua = "#61afef",
-    --yellow = "#e5c07b",
-    yellow = "#E6DB74",
-    --purple = "#c678dd",
-    purple = "#AE81FF",
-    peanut = "#f6d5a4",
-    --orange = "#d19a66",
-    orange = "#FD971F",
-    none = "NONE",
 
-    -- support colors
-    red = "#ff0000",
-    --white = "#d7d7ff",
-    white = "#ffffff",
-    light_gray = "#9ca3b2",
-    dark_gray = "#4b5261",
-    --vulcan = "#383a3e",
-    vulcan = "#080a0e",
-    dark_green = "#2d2e27",
-    dark_blue = "#26292f",
-    black = "#1e2024",
-  }
-})
-EOF
+" lua << EOF
+" require("one_monokai").setup({
+"   use_cmd = true,
+"   transparent = true,
+"   colors = {
+"     gray = "#676e7b",
+"     --pink = "#e06c75",
+"     pink = "#F92672",
+"     --green = "#98c379",
+"     green = "#A6E22E",
+"     --cyan = "#56b6c2",
+"     cyan = "#00afff",
+"     aqua = "#61afef",
+"     --yellow = "#e5c07b",
+"     yellow = "#E6DB74",
+"     --purple = "#c678dd",
+"     purple = "#AE81FF",
+"     peanut = "#f6d5a4",
+"     --orange = "#d19a66",
+"     orange = "#FD971F",
+"     none = "NONE",
+"
+"     -- support colors
+"     red = "#ff0000",
+"     --white = "#d7d7ff",
+"     white = "#ffffff",
+"     light_gray = "#9ca3b2",
+"     dark_gray = "#4b5261",
+"     --vulcan = "#383a3e",
+"     vulcan = "#080a0e",
+"     dark_green = "#2d2e27",
+"     dark_blue = "#26292f",
+"     black = "#1e2024",
+"   }
+" })
+" EOF
 
 " NvChad/base46 && NvChad/ui
 lua << EOF
-  --vim.g.nvchad_theme = "onedark"
-  vim.g.nvchad_theme = "ayu-dark"
-  --require("base46").load_theme()
-  require("base46").load_highlight("statusline")
+  -- vim.g.nvchad_theme = "onedark"
+  -- vim.g.nvchad_theme = "radium"
+  -- require("base46").load_theme()
+  -- require("base46").load_highlight("statusline")
 
-  function _G.nvchadstatusline()
-    return require("nvchad_ui.statusline").run({
-      separator_style = "default", -- default/round/block/arrow
-      --overriden_modules = nil,
-    })
-  end
-  vim.opt.statusline = "%!v:lua.nvchadstatusline()"
-  vim.opt.laststatus = 3 -- show only a global statusline
+  -- function _G.nvchadstatusline()
+  --   return require("nvchad_ui.statusline").run({
+  --     separator_style = "default", -- default/round/block/arrow
+  --   })
+  -- end
+  -- vim.opt.statusline = "%!v:lua.nvchadstatusline()"
+  -- vim.opt.laststatus = 3 -- show only a global statusline
 EOF
 
 " windwp/nvim-autopairs
@@ -297,7 +311,8 @@ lua << EOF
       mappings = {
         custom_only = false,
         list = {
-          { key = {"l", "<CR>", "o"}, cb = tree_cb "edit" },
+          { key = "o", cb = tree_cb "tabnew" },
+          { key = {"l", "<CR>"}, cb = tree_cb "edit" },
           { key = "h", cb = tree_cb "close_node" },
           { key = "v", cb = tree_cb "vsplit" },
         }
@@ -634,7 +649,7 @@ EOF
 
 
 " lukas-reineke/indent-blankline.nvim
-" let g:indent_blankline_char = ''
+let g:indent_blankline_char = '▏'
 lua << EOF
 require("indent_blankline").setup {
   -- for example, context is off by default, use this to turn it on
@@ -659,8 +674,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 EOF
-highlight IndentBlanklineContextChar guifg=#2f2f2f gui=nocombine
-highlight IndentBlanklineChar guifg=#101010  gui=nocombine
+" highlight IndentBlanklineContextChar guifg=#2f2f2f gui=nocombine
+" highlight IndentBlanklineChar guifg=#101010  gui=nocombine
 
 "Remove Alacritty padding when nvim is opened
 lua << EOF
@@ -686,17 +701,17 @@ EOF
 " hi Normal guibg=NONE ctermbg=NONE
 
 " Change split lines color
-hi VertSplit guifg=#00afff
+" hi VertSplit guifg=#00afff
 
 " Use blue colors in NvimTree
-hi NvimTreeEmptyFolderName guifg=#00afff
-hi NvimTreeFolderIcon guifg=#00afff
-hi NvimTreeFolderName guifg=#00afff
-hi NvimTreeOpenedFolderName guifg=#00afff
-
+" hi NvimTreeEmptyFolderName guifg=#00afff
+" hi NvimTreeFolderIcon guifg=#00afff
+" hi NvimTreeFolderName guifg=#00afff
+" hi NvimTreeOpenedFolderName guifg=#00afff
+"
 " Overwrite base46 colors for statusline
-hi St_NormalMode guibg=#00afff
-hi St_NormalModeSep guifg=#00afff
+" hi St_NormalMode guibg=#00afff
+" hi St_NormalModeSep guifg=#00afff
 
 "set statusline+=%{get(b:,'vgit_status','')}
 
@@ -707,15 +722,18 @@ hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34
 "hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
 "hi GitSignsDeleteNr gui=bold guibg=NONE ctermbg=NONE
 "hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
-highlight SignColumn guibg=NONE
+
+" highlight SignColumn guibg=NONE
 
 " Show tabs and trailing spaces as visible characters
 "set showbreak=↪
 "set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨,space:•
 "hi Whitespace guifg=#000000
 set list listchars+=tab:→\ ,trail:•
-set list
+" set list
 
 lua require('mymappings')
 
-au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks	setf sql
+au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks setf sql
+
+colorscheme tokyonight-night

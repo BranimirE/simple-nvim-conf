@@ -33,14 +33,6 @@ function M.shift_smart_tab()
   end
 end
 
-local bufferline = require("bufferline")
-
-function M.go_to_buffer_fun(destination)
-  return function ()
-    bufferline.go_to_buffer(destination, true)
-  end
-end
-
 -- MAPPINGS --
 local keymap = vim.keymap
 
@@ -50,10 +42,10 @@ keymap.set({'i', 's'}, '<S-Tab>', M.shift_smart_tab)
 keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
 keymap.set('n', '<leader>bd', '<esc>:bd<cr>')
 
--- Change current buffer
+-- Change current tabpage
 for index = 1,8 do
-  keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', M.go_to_buffer_fun(index))
+  keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', '<esc>'..index..'gt')
 end
-keymap.set({'i', 'n', 'v'}, '<A-9>', M.go_to_buffer_fun(-1))
+keymap.set({'i', 'n', 'v'}, '<A-9>', '<esc>:tablast<cr>')
 
 return M
