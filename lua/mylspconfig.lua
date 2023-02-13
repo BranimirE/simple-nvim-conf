@@ -1,5 +1,5 @@
 local my_lsp_servers = {
-  'sumneko_lua',
+  'lua_ls',
   'tsserver',
   'bashls',
   'pyright',
@@ -170,7 +170,8 @@ local lsp_flags = {
 local lspconfig = require('lspconfig');
 
 local my_lsp_server_config = {
-  sumneko_lua = {
+  -- sumneko_lua = {
+  lua_ls = {
     on_attach = on_attach,
     capabilities = capabilities,
     flags = lsp_flags,
