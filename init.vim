@@ -10,7 +10,8 @@ call plug#begin()
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 " Tabline
-Plug 'crispgm/nvim-tabline'
+Plug 'BranimirE/nvim-tabline'
+
 " Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
 " NvChad's status line
@@ -161,7 +162,7 @@ set termguicolors
 "   }
 " EOF
 
-" crispgm/nvim-tabline
+" BranimirE/nvim-tabline
 lua << EOF
   require('tabline').setup({
       show_index = false,        -- show tab index
@@ -170,6 +171,7 @@ lua << EOF
       modify_indicator = 'M', -- modify indicator
       no_name = 'No name',      -- no name buffer name
       brackets = { '', '' },  -- file name brackets surrounding
+      nvimtree_side = 'left', -- nvimtree integration
   })
 EOF
 
