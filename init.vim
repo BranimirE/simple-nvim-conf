@@ -9,11 +9,6 @@ call plug#begin()
 " Plug 'cpea2506/one_monokai.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
-" Tabline
-Plug 'BranimirE/nvim-tabline'
-
-" Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
-
 " NvChad's status line
 " Plug 'NvChad/NvChad'
 " Plug 'NvChad/base46'
@@ -21,6 +16,10 @@ Plug 'BranimirE/nvim-tabline'
 
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
+
+" Tabline
+" Plug 'BranimirE/nvim-tabline'
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
 " Auto pairs
 Plug 'windwp/nvim-autopairs'
@@ -94,7 +93,7 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'lukas-reineke/indent-blankline.nvim'
 
 " Add extra functionality to LSP
-" Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 
 " Git plugin
 Plug 'tpope/vim-fugitive'
@@ -145,35 +144,53 @@ set fillchars+=eob:\
 set termguicolors
 
 " akinsho/bufferline.nvim
-" lua << EOF
-"   require("bufferline").setup {
-"     options = {
-"       --mode = "tabs",
-"       -- numbers = "ordinal",
-"       color_icons = true,
-"       --separator_style = "slant",
-"       always_show_bufferline = false,
-"       offsets = {
-"         {
-"           filetype = "NvimTree",
-"         }
-"       }
-"     }
-"   }
-" EOF
-
-" BranimirE/nvim-tabline
 lua << EOF
-  require('tabline').setup({
-      show_index = false,        -- show tab index
-      show_modify = true,       -- show buffer modification indicator
-      show_icon = true,        -- show file extension icon
-      modify_indicator = 'M', -- modify indicator
-      no_name = 'No name',      -- no name buffer name
-      brackets = { '', '' },  -- file name brackets surrounding
-      nvimtree_side = 'left', -- nvimtree integration
-  })
+  require("bufferline").setup {
+    options = {
+      -- mode = "tabs",
+      -- numbers = "ordinal",
+      color_icons = true,
+      -- separator_style = "slant",
+      separator_style = {"", ""},
+      indicator = {
+        style = 'none'
+      },
+      always_show_bufferline = false,
+      offsets = {
+        {
+          filetype = "NvimTree",
+          padding = 1 -- For some reason it is not calculating the value correctly, this fix it
+        },
+      },
+      hover = {
+        enabled = true,
+        delay = 200,
+        reveal = {'close'}
+      }
+    },
+    highlights = {
+      buffer_selected = {
+        fg = "#DDDDDD",
+      },
+      -- close_button_selected = {
+      --   fg = "#EEEEEE",
+      -- }
+    }
+  }
 EOF
+
+" " BranimirE/nvim-tabline
+" lua << EOF
+"   require('tabline').setup({
+"       show_index = false,        -- show tab index
+"       show_modify = true,       -- show buffer modification indicator
+"       show_icon = true,        -- show file extension icon
+"       modify_indicator = 'M', -- modify indicator
+"       no_name = 'No name',      -- no name buffer name
+"       brackets = { '', '' },  -- file name brackets surrounding
+"       nvimtree_side = 'left', -- nvimtree integration
+"   })
+" EOF
 
 
 " lua << EOF
@@ -361,11 +378,13 @@ EOF
 lua << EOF
 require('gitsigns').setup {
   signs = {
-    add = { hl = 'GitSignsAdd', text = '│', numhl = 'GitSignsAddNr' },
-    change = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr' },
-    delete = { hl = 'GitSignsDelete', text = '_', numhl = 'GitSignsDeleteNr' },
-    topdelete = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr' },
-    changedelete = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr' },
+    add = { hl = 'GitSignsAdd', text = '▌', numhl = 'GitSignsAddNr' },
+    change = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
+    delete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
+    -- delete = { hl = 'GitSignsDelete', text = '▌_', numhl = 'GitSignsDeleteNr' },
+    topdelete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
+    -- topdelete = { hl = 'GitSignsDelete', text = '▌‾', numhl = 'GitSignsDeleteNr' },
+    changedelete = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
   },
   signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
   current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`

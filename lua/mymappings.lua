@@ -44,8 +44,8 @@ keymap.set('n', '<leader>bd', '<esc>:bd<cr>')
 
 -- Change current tabpage
 for index = 1,8 do
-  keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', '<esc>'..index..'gt')
+  keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', '<Cmd>BufferLineGoToBuffer '..index..'<CR>')
 end
-keymap.set({'i', 'n', 'v'}, '<A-9>', '<esc>:tablast<cr>')
+keymap.set({'i', 'n', 'v'}, '<A-9>', '<Cmd>BufferLineGoToBuffer -1<CR>')
 
 return M
