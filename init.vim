@@ -10,6 +10,7 @@ call plug#begin()
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 " NvChad's status line
+Plug 'nvim-lualine/lualine.nvim'
 " Plug 'NvChad/NvChad'
 " Plug 'NvChad/base46'
 " Plug 'NvChad/ui'
@@ -246,6 +247,10 @@ lua << EOF
   -- vim.opt.laststatus = 3 -- show only a global statusline
 EOF
 
+
+" nvim-lualine/lualine.nvim
+lua require('myconfig/evil_lualine')
+
 " windwp/nvim-autopairs
 lua << EOF
   require("nvim-autopairs").setup {
@@ -330,8 +335,7 @@ lua << EOF
       mappings = {
         custom_only = false,
         list = {
-          { key = "o", cb = tree_cb "tabnew" },
-          { key = {"l", "<CR>"}, cb = tree_cb "edit" },
+          { key = {"l", "<CR>", "o"}, cb = tree_cb "edit" },
           { key = "h", cb = tree_cb "close_node" },
           { key = "v", cb = tree_cb "vsplit" },
         }
@@ -725,10 +729,10 @@ EOF
 " hi VertSplit guifg=#00afff
 
 " Use blue colors in NvimTree
-" hi NvimTreeEmptyFolderName guifg=#00afff
-" hi NvimTreeFolderIcon guifg=#00afff
-" hi NvimTreeFolderName guifg=#00afff
-" hi NvimTreeOpenedFolderName guifg=#00afff
+hi NvimTreeEmptyFolderName guifg=#00afff
+hi NvimTreeFolderIcon guifg=#00afff
+hi NvimTreeFolderName guifg=#00afff
+hi NvimTreeOpenedFolderName guifg=#00afff
 "
 " Overwrite base46 colors for statusline
 " hi St_NormalMode guibg=#00afff
