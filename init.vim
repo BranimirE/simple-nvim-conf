@@ -17,7 +17,7 @@ Plug 'nvim-lualine/lualine.nvim'
 
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
-
+Plug 'onsails/lspkind.nvim'
 " Tabline
 " Plug 'BranimirE/nvim-tabline'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
