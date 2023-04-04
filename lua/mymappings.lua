@@ -54,4 +54,12 @@ keymap.set('v', '<leader>fg', function()
   require('telescope.builtin').live_grep({ default_text = text })
 end, { noremap = true, silent = true })
 
+-- Auto search last nvim searched string with / when telescope live grep is opened
+keymap.set('n', '<leader>fg', function()
+  local text = require('myutils').getLastSearch()
+  -- Hide current highlighted search(if it exists)
+  vim.cmd(M.t('normal <C-l>'))
+  require('telescope.builtin').live_grep({ default_text = text })
+end, { noremap = true, silent = true })
+
 return M

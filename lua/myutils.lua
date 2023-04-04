@@ -14,4 +14,18 @@ function M.getVisualSelection()
   end
 end
 
+function M.getLastSearch()
+  local text = vim.fn.histget('/')
+
+  if #text > 3 and text:find("^\\<.*\\>$") then
+    text = text:sub(3, -3)
+  end
+
+  if #text > 0 then
+    return text
+  else
+    return ''
+  end
+end
+
 return M
