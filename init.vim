@@ -129,7 +129,7 @@ set showmatch
 "set sw=2
 
 "as we are going to install a pluging we dont need to show the mode
-set noshowmode
+" set noshowmode
 
 "highlight the current line
 set cursorline

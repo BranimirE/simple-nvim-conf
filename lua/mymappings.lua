@@ -48,4 +48,10 @@ for index = 1,8 do
 end
 keymap.set({'i', 'n', 'v'}, '<A-9>', '<Cmd>BufferLineGoToBuffer -1<CR>')
 
+-- Auto search selected text in visual mode if telescope live grep is opened
+keymap.set('v', '<leader>fg', function()
+  local text = require('myutils').getVisualSelection()
+  require('telescope.builtin').live_grep({ default_text = text })
+end, { noremap = true, silent = true })
+
 return M
