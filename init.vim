@@ -281,80 +281,79 @@ let g:vsnip_filetypes.typescriptreact = ['typescript']
 
 " kyazdani42/nvim-tree.lua
 lua << EOF
-  -- https://github.com/kyazdani42/nvim-tree.lua/issues/674
-  local tree_cb = require'nvim-tree.config'.nvim_tree_callback
-  require("nvim-tree").setup {
-    hijack_cursor = true,
-    update_cwd = true,
-    update_focused_file = {
-      enable = true,
-      update_cwd = false,
-    },
-    renderer = {
-      highlight_git = false,
-      highlight_opened_files = "all",
-      indent_markers = {
-        enable = true
-      },
-      icons = {
-        git_placement = "after",
-        show = {
-          file = true,
-          folder = true,
-          folder_arrow = false, 
-          git = false,
-        },
-        glyphs = {
-          default = "",
-          symlink = "",
-          --folder = {
-          --  --arrow_open = "ﯰ",
-          --  --arrow_open = "",
-          --  --arrow_closed = "ﰂ",
-          --  --arrow_closed = "樂",
-          --},
-          --git = {
-          --  unstaged = "✗",
-          --  staged = "✓",
-          --  unmerged = "",
-          --  renamed = "➜",
-          --  untracked = "★",
-          --  deleted = "",
-          --  ignored = "◌",
-          --},
-        },
-      },
-    },
-    git = {
-      ignore = false -- hide files/dirs in gitignore?
-    },
-    diagnostics = {
+require("nvim-tree").setup({
+  on_attach = function(bufnr)
+    local api = require('nvim-tree.api')
+
+    local function opts(desc)
+      return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+
+    -- BEGIN_DEFAULT_ON_ATTACH
+    api.config.mappings.default_on_attach(bufnr)
+    -- END_DEFAULT_ON_ATTACH
+
+    vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
+    vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+    vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
+    vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close Directory'))
+    vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+  end,
+  renderer = {
+    root_folder_label = false,
+    highlight_opened_files = 'all',
+    -- show indent lines(vertical lines)
+    indent_markers = {
       enable = true,
     },
-    view = {
-      mappings = {
-        custom_only = false,
-        list = {
-          { key = {"l", "<CR>", "o"}, cb = tree_cb "edit" },
-          { key = "h", cb = tree_cb "close_node" },
-          { key = "v", cb = tree_cb "vsplit" },
-        }
-      },
-      adaptive_size = true,
-      side = "left",
-      width = 25,
-      hide_root_folder = true,
-    },
-    filesystem_watchers = {
-      enable = true,
-    },
-    actions = {
-      open_file = {
-        resize_window = true,
+    icons = {
+      -- position files' git status icon
+      git_placement = "after",
+      show = {
+        folder_arrow = false, 
+        -- show files' git status icons
+        git = true,
       },
     },
-  }
+  },
+  -- highlight current opened file when we change the focus
+  update_focused_file = {
+    enable = true,
+  },
+  -- maintain cursor on the first letter of the file name
+  hijack_cursor = true,
+  git = {
+    ignore = false -- hide files/dirs in gitignore?
+  },
+})
 EOF
+" Not migrated configs. TODO: Review them
+" lua << EOF
+"   -- https://github.com/kyazdani42/nvim-tree.lua/issues/674
+"   local tree_cb = require'nvim-tree.config'.nvim_tree_callback
+"   require("nvim-tree").setup {
+"     renderer = {
+"       highlight_git = false,
+"     },
+"     diagnostics = {
+"       enable = true,
+"     },
+"     view = {
+"       adaptive_size = true,
+"       side = "left",
+"       width = 25,
+"       hide_root_folder = true,
+"     },
+"     filesystem_watchers = {
+"       enable = true,
+"     },
+"     actions = {
+"       open_file = {
+"         resize_window = true,
+"       },
+"     },
+"   }
+" EOF
 " map <C-n> :NvimTreeToggle<CR>
 
 " rcarriga/nvim-notify
