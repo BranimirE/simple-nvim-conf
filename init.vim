@@ -20,7 +20,8 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'onsails/lspkind.nvim'
 " Tabline
 " Plug 'BranimirE/nvim-tabline'
-Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+" Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+Plug 'akinsho/bufferline.nvim'
 
 " Auto pairs
 Plug 'windwp/nvim-autopairs'
