@@ -68,7 +68,8 @@ local config = {
     lualine_c = {},
     lualine_x = {},
   },
-  extensions = {'quickfix', 'nvim-tree'},
+  -- extensions = {'quickfix', 'nvim-tree'},
+  extensions = {'nvim-tree'},
 }
 
 -- Inserts a component in lualine_c at left section
