@@ -7,7 +7,8 @@ call plug#begin()
 "Plug 'ful1e5/onedark.nvim'
 "Plug 'olimorris/onedarkpro.nvim' 
 " Plug 'cpea2506/one_monokai.nvim'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " NvChad's status line
 Plug 'nvim-lualine/lualine.nvim'
@@ -602,14 +603,13 @@ EOF
 " Remove background colors
 " hi Normal guibg=NONE ctermbg=NONE
 
-" Change split lines color
-" hi VertSplit guifg=#00afff
 
 " Use blue colors in NvimTree
-hi NvimTreeEmptyFolderName guifg=#00afff
-hi NvimTreeFolderIcon guifg=#00afff
-hi NvimTreeFolderName guifg=#00afff
-hi NvimTreeOpenedFolderName guifg=#00afff
+" hi NvimTreeEmptyFolderName guifg=#00afff
+" hi NvimTreeFolderIcon guifg=#00afff
+" hi NvimTreeFolderName guifg=#00afff
+" hi NvimTreeOpenedFolderName guifg=#00afff
+"
 "
 " Overwrite base46 colors for statusline
 " hi St_NormalMode guibg=#00afff
@@ -636,4 +636,16 @@ lua require('mymappings')
 
 au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks setf sql
 
-colorscheme tokyonight-night
+lua << EOF
+require("catppuccin").setup({
+  transparent_background = true,
+  integrations = {
+  }
+})
+EOF
+
+" colorscheme tokyonight-night
+colorscheme catppuccin-macchiato
+
+" Change split lines color
+" hi VertSplit guifg=#00afff
