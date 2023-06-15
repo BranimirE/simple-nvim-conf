@@ -58,8 +58,11 @@ end, { noremap = true, silent = true })
 keymap.set('n', '<leader>fg', function()
   local text = require('myutils').getLastSearch()
   -- Hide current highlighted search(if it exists)
-  vim.cmd(M.t('normal <C-l>'))
+  vim.cmd(M.t('nohlsearch'))
   require('telescope.builtin').live_grep({ default_text = text })
 end, { noremap = true, silent = true })
+
+-- As we are using Ctrl+l to move to the right panel, we are remapping its functionality to ','
+keymap.set('n', ',', '<Cmd>nohlsearch<CR>')
 
 return M
