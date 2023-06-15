@@ -7,8 +7,8 @@ call plug#begin()
 "Plug 'ful1e5/onedark.nvim'
 "Plug 'olimorris/onedarkpro.nvim' 
 " Plug 'cpea2506/one_monokai.nvim'
-" Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " NvChad's status line
 Plug 'nvim-lualine/lualine.nvim'
@@ -100,6 +100,9 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 
 " Git plugin
+" Adds some useful commands to neovim, like:
+"   :Git blame
+"
 Plug 'tpope/vim-fugitive'
 
 call plug#end()
@@ -636,16 +639,16 @@ lua require('mymappings')
 
 au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks setf sql
 
-lua << EOF
-require("catppuccin").setup({
-  transparent_background = true,
-  integrations = {
-  }
-})
-EOF
+" lua << EOF
+" require("catppuccin").setup({
+"   transparent_background = true,
+"   integrations = {
+"   }
+" })
+" EOF
 
-" colorscheme tokyonight-night
-colorscheme catppuccin-macchiato
+colorscheme tokyonight-night
+" colorscheme catppuccin-mocha
 
 " Change split lines color
 " hi VertSplit guifg=#00afff
