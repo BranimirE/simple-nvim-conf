@@ -105,6 +105,9 @@ Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 "
 Plug 'tpope/vim-fugitive'
 
+" tmux change panel integration
+Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 
 " Set space as Leader key
