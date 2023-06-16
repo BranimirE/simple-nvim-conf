@@ -23,7 +23,7 @@ vim.api.nvim_create_autocmd({"BufReadPost", 'FileReadPost'}, {
 })
 
 -- How many columns use to show the folding icons, '0' to disable it
-vim.o.foldcolumn = '1'
+vim.o.foldcolumn = '0'
 vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']]
 vim.o.fillchars = [[fold: ,foldopen:,foldsep: ,foldclose:]]
 

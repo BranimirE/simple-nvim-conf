@@ -101,7 +101,10 @@ let mapleader = "\<Space>"
 "Enable mouse
 set mouse=a
 set clipboard=unnamed
-syntax enable
+" As we are using tree-sitter, it is better to disable default highlighting on
+" nvim
+" syntax enable
+syntax off
 "show the commands that we are writing
 set showcmd
 "show the row and col
