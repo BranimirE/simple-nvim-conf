@@ -2,26 +2,17 @@ lua require('mysettings')
 call plug#begin()
 
 " Theme
-"Plug 'ayu-theme/ayu-vim'
-" Plug 'folke/gcctokyonight.nvim', { 'branch': 'main' }
-"Plug 'ful1e5/onedark.nvim'
-"Plug 'olimorris/onedarkpro.nvim' 
-" Plug 'cpea2506/one_monokai.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 " Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " NvChad's status line
 Plug 'nvim-lualine/lualine.nvim'
-" Plug 'NvChad/NvChad'
-" Plug 'NvChad/base46'
-" Plug 'NvChad/ui'
 
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'onsails/lspkind.nvim'
+
 " Tabline
-" Plug 'BranimirE/nvim-tabline'
-" Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 Plug 'akinsho/bufferline.nvim'
 
 " Auto pairs
@@ -42,9 +33,6 @@ Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 " For snippets
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
-" Plug 'rafamadriz/friendly-snippets'
-
-"Plug 'burkeholland/simple-react-snippets'
 Plug 'dsznajder/vscode-es7-javascript-react-snippets', { 'do': 'yarn install --frozen-lockfile && yarn compile' }
 
 " Navigation Tree
@@ -58,6 +46,7 @@ Plug 'lewis6991/gitsigns.nvim'
 
 " Improve highlighting
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 " Autoclose and autorename tags in html(using treesitter)
 Plug 'windwp/nvim-ts-autotag'
 
@@ -76,7 +65,6 @@ Plug 'norcalli/nvim-colorizer.lua'
 
 " Detect indentation in the file
 Plug 'tpope/vim-sleuth'
-" Plug 'nmac427/guess-indent.nvim'
 
 " (Un)Install language server protocols Automatically
 Plug 'williamboman/mason.nvim'
@@ -90,9 +78,6 @@ Plug 'jayp0521/mason-null-ls.nvim'
 Plug 'numToStr/Comment.nvim'
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 
-" Gitdiff view
-"Plug 'sindrets/diffview.nvim'
-
 " Show indent lines
 Plug 'lukas-reineke/indent-blankline.nvim'
 
@@ -102,7 +87,7 @@ Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 " Git plugin
 " Adds some useful commands to neovim, like:
 "   :Git blame
-"
+"   :Gvdiff
 Plug 'tpope/vim-fugitive'
 
 " tmux change panel integration
@@ -111,13 +96,6 @@ Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 " Set space as Leader key
-"nnoremap <SPACE> <Nop>
-"let mapleader=" "
-"
-"map <Space> <Leader>
-"
-"lua vim.g.mapleader = "<Space>"
-"
 let mapleader = "\<Space>"
 
 "Enable mouse
@@ -189,20 +167,6 @@ lua << EOF
   }
 EOF
 
-" " BranimirE/nvim-tabline
-" lua << EOF
-"   require('tabline').setup({
-"       show_index = false,        -- show tab index
-"       show_modify = true,       -- show buffer modification indicator
-"       show_icon = true,        -- show file extension icon
-"       modify_indicator = 'M', -- modify indicator
-"       no_name = 'No name',      -- no name buffer name
-"       brackets = { '', '' },  -- file name brackets surrounding
-"       nvimtree_side = 'left', -- nvimtree integration
-"   })
-" EOF
-
-
 " lua << EOF
 " require("one_monokai").setup({
 "   use_cmd = true,
@@ -239,23 +203,6 @@ EOF
 "   }
 " })
 " EOF
-
-" NvChad/base46 && NvChad/ui
-lua << EOF
-  -- vim.g.nvchad_theme = "onedark"
-  -- vim.g.nvchad_theme = "radium"
-  -- require("base46").load_theme()
-  -- require("base46").load_highlight("statusline")
-
-  -- function _G.nvchadstatusline()
-  --   return require("nvchad_ui.statusline").run({
-  --     separator_style = "default", -- default/round/block/arrow
-  --   })
-  -- end
-  -- vim.opt.statusline = "%!v:lua.nvchadstatusline()"
-  -- vim.opt.laststatus = 3 -- show only a global statusline
-EOF
-
 
 " nvim-lualine/lualine.nvim
 lua require('myconfig/evil_lualine')
@@ -336,34 +283,6 @@ require("nvim-tree").setup({
   },
 })
 EOF
-" Not migrated configs. TODO: Review them
-" lua << EOF
-"   -- https://github.com/kyazdani42/nvim-tree.lua/issues/674
-"   local tree_cb = require'nvim-tree.config'.nvim_tree_callback
-"   require("nvim-tree").setup {
-"     renderer = {
-"       highlight_git = false,
-"     },
-"     diagnostics = {
-"       enable = true,
-"     },
-"     view = {
-"       adaptive_size = true,
-"       side = "left",
-"       width = 25,
-"       hide_root_folder = true,
-"     },
-"     filesystem_watchers = {
-"       enable = true,
-"     },
-"     actions = {
-"       open_file = {
-"         resize_window = true,
-"       },
-"     },
-"   }
-" EOF
-" map <C-n> :NvimTreeToggle<CR>
 
 " rcarriga/nvim-notify
 lua << EOF
@@ -464,7 +383,6 @@ require('gitsigns').setup {
 EOF
 
 " nvim-treesitter/nvim-treesitter
-
 lua << EOF
   require('nvim-treesitter.configs').setup {
     -- A list of parser names, or "all"
@@ -537,6 +455,7 @@ require("telescope").setup {
   }
 }
 EOF
+
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown({}))<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
@@ -583,45 +502,15 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 EOF
-" highlight IndentBlanklineContextChar guifg=#2f2f2f gui=nocombine
-" highlight IndentBlanklineChar guifg=#101010  gui=nocombine
-
-"Remove Alacritty padding when nvim is opened
-lua << EOF
-  function Sad(line_nr, from, to, fname)
-    vim.cmd(string.format("silent !sed -i '%ss/%s/%s/' %s", line_nr, from, to, fname))
-  end
-
-  function IncreasePadding()
-    Sad('52', 0, 8, '~/.config/alacritty/alacritty.yml')
-    Sad('53', 0, 8, '~/.config/alacritty/alacritty.yml')
-  end
-
-  function DecreasePadding()
-    Sad('52', 8, 0, '~/.config/alacritty/alacritty.yml')
-    Sad('53', 8, 0, '~/.config/alacritty/alacritty.yml')
-  end
-EOF
-
-"autocmd VimEnter * lua DecreasePadding()
-"autocmd VimLeavePre * lua IncreasePadding()
 
 " Remove background colors
 " hi Normal guibg=NONE ctermbg=NONE
-
 
 " Use blue colors in NvimTree
 " hi NvimTreeEmptyFolderName guifg=#00afff
 " hi NvimTreeFolderIcon guifg=#00afff
 " hi NvimTreeFolderName guifg=#00afff
 " hi NvimTreeOpenedFolderName guifg=#00afff
-"
-"
-" Overwrite base46 colors for statusline
-" hi St_NormalMode guibg=#00afff
-" hi St_NormalModeSep guifg=#00afff
-
-hi LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34
 
 "hi GitSignsAddNr    gui=bold guibg=NONE ctermbg=NONE
 "hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE

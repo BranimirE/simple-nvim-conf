@@ -93,13 +93,6 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    -- ['<Esc>'] = cmp.mapping(function (fallback)
-    --   if cmp.visible() then
-    --     cmp.abort()
-    --   else
-    --     fallback()
-    --   end
-    -- end, {'i', 's'}),
     ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   }),
   sources = cmp.config.sources({
@@ -110,26 +103,6 @@ cmp.setup({
     { name = 'buffer' },
     { name = 'nvim_lsp_signature_help' },
   }),
-  -- formatting = {
-  --   format = function(_, vim_item)
-  --     local icons = require("nvchad_ui.icons").lspkind
-  --     vim_item.kind = string.format("%s %s", icons[vim_item.kind], vim_item.kind)
-  --     return vim_item
-  --   end,
-  -- },
-  -- formatting = {
-  --   format = function(entry, vim_item)
-  --     if vim.tbl_contains({ 'path' }, entry.source.name) then
-  --       local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
-  --       if icon then
-  --         vim_item.kind = icon
-  --         vim_item.kind_hl_group = hl_group
-  --         return vim_item
-  --       end
-  --     end
-  --     return require('lspkind').cmp_format({ with_text = false })(entry, vim_item)
-  --   end
-  -- },
   formatting = {
     fields = { "kind", "abbr", "menu" },
     format = function(entry, vim_item)
