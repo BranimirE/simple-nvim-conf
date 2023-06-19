@@ -236,13 +236,18 @@ local my_lsp_server_config = {
   tsserver = {
     capabilities = capabilities,
     on_attach = function(client)
-        -- client.resolved_capabilities.document_formatting = false
-        client.server_capabilities.documentFormattingProvider = false
+      -- Disable annoying convert JS module message
+      require('nvim-lsp-ts-utils').setup({
+          filter_out_diagnostics_by_code = { 80001 },
+      })
+      require('nvim-lsp-ts-utils').setup_client(client)      -- client.resolved_capabilities.document_formatting = false
+
+      client.server_capabilities.documentFormattingProvider = false
     end,
   }
 }
 
-for index, server_name in ipairs(my_lsp_servers) do
+for _, server_name in ipairs(my_lsp_servers) do
   if my_lsp_server_config[server_name] ~= nil then
     lspconfig[server_name].setup(my_lsp_server_config[server_name])
   else

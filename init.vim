@@ -93,6 +93,9 @@ Plug 'tpope/vim-fugitive'
 " tmux change panel integration
 Plug 'christoomey/vim-tmux-navigator'
 
+" to disable annoying "File is a CommonJS module; it may be converted to an ES module."
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+
 call plug#end()
 
 " Set space as Leader key
