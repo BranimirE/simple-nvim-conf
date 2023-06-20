@@ -260,6 +260,7 @@ require("nvim-tree").setup({
     vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
     vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close Directory'))
     vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+    vim.keymap.set('n', 'L', api.node.open.vertical, opts('Open: Vertical Split'))
   end,
   renderer = {
     root_folder_label = false,
