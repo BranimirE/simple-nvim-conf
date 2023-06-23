@@ -97,7 +97,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 
 " Colorize parenthesis pairs with distinct colors
-Plug 'p00f/nvim-ts-rainbow'
+Plug 'HiPhish/nvim-ts-rainbow2'
 
 call plug#end()
 
