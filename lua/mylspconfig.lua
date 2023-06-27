@@ -52,18 +52,6 @@ end
 
 -- ######################## BEGIN COMPLETITION CONFIG ######################## 
 vim.g.completeopt = "menu,menuone,noselect,noinsert"
-local function border(hl_name)
-  return {
-    { "┌", hl_name },
-    { "─", hl_name },
-    { "┐", hl_name },
-    { "│", hl_name },
-    { "┘", hl_name },
-    { "─", hl_name },
-    { "└", hl_name },
-    { "│", hl_name },
-  }
-end
 -- Setup nvim-cmp.
 local cmp = require'cmp'
 
@@ -75,16 +63,12 @@ cmp.setup({
     end,
   },
   window = {
-    --completion = cmp.config.window.bordered(),
     completion = {
-      -- border = border "CmpBorder",
       winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
       col_offset = -3,
       side_padding = 0,
     },
-    --documentation = cmp.config.window.bordered(),
     documentation = {
-      --border = border "CmpDocBorder",
       winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
     },
   },
@@ -352,12 +336,23 @@ end
 
 local formatting = null_ls.builtins.formatting
 -- local diagnostic = null_ls.builtins.diagnostics
+local code_actions = null_ls.builtins.code_actions
 
 null_ls.setup({
   sources = {
-    null_ls.builtins.code_actions.gitsigns,
+    code_actions.gitsigns,
     formatting.prettier
   }
 })
+
+-- Create "Format" command to format the document
+vim.api.nvim_create_user_command('Format', function(cmd_opts)
+  vim.lsp.buf.format({
+    range = {
+      ["start"] = {cmd_opts.line1, 0},
+      ["end"] = {cmd_opts.line2, 0}
+    }
+  })
+end, {range='%'})
 
 -- ######################## END NULL-LS CONFIG ######################## 
