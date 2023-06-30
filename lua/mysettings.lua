@@ -6,15 +6,20 @@ opt.joinspaces = false -- prevent joining spaces with J
 opt.ignorecase = true -- Make search insensitive
 opt.smartcase = true -- Make search sensitive if there is a capital letter
 -- opt.signcolumn = 'yes' -- Show the signcolumn always
-
 opt.path = '**' -- Make the project root directory as the dir to search when we use :find or similar commands
+opt.foldcolumn = '0' -- How many columns use to show the folding icons, '0' to disable it
+opt.foldexpr = "nvim_treesitter#foldexpr()" -- Set nvim treesitter script to define the folding
+opt.foldlevel = 20 -- Automatically open 20 levels of folding when opening a file
+opt.foldmethod = 'expr' -- opt.foldexpr option value will give the fold method
+opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']] -- Set the folding format(How the folded line looks)
+opt.fillchars = [[fold: ,foldopen:,foldsep: ,foldclose:]] -- Update the folding icons on the numbers columns
+opt.mouse = 'a' -- Enable mouse on (a)ll modes
+opt.showmatch = true -- Show pair of parenthesis/curly brackets/brackets
+opt.ruler = true -- Show row and column of the cursor on the status line
+opt.cursorline = true -- Highlight the current line
+opt.number = true -- Show line numbers column
 
--- Set nvim-treesitter for folding
-opt.foldmethod = 'expr'
-opt.foldexpr = "nvim_treesitter#foldexpr()"
--- Automatically open 20 levels of folding on opening a file
-opt.foldlevel = 20
-
+-- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened
 -- vim.api.nvim_create_autocmd({"BufReadPost", 'FileReadPost'}, {
 --   pattern = "*",
@@ -23,9 +28,4 @@ opt.foldlevel = 20
 --     require('mymappings').feedkey('zR', 'n')
 --   end,
 -- })
-
--- How many columns use to show the folding icons, '0' to disable it
-vim.o.foldcolumn = '0'
-vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']]
-vim.o.fillchars = [[fold: ,foldopen:,foldsep: ,foldclose:]]
 

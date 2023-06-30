@@ -104,8 +104,6 @@ call plug#end()
 " Set space as Leader key
 let mapleader = "\<Space>"
 
-"Enable mouse
-set mouse=a
 set clipboard=unnamed
 " As we are using tree-sitter, it is better to disable default highlighting on
 " nvim
@@ -113,25 +111,7 @@ set clipboard=unnamed
 syntax off
 "show the commands that we are writing
 set showcmd
-"show the row and col
-set ruler
-
 set encoding=utf-8
-
-"show pair of a parenthesis
-set showmatch
-
-"use two spaces instead of tabs
-"set sw=2
-
-"as we are going to install a pluging we dont need to show the mode
-" set noshowmode
-
-"highlight the current line
-set cursorline
-
-"Show line numbers
-set number
 
 "Remove ~ chars at the end of the buffer
 "Only works for neovim, note that there is ' ' (a blank space) after the '\' char
