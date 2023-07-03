@@ -111,6 +111,7 @@ set clipboard=unnamed
 syntax off
 "show the commands that we are writing
 set showcmd
+
 set encoding=utf-8
 
 "Remove ~ chars at the end of the buffer
@@ -331,7 +332,6 @@ require('gitsigns').setup {
     delay = 100,
     ignore_whitespace = false,
   },
-  --current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> ⏺ <summary>',
   current_line_blame_formatter = '<author>, <author_time:%R> ● <summary>',
   current_line_blame_formatter_nc = 'You, <author_time:%R> ● Uncommitted changes',
   preview_config = {
@@ -486,11 +486,9 @@ lua << EOF
 EOF
 
 " lukas-reineke/indent-blankline.nvim
-let g:indent_blankline_char = '▏'
 lua << EOF
 require("indent_blankline").setup {
-  -- for example, context is off by default, use this to turn it on
-  --char = '',
+  char = '▏',
   show_current_context = true,
   --show_current_context_start = true,
   use_treesitter = true,
@@ -530,11 +528,7 @@ EOF
 " highlight SignColumn guibg=NONE
 
 " Show tabs and trailing spaces as visible characters
-"set showbreak=↪
-"set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨,space:•
-"hi Whitespace guifg=#000000
 set list listchars+=tab:→\ ,trail:•
-" set list
 
 lua require('mymappings')
 
