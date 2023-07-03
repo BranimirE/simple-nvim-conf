@@ -109,11 +109,6 @@ set clipboard=unnamed
 " nvim
 " syntax enable
 syntax off
-"show the commands that we are writing
-set showcmd
-
-set encoding=utf-8
-
 "Remove ~ chars at the end of the buffer
 "Only works for neovim, note that there is ' ' (a blank space) after the '\' char
 set fillchars+=eob:\ 
