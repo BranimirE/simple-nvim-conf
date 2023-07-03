@@ -18,6 +18,8 @@ opt.showmatch = true -- Show pair of parenthesis/curly brackets/brackets
 opt.ruler = true -- Show row and column of the cursor on the status line
 opt.cursorline = true -- Highlight the current line
 opt.number = true -- Show line numbers column
+opt.showcmd = true -- Show the commands that we are writing
+opt.encoding = 'utf-8'
 
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened
