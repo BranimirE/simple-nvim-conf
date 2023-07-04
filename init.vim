@@ -101,69 +101,64 @@ Plug 'HiPhish/nvim-ts-rainbow2'
 
 call plug#end()
 
-" akinsho/bufferline.nvim
 lua << EOF
-  require("bufferline").setup {
-    options = {
-      -- mode = "tabs",
-      -- numbers = "ordinal",
-      color_icons = true,
-      -- separator_style = "slant",
-      separator_style = {"", ""},
-      indicator = {
-        style = 'none'
-      },
-      always_show_bufferline = false,
-      offsets = {
-        {
-          filetype = "NvimTree",
-          padding = 1 -- For some reason it is not calculating the value correctly, this fix it
-        },
-      },
-      hover = {
-        enabled = true,
-        delay = 200,
-        reveal = {'close'}
-      }
+-- " akinsho/bufferline.nvim
+require("bufferline").setup {
+  options = {
+    -- mode = "tabs",
+    -- numbers = "ordinal",
+    color_icons = true,
+    -- separator_style = "slant",
+    separator_style = {"", ""},
+    indicator = {
+      style = 'none'
     },
-    highlights = {
-      buffer_selected = {
-        fg = "#DDDDDD",
+    always_show_bufferline = false,
+    offsets = {
+      {
+        filetype = "NvimTree",
+        padding = 1 -- For some reason it is not calculating the value correctly, this fix it
       },
-      -- close_button_selected = {
-      --   fg = "#EEEEEE",
-      -- }
+    },
+    hover = {
+      enabled = true,
+      delay = 200,
+      reveal = {'close'}
     }
+  },
+  highlights = {
+    buffer_selected = {
+      fg = "#DDDDDD",
+    },
+    -- close_button_selected = {
+    --   fg = "#EEEEEE",
+    -- }
   }
-EOF
+}
 
-" nvim-lualine/lualine.nvim
-lua require('myconfig/evil_lualine')
+-- " nvim-lualine/lualine.nvim
+require('myconfig/evil_lualine')
 
-" windwp/nvim-autopairs
-lua << EOF
-  require("nvim-autopairs").setup {
-    check_ts = true, -- check treesitter for autopairing
-    enable_moveright = true,
-  }
-EOF
+-- " windwp/nvim-autopairs
+require("nvim-autopairs").setup {
+  check_ts = true, -- check treesitter for autopairing
+  enable_moveright = true,
+}
 
-" williamboman/mason.nvim
-lua require("mason").setup()
-" Automatically install lsp configured servers(it needs to be setup before lsp-config)
-lua require("mason-lspconfig").setup({automatic_installation=true})
+-- " williamboman/mason.nvim
+require("mason").setup()
 
-lua << EOF
-  require("mason-null-ls").setup({
-    ensure_installed = {'prettier'}
-  })
-EOF
+-- " Automatically install lsp configured servers(it needs to be setup before lsp-config)
+require("mason-lspconfig").setup({automatic_installation=true})
 
-" neovim/nvim-lspconfig
-lua require('mylspconfig')
+require("mason-null-ls").setup({
+  ensure_installed = {'prettier'}
+})
 
-" kyazdani42/nvim-tree.lua
-lua << EOF
+-- " neovim/nvim-lspconfig
+require('mylspconfig')
+
+-- " kyazdani42/nvim-tree.lua
 require("nvim-tree").setup({
   on_attach = function(bufnr)
     local api = require('nvim-tree.api')
@@ -226,31 +221,27 @@ require("nvim-tree").setup({
     ignore = false -- hide files/dirs in gitignore?
   },
 })
-EOF
 
-" rcarriga/nvim-notify
-lua << EOF
-  require("notify").setup({
-    background_colour = "#000000",
-  })
-  vim.notify = require 'notify'
+-- " rcarriga/nvim-notify
+require("notify").setup({
+  background_colour = "#000000",
+})
+-- vim.notify = require 'notify'
+--
+-- local notify = vim.notify
+-- vim.notify = function(msg, ...)
+--   if type(msg) == 'string' then
+--     local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available'
+--     if is_suppressed_message then
+--       -- Do not show some messages
+--       return
+--     end
+--   end
+--
+--   notify(msg, ...)
+-- end
 
-  local notify = vim.notify
-  vim.notify = function(msg, ...)
-    if type(msg) == 'string' then
-      local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available'
-      if is_suppressed_message then
-        -- Do not show some messages
-        return
-      end
-    end
-
-    notify(msg, ...)
-  end
-EOF
-
-" lewis6991/gitsigns.nvim
-lua << EOF
+-- " lewis6991/gitsigns.nvim
 require('gitsigns').setup {
   signs = {
     add = { hl = 'GitSignsAdd', text = '▌', numhl = 'GitSignsAddNr' },
@@ -321,56 +312,52 @@ require('gitsigns').setup {
     map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
   end,
 }
-EOF
 
-" nvim-treesitter/nvim-treesitter
-lua << EOF
-  require('nvim-treesitter.configs').setup {
-    -- A list of parser names, or "all"
-    ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff'},
-    sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
-    auto_install = true, -- Automatically install missing parsers when entering buffer
-    -- ignore_install = { "javascript" }, -- List of parsers to ignore installing (for "all")
-    highlight = {
-      enable = true, -- `false` will disable the whole extension
-      disable = function(lang, bufnr)
-        if vim.fn.expand("%:t") == "lsp.log" or vim.bo.filetype == "help" then
-          return false
-        end
-        local n_lines = vim.api.nvim_buf_line_count(bufnr)
-        -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
-        return  n_lines > 5000 or (n_lines > 0 and  vim.fn.getfsize(vim.fn.expand("%")) / n_lines > 10000)
-      end,
-      use_languagetree = true, -- use this to enable language injection
-      -- disable = { "c", "rust" }, -- list of language that will be disabled
+-- " nvim-treesitter/nvim-treesitter
+require('nvim-treesitter.configs').setup {
+  -- A list of parser names, or "all"
+  ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff'},
+  sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
+  auto_install = true, -- Automatically install missing parsers when entering buffer
+  -- ignore_install = { "javascript" }, -- List of parsers to ignore installing (for "all")
+  highlight = {
+    enable = true, -- `false` will disable the whole extension
+    disable = function(lang, bufnr)
+      if vim.fn.expand("%:t") == "lsp.log" or vim.bo.filetype == "help" then
+        return false
+      end
+      local n_lines = vim.api.nvim_buf_line_count(bufnr)
+      -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
+      return  n_lines > 5000 or (n_lines > 0 and  vim.fn.getfsize(vim.fn.expand("%")) / n_lines > 10000)
+    end,
+    use_languagetree = true, -- use this to enable language injection
+    -- disable = { "c", "rust" }, -- list of language that will be disabled
 
-      -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-      -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-      -- Using this option may slow down your editor, and you may see some duplicate highlights.
-      -- Instead of true it can also be a list of languages
-      additional_vim_regex_highlighting = false,
-    },
-    indent = {
-      enable = true, -- Indent with = using treesitter
-    },
-    autotag = {
-      enable = true,
-    },
-    autopairs = {
-      enable = true,
-    },
-    context_commentstring = {
-      enable = true,
-      enable_autocmd = false,
-    },
-    rainbow = {
-      enable = true,
-    }
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+  indent = {
+    enable = true, -- Indent with = using treesitter
+  },
+  autotag = {
+    enable = true,
+  },
+  autopairs = {
+    enable = true,
+  },
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = false,
+  },
+  rainbow = {
+    enable = true,
   }
-EOF
+}
 
-" nvim-telescope/telescope.nvim
-lua << EOF
+-- " nvim-telescope/telescope.nvim
 require("telescope").setup {
   defaults = {
     file_ignore_patterns = {
@@ -408,26 +395,22 @@ require("telescope").setup {
     }
   }
 }
-EOF
 
-"nvim-telescope/telescope-fzf-native.nvim
-lua require('telescope').load_extension('fzf')
+-- "nvim-telescope/telescope-fzf-native.nvim
+require('telescope').load_extension('fzf')
 
-"nvim-telescope/telescope-ui-select.nvim
-lua require("telescope").load_extension("ui-select")
+-- "nvim-telescope/telescope-ui-select.nvim
+require("telescope").load_extension("ui-select")
 
-" norcalli/nvim-colorizer.lua
-lua require'colorizer'.setup()
+-- " norcalli/nvim-colorizer.lua
+require'colorizer'.setup()
 
-" numToStr/Comment.nvim
-lua << EOF
-  require('Comment').setup {
-    pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
-  }
-EOF
+-- " numToStr/Comment.nvim
+require('Comment').setup {
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+}
 
-" lukas-reineke/indent-blankline.nvim
-lua << EOF
+-- " lukas-reineke/indent-blankline.nvim
 require("indent_blankline").setup {
   char = '▏',
   show_current_context = true,
@@ -449,9 +432,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
   end,
 })
-EOF
 
-lua require('mymappings')
+require('mymappings')
+vim.cmd('colorscheme tokyonight-night')
+-- " colorscheme catppuccin-mocha
+EOF
 
 " Remove background colors
 " hi Normal guibg=NONE ctermbg=NONE
@@ -478,8 +463,6 @@ lua require('mymappings')
 " })
 " EOF
 
-colorscheme tokyonight-night
-" colorscheme catppuccin-mocha
 
 " Change split lines color
 " hi VertSplit guifg=#00afff
