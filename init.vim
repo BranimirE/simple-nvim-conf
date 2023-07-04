@@ -437,10 +437,6 @@ require("telescope").setup {
 }
 EOF
 
-nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown({}))<cr>
-nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
-
 "nvim-telescope/telescope-fzf-native.nvim
 lua require('telescope').load_extension('fzf')
 
@@ -501,7 +497,7 @@ EOF
 
 lua require('mymappings')
 
-au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks setf sql
+au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks,*.PKB,*.PKS setf sql
 
 " lua << EOF
 " require("catppuccin").setup({

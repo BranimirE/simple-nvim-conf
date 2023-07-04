@@ -62,7 +62,10 @@ keymap.set('n', '<leader>fg', function()
   require('telescope.builtin').live_grep({ default_text = text })
 end, { noremap = true, silent = true })
 
+keymap.set('n', '<leader>fb', '<cmd>Telescope buffers', { noremap = true, silent = true })
+keymap.set('n', '<leader>ff', '<cmd>Telescope find_files previewer=false theme=dropdown<cr>', { noremap = true, silent = true })
+
 -- As we are using Ctrl+l to move to the right panel, we are remapping its functionality to ','
-keymap.set('n', ',', '<Cmd>nohlsearch<CR>')
+keymap.set('n', ',', '<cmd>nohlsearch<cr>')
 
 return M
