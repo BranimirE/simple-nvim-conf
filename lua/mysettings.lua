@@ -15,7 +15,7 @@ opt.foldexpr = "nvim_treesitter#foldexpr()" -- Set nvim treesitter script to def
 opt.foldlevel = 20 -- Automatically open 20 levels of folding when opening a file
 opt.foldmethod = 'expr' -- opt.foldexpr option value will give the fold method
 opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']] -- Set the folding format(How the folded line looks)
-opt.fillchars = [[fold: ,foldopen:,foldsep: ,foldclose:]] -- Update the folding icons on the numbers columns
+opt.fillchars:append [[fold: ,foldopen:,foldsep: ,foldclose:]] -- Update the folding icons on the numbers columns
 opt.mouse = 'a' -- Enable mouse on (a)ll modes
 opt.showmatch = true -- Show pair of parenthesis/curly brackets/brackets
 opt.ruler = true -- Show row and column of the cursor on the status line
@@ -24,6 +24,7 @@ opt.number = true -- Show line numbers column
 opt.showcmd = true -- Show the commands that we are writing
 opt.encoding = 'utf-8' -- Set default enconding
 opt.fillchars:append [[eob: ]] -- Remove ~ chars at the end of the buffer
+opt.termguicolors = true -- User GUI version colors(without it, only terminal colors will be available)
 
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened

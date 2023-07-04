@@ -101,17 +101,11 @@ Plug 'HiPhish/nvim-ts-rainbow2'
 
 call plug#end()
 
-" Set space as Leader key
-" let mapleader = "\<Space>"
-
 set clipboard=unnamed
 " As we are using tree-sitter, it is better to disable default highlighting on
 " nvim
 " syntax enable
 syntax off
-
-"Setting the theme
-set termguicolors
 
 " akinsho/bufferline.nvim
 lua << EOF
