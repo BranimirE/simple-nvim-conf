@@ -137,43 +137,6 @@ lua << EOF
   }
 EOF
 
-" lua << EOF
-" require("one_monokai").setup({
-"   use_cmd = true,
-"   transparent = true,
-"   colors = {
-"     gray = "#676e7b",
-"     --pink = "#e06c75",
-"     pink = "#F92672",
-"     --green = "#98c379",
-"     green = "#A6E22E",
-"     --cyan = "#56b6c2",
-"     cyan = "#00afff",
-"     aqua = "#61afef",
-"     --yellow = "#e5c07b",
-"     yellow = "#E6DB74",
-"     --purple = "#c678dd",
-"     purple = "#AE81FF",
-"     peanut = "#f6d5a4",
-"     --orange = "#d19a66",
-"     orange = "#FD971F",
-"     none = "NONE",
-"
-"     -- support colors
-"     red = "#ff0000",
-"     --white = "#d7d7ff",
-"     white = "#ffffff",
-"     light_gray = "#9ca3b2",
-"     dark_gray = "#4b5261",
-"     --vulcan = "#383a3e",
-"     vulcan = "#080a0e",
-"     dark_green = "#2d2e27",
-"     dark_blue = "#26292f",
-"     black = "#1e2024",
-"   }
-" })
-" EOF
-
 " nvim-lualine/lualine.nvim
 lua require('myconfig/evil_lualine')
 
@@ -433,6 +396,16 @@ require("telescope").setup {
     ["ui-select"] = {
       require("telescope.themes").get_dropdown { }
     }
+  },
+  pickers = {
+    find_files = {
+      theme = 'dropdown',
+      previewer = false,
+      prompt_prefix = ' 󰱼 '
+    },
+    live_grep = {
+      prompt_prefix = '  '
+    }
   }
 }
 EOF
@@ -478,6 +451,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 EOF
 
+lua require('mymappings')
+
 " Remove background colors
 " hi Normal guibg=NONE ctermbg=NONE
 
@@ -495,8 +470,6 @@ EOF
 
 " highlight SignColumn guibg=NONE
 
-lua require('mymappings')
-
 " lua << EOF
 " require("catppuccin").setup({
 "   transparent_background = true,
@@ -510,3 +483,39 @@ colorscheme tokyonight-night
 
 " Change split lines color
 " hi VertSplit guifg=#00afff
+
+" require("one_monokai").setup({
+"   use_cmd = true,
+"   transparent = true,
+"   colors = {
+"     gray = "#676e7b",
+"     --pink = "#e06c75",
+"     pink = "#F92672",
+"     --green = "#98c379",
+"     green = "#A6E22E",
+"     --cyan = "#56b6c2",
+"     cyan = "#00afff",
+"     aqua = "#61afef",
+"     --yellow = "#e5c07b",
+"     yellow = "#E6DB74",
+"     --purple = "#c678dd",
+"     purple = "#AE81FF",
+"     peanut = "#f6d5a4",
+"     --orange = "#d19a66",
+"     orange = "#FD971F",
+"     none = "NONE",
+"
+"     -- support colors
+"     red = "#ff0000",
+"     --white = "#d7d7ff",
+"     white = "#ffffff",
+"     light_gray = "#9ca3b2",
+"     dark_gray = "#4b5261",
+"     --vulcan = "#383a3e",
+"     vulcan = "#080a0e",
+"     dark_green = "#2d2e27",
+"     dark_blue = "#26292f",
+"     black = "#1e2024",
+"   }
+" })
+
