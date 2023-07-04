@@ -1,5 +1,6 @@
 local opt = vim.opt
 local g = vim.g
+local api = vim.api
 
 g.mapleader = " " -- Set space as leader key
 
@@ -38,3 +39,7 @@ opt.listchars:append [[tab:→ ,trail:•]] -- Replace some default listchars
 --   end,
 -- })
 
+api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
+  pattern = {'*.tyb', '*.typ', '*.tyc', '*.pkb', '*.pks', '*.PKB', '*.PKS'},
+  command = [[setf sql]]
+})

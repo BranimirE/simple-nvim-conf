@@ -497,8 +497,6 @@ EOF
 
 lua require('mymappings')
 
-au BufNewFile,BufRead *.tyb,*.typ,*.tyc,*.pkb,*.pks,*.PKB,*.PKS setf sql
-
 " lua << EOF
 " require("catppuccin").setup({
 "   transparent_background = true,
