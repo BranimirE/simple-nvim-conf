@@ -24,7 +24,9 @@ opt.number = true -- Show line numbers column
 opt.showcmd = true -- Show the commands that we are writing
 opt.encoding = 'utf-8' -- Set default enconding
 opt.fillchars:append [[eob: ]] -- Remove ~ chars at the end of the buffer
-opt.termguicolors = true -- User GUI version colors(without it, only terminal colors will be available)
+opt.termguicolors = true -- User GUI version colors(without it, only basic terminal colors will be available)
+opt.list = true -- Enable list mode. It shows invisible chars as visible chars(using listchars values)
+opt.listchars:append [[tab:→ ,trail:•]] -- Replace some default listchars
 
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened

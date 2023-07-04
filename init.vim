@@ -101,12 +101,6 @@ Plug 'HiPhish/nvim-ts-rainbow2'
 
 call plug#end()
 
-set clipboard=unnamed
-" As we are using tree-sitter, it is better to disable default highlighting on
-" nvim
-" syntax enable
-syntax off
-
 " akinsho/bufferline.nvim
 lua << EOF
   require("bufferline").setup {
@@ -205,12 +199,6 @@ EOF
 " neovim/nvim-lspconfig
 lua require('mylspconfig')
 
-" hrsh7th/vim-vsnip
-" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
-let g:vsnip_filetypes = {}
-let g:vsnip_filetypes.javascriptreact = ['javascript']
-let g:vsnip_filetypes.typescriptreact = ['typescript']
-
 " kyazdani42/nvim-tree.lua
 lua << EOF
 require("nvim-tree").setup({
@@ -305,9 +293,7 @@ require('gitsigns').setup {
     add = { hl = 'GitSignsAdd', text = '▌', numhl = 'GitSignsAddNr' },
     change = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
     delete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
-    -- delete = { hl = 'GitSignsDelete', text = '▌_', numhl = 'GitSignsDeleteNr' },
     topdelete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
-    -- topdelete = { hl = 'GitSignsDelete', text = '▌‾', numhl = 'GitSignsDeleteNr' },
     changedelete = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
   },
   signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
@@ -512,9 +498,6 @@ EOF
 "hi GitSignsChangeNr gui=bold guibg=NONE ctermbg=NONE
 
 " highlight SignColumn guibg=NONE
-
-" Show tabs and trailing spaces as visible characters
-set list listchars+=tab:→\ ,trail:•
 
 lua require('mymappings')
 
