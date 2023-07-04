@@ -102,16 +102,13 @@ Plug 'HiPhish/nvim-ts-rainbow2'
 call plug#end()
 
 " Set space as Leader key
-let mapleader = "\<Space>"
+" let mapleader = "\<Space>"
 
 set clipboard=unnamed
 " As we are using tree-sitter, it is better to disable default highlighting on
 " nvim
 " syntax enable
 syntax off
-"Remove ~ chars at the end of the buffer
-"Only works for neovim, note that there is ' ' (a blank space) after the '\' char
-set fillchars+=eob:\ 
 
 "Setting the theme
 set termguicolors
