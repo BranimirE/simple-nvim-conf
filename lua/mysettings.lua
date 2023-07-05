@@ -13,8 +13,9 @@ opt.smartcase = true -- Make search sensitive if there is a capital letter
 opt.path = '**' -- Make the project root directory as the dir to search when we use :find or similar commands
 opt.foldcolumn = '0' -- How many columns use to show the folding icons, '0' to disable it
 opt.foldexpr = "nvim_treesitter#foldexpr()" -- Set nvim treesitter script to define the folding
-opt.foldlevel = 20 -- Automatically open 20 levels of folding when opening a file
 opt.foldmethod = 'expr' -- opt.foldexpr option value will give the fold method
+opt.foldlevel = 20 -- Automatically open 20 levels of folding when opening a file
+-- opt.foldenable = false -- Disable folding at startup
 opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']] -- Set the folding format(How the folded line looks)
 opt.fillchars:append [[fold: ,foldopen:,foldsep: ,foldclose:]] -- Update the folding icons on the numbers columns
 opt.mouse = 'a' -- Enable mouse on (a)ll modes
@@ -49,3 +50,4 @@ api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
   pattern = {'*.tyb', '*.typ', '*.tyc', '*.pkb', '*.pks', '*.PKB', '*.PKS'},
   command = [[setf sql]]
 })
+vim.cmd('syntax off')

@@ -15,7 +15,7 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup("myplugins", {
  defaults = { lazy = true },
- install = { colorscheme = { "tokyonight" } },
+ -- install = { colorscheme = { "tokyonight" } },
  checker = { enabled = true },
  change_detection = {
   notify = false,
@@ -44,4 +44,3 @@ vim.api.nvim_create_autocmd("User", {
   -- require("commands")
  end,
 })
-vim.cmd('colorscheme tokyonight-night')
