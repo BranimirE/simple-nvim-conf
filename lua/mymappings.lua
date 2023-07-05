@@ -11,25 +11,31 @@ end
 
 -- LOGIC --
 
-local cmp = require('cmp')
+local exist_cmp, cmp = pcall(require, 'cmp')
 
 function M.smart_tab()
-  if cmp.visible() then
+  if exist_cmp and cmp.visible() then
     cmp.confirm({ select = true })
-  elseif vim.fn['vsnip#available']() == 1 then
-    M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
   else
-    M.feedkey([[<Tab>]], 'n')
+    local exist_vsnip, vsnip_available = pcall(vim.fn['vsnip#available'])
+    if exist_vsnip and vsnip_available == 1 then
+      M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
+    else
+      M.feedkey([[<Tab>]], 'n')
+    end
   end
 end
 
 function M.shift_smart_tab()
-  if cmp.visible() then
+  if exist_cmp and cmp.visible() then
     cmp.select_prev_item()
-  elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-    M.feedkey('<Plug>(vsnip-jump-prev)', '')
   else
-    M.feedkey([[<S-Tab>]], 'n')
+    local exist_vsnip, vsnip_jumpable = pcall(vim.fn['vsnip#jumpable'], -1)
+    if exist_vsnip and vsnip_jumpable == 1 then
+      M.feedkey('<Plug>(vsnip-jump-prev)', '')
+    else
+      M.feedkey([[<S-Tab>]], 'n')
+    end
   end
 end
 
@@ -37,10 +43,10 @@ end
 local keymap = vim.keymap
 
 keymap.set('i', 'jk', '<esc>') -- Press jk to go normal mode in insert mode
+keymap.set('n', '<leader>bd', '<esc>:bd<cr>') -- Close the current buffer
 keymap.set({'i', 's'}, '<Tab>', M.smart_tab)
 keymap.set({'i', 's'}, '<S-Tab>', M.shift_smart_tab)
 keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
-keymap.set('n', '<leader>bd', '<esc>:bd<cr>')
 
 -- Change current tabpage
 for index = 1,8 do

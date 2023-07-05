@@ -29,6 +29,12 @@ opt.termguicolors = true -- User GUI version colors(without it, only basic termi
 opt.list = true -- Enable list mode. It shows invisible chars as visible chars(using listchars values)
 opt.listchars:append [[tab:→ ,trail:•]] -- Replace some default listchars
 
+opt.expandtab = true
+opt.shiftwidth = 2
+opt.smartindent = true
+opt.tabstop = 2
+opt.softtabstop = 2
+
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened
 -- vim.api.nvim_create_autocmd({"BufReadPost", 'FileReadPost'}, {

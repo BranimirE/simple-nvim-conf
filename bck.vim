@@ -1,12 +1,7 @@
 lua require('mysettings')
 call plug#begin()
 
-" Theme
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-" Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
-" NvChad's status line
-Plug 'nvim-lualine/lualine.nvim'
 
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
@@ -434,7 +429,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 require('mymappings')
-vim.cmd('colorscheme tokyonight-night')
 -- " colorscheme catppuccin-mocha
 EOF
 
