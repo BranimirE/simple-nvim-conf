@@ -55,6 +55,10 @@ end
 keymap.set({'i', 'n', 'v'}, '<A-9>', '<Cmd>BufferLineGoToBuffer -1<CR>')
 -- <M-S-1> mapping does not work correctly this map <M-S-1> correctly
 keymap.set({'i', 'n', 'v'}, '<M-4>0', '<Cmd>tabn 1<CR>', { noremap = true })
+-- Inside tmux <M-S-{index}> are not being sent correctly, this is work around for English keyboard
+keymap.set({'i', 'n', 'v'}, '<M-@>', '<Cmd>tabn 2<CR>', { noremap = true })
+keymap.set({'i', 'n', 'v'}, '<M-#>', '<Cmd>tabn 3<CR>', { noremap = true })
+keymap.set({'i', 'n', 'v'}, '<M-$>', '<Cmd>tabn 4<CR>', { noremap = true })
 
 -- Auto search selected text in visual mode if telescope live grep is opened
 keymap.set('v', '<leader>fg', function()
