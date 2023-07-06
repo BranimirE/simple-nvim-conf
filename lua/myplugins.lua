@@ -2,7 +2,14 @@ return {
   { -- Theme
     'folke/tokyonight.nvim',
     event = 'VeryLazy',
-    opts = { style = 'night'},
+    opts = {
+      style = 'night',
+      transparent = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
+      },
+    },
     init = function()
       vim.cmd('colorscheme tokyonight')
     end
@@ -260,6 +267,51 @@ return {
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
       end,
+    }
+  },
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.2',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+      'nvim-telescope/telescope-ui-select.nvim' -- Show code actions in Telescope dropdown TODO: (a) check if this is still necessary with LspSaga
+    },
+    cmd = 'Telescope',
+    init = function()
+      require('telescope').load_extension('fzf')
+      require("telescope").load_extension("ui-select") -- TODO: (a) same
+    end,
+    opts = {
+      defaults = {
+        prompt_prefix = " ",
+        selection_caret = " ",
+        file_ignore_patterns = {
+          "ext.js",
+          "ext-modern.js",
+          "ext-modern-all.js",
+          "ext-modern-all-sandbox.js",
+          "ext-all.js",
+          "ext-all-sandbox.js",
+          "ext-all-rtl.js",
+          "ext-all-rtl-sandbox.js"
+        }
+      },
+      -- TODO: (a) same
+      -- extensions = {
+      --   ["ui-select"] = {
+      --     require("telescope.themes").get_dropdown({})
+      --   }
+      -- },
+      pickers = {
+        find_files = {
+          theme = 'dropdown',
+          previewer = false,
+          prompt_prefix = ' 󰱼 '
+        },
+        live_grep = {
+          prompt_prefix = '  '
+        }
+      }
     }
   }
 }
