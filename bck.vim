@@ -22,9 +22,6 @@ Plug 'dsznajder/vscode-es7-javascript-react-snippets', { 'do': 'yarn install --f
 " Show background colors in color strings like #FF0000
 Plug 'norcalli/nvim-colorizer.lua'
 
-" Detect indentation in the file
-Plug 'tpope/vim-sleuth'
-
 " (Un)Install language server protocols Automatically
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'

@@ -24,6 +24,7 @@ return {
   { -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { "NvimTreeToggle", "NvimTreeFocus" }, -- Lazy-load on commands
+    dependencies = 'nvim-tree/nvim-web-devicons',
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
@@ -313,5 +314,9 @@ return {
         }
       }
     }
-  }
+  },
+  { -- Auto detect file indent settings
+    'tpope/vim-sleuth',
+    event = { 'BufReadPre', 'BufNewFile' },
+  },
 }
