@@ -50,4 +50,3 @@ api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
   pattern = {'*.tyb', '*.typ', '*.tyc', '*.pkb', '*.pks', '*.PKB', '*.PKS'},
   command = [[setf sql]]
 })
-vim.cmd('syntax off')

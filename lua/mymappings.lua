@@ -47,12 +47,14 @@ keymap.set('n', '<leader>bd', '<esc>:bd<cr>') -- Close the current buffer
 keymap.set({'i', 's'}, '<Tab>', M.smart_tab)
 keymap.set({'i', 's'}, '<S-Tab>', M.shift_smart_tab)
 keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
-
 -- Change current tabpage
 for index = 1,8 do
-  keymap.set({'i', 'n', 'v'}, '<A-'..tostring(index)..'>', '<Cmd>BufferLineGoToBuffer '..index..'<CR>')
+  keymap.set({'i', 'n', 'v'}, '<A-'..index..'>', '<Cmd>BufferLineGoToBuffer '..index..'<CR>') -- TODO: Feature - Check if the tab has splits, if so then instead of replacing the current window with the new buffer, change the focus to the windows that is displaying that buffer, or replace the buffer if it is not displayed
+  keymap.set({'i', 'n', 'v'}, '<M-S-'..index..'>', '<Cmd>tabn '..index..'<CR>', { noremap = true })
 end
 keymap.set({'i', 'n', 'v'}, '<A-9>', '<Cmd>BufferLineGoToBuffer -1<CR>')
+-- <M-S-1> mapping does not work correctly this map <M-S-1> correctly
+keymap.set({'i', 'n', 'v'}, '<M-4>0', '<Cmd>tabn 1<CR>', { noremap = true })
 
 -- Auto search selected text in visual mode if telescope live grep is opened
 keymap.set('v', '<leader>fg', function()

@@ -112,7 +112,7 @@ return {
     },
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff'},
+      ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "jsonc", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff'},
       sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
       auto_install = true, -- Automatically install missing parsers when entering buffer
       highlight = {
