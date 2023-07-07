@@ -120,7 +120,7 @@ return {
     },
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "jsonc", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff'},
+      ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "jsonc", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
       sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
       auto_install = true, -- Automatically install missing parsers when entering buffer
       highlight = {
@@ -279,6 +279,7 @@ return {
       'nvim-treesitter/nvim-treesitter'
     },
     cmd = 'Telescope',
+    keys = require('mymappings').telescope,
     opts = function()
       return {
         defaults = {
@@ -313,6 +314,7 @@ return {
           },
           live_grep = {
             prompt_prefix = ' 󰱼 '
+            -- prompt_prefix = ''
           }
         }
       }

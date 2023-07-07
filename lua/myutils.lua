@@ -1,5 +1,12 @@
-
 local M = {}
+
+function M.t(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+function M.feedkey(key, mode)
+  vim.api.nvim_feedkeys(M.t(key), mode, true)
+end
 
 function M.getVisualSelection()
   vim.cmd('noau normal! "vy"')
@@ -25,6 +32,60 @@ function M.getLastSearch()
     return text
   else
     return ''
+  end
+end
+
+local exist_cmp, cmp = pcall(require, 'cmp')
+
+function M.smart_tab()
+  if exist_cmp and cmp.visible() then
+    cmp.confirm({ select = true })
+  else
+    local exist_vsnip, vsnip_available = pcall(vim.fn['vsnip#available'])
+    if exist_vsnip and vsnip_available == 1 then
+      M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
+    else
+      M.feedkey([[<Tab>]], 'n')
+    end
+  end
+end
+
+function M.shift_smart_tab()
+  if exist_cmp and cmp.visible() then
+    cmp.select_prev_item()
+  else
+    local exist_vsnip, vsnip_jumpable = pcall(vim.fn['vsnip#jumpable'], -1)
+    if exist_vsnip and vsnip_jumpable == 1 then
+      M.feedkey('<Plug>(vsnip-jump-prev)', '')
+    else
+      M.feedkey([[<S-Tab>]], 'n')
+    end
+  end
+end
+
+function M.telescope_auto_input(source_input_fn, clean_hl_search)
+  return function()
+    local text = source_input_fn()
+    if clean_hl_search then
+      vim.cmd(M.t('nohlsearch')) -- Hide current highlighted search(if it exists)
+    end
+    -- Reference: https://github.com/nvim-telescope/telescope.nvim/issues/1939
+    require('telescope.builtin').live_grep({
+      default_text = text,
+      on_complete = {
+        function(picker)
+          local mode = vim.fn.mode()
+          local keys = mode ~= 'n' and '<esc>' or ''
+          M.feedkey(keys .. '^2lv$<C-g>', 'n')
+
+          -- should you have more callbacks, just pop the first one
+          table.remove(picker._completion_callbacks, 1)
+
+          local prompt_bufnr = picker.prompt_bufnr
+          vim.keymap.set('s', '<cr>', '<esc>', { buffer = prompt_bufnr })
+        end,
+      }
+    })
   end
 end
 

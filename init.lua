@@ -58,7 +58,7 @@ require('lazy').setup('myplugins', {
 vim.api.nvim_create_autocmd('User', {
  pattern = 'VeryLazy',
  callback = function()
-  require('mymappings')
+  require('mymappings').misc()
   require('mycommands')
  end,
 })
