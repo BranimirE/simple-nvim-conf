@@ -46,19 +46,19 @@ keymap.set('i', 'jk', '<esc>') -- Press jk to go normal mode in insert mode
 keymap.set('n', '<leader>bd', '<esc>:bd<cr>') -- Close the current buffer
 keymap.set({'i', 's'}, '<Tab>', M.smart_tab)
 keymap.set({'i', 's'}, '<S-Tab>', M.shift_smart_tab)
-keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>')
+keymap.set({'i', 'n'}, '<C-n>', '<esc>:NvimTreeToggle<cr>', { silent = true })
 -- Change current tabpage
 for index = 1,8 do
   keymap.set({'i', 'n', 'v'}, '<A-'..index..'>', '<Cmd>BufferLineGoToBuffer '..index..'<CR>') -- TODO: Feature - Check if the tab has splits, if so then instead of replacing the current window with the new buffer, change the focus to the windows that is displaying that buffer, or replace the buffer if it is not displayed
-  keymap.set({'i', 'n', 'v'}, '<M-S-'..index..'>', '<Cmd>tabn '..index..'<CR>', { noremap = true })
+  -- keymap.set({'i', 'n', 'v'}, '<M-S-'..index..'>', '<Cmd>tabn '..index..'<CR>', { noremap = true })
 end
 keymap.set({'i', 'n', 'v'}, '<A-9>', '<Cmd>BufferLineGoToBuffer -1<CR>')
 -- <M-S-1> mapping does not work correctly this map <M-S-1> correctly
-keymap.set({'i', 'n', 'v'}, '<M-4>0', '<Cmd>tabn 1<CR>', { noremap = true })
--- Inside tmux <M-S-{index}> are not being sent correctly, this is work around for English keyboard
-keymap.set({'i', 'n', 'v'}, '<M-@>', '<Cmd>tabn 2<CR>', { noremap = true })
-keymap.set({'i', 'n', 'v'}, '<M-#>', '<Cmd>tabn 3<CR>', { noremap = true })
-keymap.set({'i', 'n', 'v'}, '<M-$>', '<Cmd>tabn 4<CR>', { noremap = true })
+-- keymap.set({'i', 'n', 'v'}, '<M-4>0', '<Cmd>tabn 1<CR>', { noremap = true })
+-- Inside tmux <M-S-{index}> are not being sent correctly, this is a workaround for English keyboard
+-- keymap.set({'i', 'n', 'v'}, '<M-@>', '<Cmd>tabn 2<CR>', { noremap = true })
+-- keymap.set({'i', 'n', 'v'}, '<M-#>', '<Cmd>tabn 3<CR>', { noremap = true })
+-- keymap.set({'i', 'n', 'v'}, '<M-$>', '<Cmd>tabn 4<CR>', { noremap = true })
 
 -- Auto search selected text in visual mode if telescope live grep is opened
 keymap.set('v', '<leader>fg', function()
@@ -69,8 +69,7 @@ end, { noremap = true, silent = true })
 -- Auto search last nvim searched string with / when telescope live grep is opened
 keymap.set('n', '<leader>fg', function()
   local text = require('myutils').getLastSearch()
-  -- Hide current highlighted search(if it exists)
-  vim.cmd(M.t('nohlsearch'))
+  vim.cmd(M.t('nohlsearch')) -- Hide current highlighted search(if it exists)
   require('telescope.builtin').live_grep({ default_text = text })
 end, { noremap = true, silent = true })
 

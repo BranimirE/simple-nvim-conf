@@ -181,7 +181,7 @@ return {
   { -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
-    opts = {}
+    config = true,
   },
   { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',
@@ -270,53 +270,74 @@ return {
       end,
     }
   },
-  {
+  { -- Telescope - Fuzzy finder
     'nvim-telescope/telescope.nvim', tag = '0.1.2',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      'nvim-telescope/telescope-ui-select.nvim' -- Show code actions in Telescope dropdown TODO: (a) check if this is still necessary with LspSaga
+      -- 'nvim-telescope/telescope-ui-select.nvim' -- Show code actions in Telescope dropdown TODO: (a) check if this is still necessary with LspSaga
+      'nvim-treesitter/nvim-treesitter'
     },
     cmd = 'Telescope',
-    init = function()
-      require('telescope').load_extension('fzf')
-      require("telescope").load_extension("ui-select") -- TODO: (a) same
-    end,
-    opts = {
-      defaults = {
-        prompt_prefix = " ",
-        selection_caret = " ",
-        file_ignore_patterns = {
-          "ext.js",
-          "ext-modern.js",
-          "ext-modern-all.js",
-          "ext-modern-all-sandbox.js",
-          "ext-all.js",
-          "ext-all-sandbox.js",
-          "ext-all-rtl.js",
-          "ext-all-rtl-sandbox.js"
-        }
-      },
-      -- TODO: (a) same
-      -- extensions = {
-      --   ["ui-select"] = {
-      --     require("telescope.themes").get_dropdown({})
-      --   }
-      -- },
-      pickers = {
-        find_files = {
-          theme = 'dropdown',
-          previewer = false,
-          prompt_prefix = ' 󰱼 '
+    opts = function()
+      return {
+        defaults = {
+          prompt_prefix = ' ',
+          selection_caret = ' ',
+          file_ignore_patterns = {
+            'node_modules',
+            'ext.js',
+            'ext-modern.js',
+            'ext-modern-all.js',
+            'ext-modern-all-sandbox.js',
+            'ext-all.js',
+            'ext-all-sandbox.js',
+            'ext-all-rtl.js',
+            'ext-all-rtl-sandbox.js'
+          },
+          mappings = {
+            n = { ["q"] = require("telescope.actions").close },
+          },
         },
-        live_grep = {
-          prompt_prefix = '  '
+        -- TODO: (a) same
+        -- extensions = {
+        --   ['ui-select'] = {
+        --     require('telescope.themes').get_dropdown({})
+        --   }
+        -- },
+        pickers = {
+          find_files = {
+            theme = 'dropdown',
+            previewer = false,
+            prompt_prefix = '  '
+          },
+          live_grep = {
+            prompt_prefix = ' 󰱼 '
+          }
         }
       }
-    }
+    end,
+    config = function(_, opts)
+      local telescope = require('telescope')
+      telescope.setup(opts)
+      telescope.load_extension('fzf')
+      -- telescope.load_extension('ui-select') -- TODO: (a) same
+    end
   },
   { -- Auto detect file indent settings
     'tpope/vim-sleuth',
     event = { 'BufReadPre', 'BufNewFile' },
+  },
+  { -- Hihglight TODOs and show a list with all TODOs
+    'folke/todo-comments.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    cmd = { --[[ 'TodoTrouble',  ]]'TodoTelescope', 'TodoQuickFix' },
+    event = { 'BufReadPost', 'BufNewFile' },
+    config = true,
+  },
+  { -- Colorize color strings like #00afff or magenta
+    'NvChad/nvim-colorizer.lua',
+    event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
+    config = true,
   },
 }

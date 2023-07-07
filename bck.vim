@@ -19,9 +19,6 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'dsznajder/vscode-es7-javascript-react-snippets', { 'do': 'yarn install --frozen-lockfile && yarn compile' }
 
-" Show background colors in color strings like #FF0000
-Plug 'norcalli/nvim-colorizer.lua'
-
 " (Un)Install language server protocols Automatically
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
@@ -74,9 +71,6 @@ require('mylspconfig')
 --
 --   notify(msg, ...)
 -- end
-
--- " norcalli/nvim-colorizer.lua
-require'colorizer'.setup()
 
 -- " lukas-reineke/indent-blankline.nvim
 -- Disable the plugin in very big files
