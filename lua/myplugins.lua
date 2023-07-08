@@ -28,37 +28,8 @@ return {
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
-
-        local function opts(desc)
-          return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-        end
-
-        -- BEGIN_DEFAULT_ON_ATTACH
         api.config.mappings.default_on_attach(bufnr)
-        -- END_DEFAULT_ON_ATTACH
-
-        vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
-        vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
-        vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
-        vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close Directory'))
-        vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
-        vim.keymap.set('n', 'L', function ()
-          local current_layout = vim.fn.winlayout()
-          local first_level_split = current_layout[1]
-          local first_level_layout = current_layout[2]
-          if first_level_split == "row" then
-            local columns_count = 0
-            for _ in pairs(first_level_layout) do
-              columns_count = columns_count + 1
-            end
-            -- nvim-tree | panel | panel = 3
-            if columns_count == 3 then
-              api.node.open.horizontal()
-              return
-            end
-          end
-          api.node.open.vertical()
-        end, opts('Open: Vertical Split'))
+        require('myutils').load_mapping(require('mymappings').nvim_tree, bufnr)
       end,
       renderer = {
         root_folder_label = false,

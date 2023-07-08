@@ -1,12 +1,43 @@
 local M = {}
 local util = require('myutils')
 
+-- Default mode='n'
+
 M.telescope = {
-  {'<leader>fg', util.telescope_auto_input(util.getLastSearch, true), { noremap = true, silent = true }},
-  {'<leader>fg', util.telescope_auto_input(util.getVisualSelection, false), mode = 'v', { noremap = true, silent = true }},
-  {'<leader>fb', '<cmd>Telescope buffers<cr>', { noremap = true, silent = true }},
-  {'<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true }},
+  {'<leader>fg', util.telescope_auto_input(util.getLastSearch, true), noremap = true, silent = true },
+  {'<leader>fg', util.telescope_auto_input(util.getVisualSelection, false), mode = 'v', noremap = true, silent = true },
+  {'<leader>fb', '<cmd>Telescope buffers<cr>', noremap = true, silent = true },
+  {'<leader>ff', '<cmd>Telescope find_files<cr>', noremap = true, silent = true },
 }
+
+M.nvim_tree = {
+  {'l', function() require("nvim-tree.api").node.open.edit() end, desc = 'nvim-tree: Open file', noremap = true, silent = true, nowait = true }
+}
+-- local function opts(desc)
+--   return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+-- end
+-- vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
+-- vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+-- vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
+-- vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close Directory'))
+-- vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+-- vim.keymap.set('n', 'L', function ()
+--   local current_layout = vim.fn.winlayout()
+--   local first_level_split = current_layout[1]
+--   local first_level_layout = current_layout[2]
+--   if first_level_split == "row" then
+--     local columns_count = 0
+--     for _ in pairs(first_level_layout) do
+--       columns_count = columns_count + 1
+--     end
+--     -- nvim-tree | panel | panel = 3
+--     if columns_count == 3 then
+--       api.node.open.horizontal()
+--       return
+--     end
+--   end
+--   api.node.open.vertical()
+-- end, opts('Open: Vertical Split'))
 
 function M.misc()
   local keymap = vim.keymap

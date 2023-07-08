@@ -89,4 +89,27 @@ function M.telescope_auto_input(source_input_fn, clean_hl_search)
   end
 end
 
+function M.opts_parser(keys)
+  local opts = {}
+  for k, v in pairs(keys) do
+    if type(k) ~= "number" and k ~= "mode" then
+      opts[k] = v
+    end
+  end
+  return opts
+end
+
+function M.load_mapping(mapping_table, bufnr)
+  for _, mapping in pairs(mapping_table) do
+    local keys = vim.deepcopy(mapping)
+    local opts = M.opts_parser(keys)
+    if bufnr then
+      opts.buffer = bufnr
+    end
+    keys.mode = keys.mode or 'n'
+
+    vim.keymap.set(keys.mode, keys[1], keys[2], opts)
+  end
+end
+
 return M
