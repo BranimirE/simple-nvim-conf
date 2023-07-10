@@ -99,17 +99,24 @@ function M.opts_parser(keys)
   return opts
 end
 
-function M.load_mapping(mapping_table, bufnr)
+function M.load_mapping(mapping_table)
   for _, mapping in pairs(mapping_table) do
     local keys = vim.deepcopy(mapping)
     local opts = M.opts_parser(keys)
-    if bufnr then
-      opts.buffer = bufnr
-    end
     keys.mode = keys.mode or 'n'
 
     vim.keymap.set(keys.mode, keys[1], keys[2], opts)
   end
+end
+
+
+function M.with_opts(mapping_table, extra_opts)
+  local ret = {}
+  for _, mapping in pairs(mapping_table) do
+    table.insert(ret, vim.tbl_extend('force', mapping, extra_opts))
+  end
+
+  return ret
 end
 
 return M

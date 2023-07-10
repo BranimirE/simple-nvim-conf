@@ -1,3 +1,4 @@
+local mymappings = require('mymappings')
 return {
   { -- Theme
     'folke/tokyonight.nvim',
@@ -29,7 +30,7 @@ return {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
         api.config.mappings.default_on_attach(bufnr)
-        require('myutils').load_mapping(require('mymappings').nvim_tree, bufnr)
+        require('myutils').load_mapping(mymappings.nvim_tree(api, bufnr))
       end,
       renderer = {
         root_folder_label = false,
@@ -250,7 +251,7 @@ return {
       'nvim-treesitter/nvim-treesitter'
     },
     cmd = 'Telescope',
-    keys = require('mymappings').telescope,
+    keys = mymappings.telescope(),
     opts = function()
       return {
         defaults = {

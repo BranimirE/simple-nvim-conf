@@ -1,17 +1,23 @@
 local M = {}
 local util = require('myutils')
+local with_opts = util.with_opts
 
 -- Default mode='n'
+M = {
+  telescope = function()
+    return with_opts({
+      { '<leader>fg', util.telescope_auto_input(util.getLastSearch, true) },
+      { '<leader>fg', util.telescope_auto_input(util.getVisualSelection, false), mode = 'v' },
+      { '<leader>fb', '<cmd>Telescope buffers<cr>' },
+      { '<leader>ff', '<cmd>Telescope find_files<cr>' },
+    }, { noremap = true, silent = true })
+  end,
 
-M.telescope = {
-  {'<leader>fg', util.telescope_auto_input(util.getLastSearch, true), noremap = true, silent = true },
-  {'<leader>fg', util.telescope_auto_input(util.getVisualSelection, false), mode = 'v', noremap = true, silent = true },
-  {'<leader>fb', '<cmd>Telescope buffers<cr>', noremap = true, silent = true },
-  {'<leader>ff', '<cmd>Telescope find_files<cr>', noremap = true, silent = true },
-}
-
-M.nvim_tree = {
-  {'l', function() require("nvim-tree.api").node.open.edit() end, desc = 'nvim-tree: Open file', noremap = true, silent = true, nowait = true }
+  nvim_tree = function(nvim_tree_api, bufnr)
+    return with_opts({
+      { 'l', nvim_tree_api.node.open.edit, desc = 'nvim-tree: Open file' }
+    }, { noremap = true, silent = true, nowait = true, buffer = bufnr })
+  end
 }
 -- local function opts(desc)
 --   return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
