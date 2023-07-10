@@ -123,6 +123,7 @@ return {
     'akinsho/bufferline.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
     event = "VeryLazy",
+    keys = mymappings.bufferline(),
     opts = {
       options = {
         color_icons = true,

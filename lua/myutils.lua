@@ -109,7 +109,6 @@ function M.load_mapping(mapping_table)
   end
 end
 
-
 function M.with_opts(mapping_table, extra_opts)
   local ret = {}
   for _, mapping in pairs(mapping_table) do
@@ -117,6 +116,26 @@ function M.with_opts(mapping_table, extra_opts)
   end
 
   return ret
+end
+
+function M.nvim_tree_smart_split(nvim_tree_api)
+  return function()
+    local current_layout = vim.fn.winlayout()
+    local first_level_split = current_layout[1]
+    local first_level_layout = current_layout[2]
+    if first_level_split == "row" then
+      local columns_count = 0
+      for _ in pairs(first_level_layout) do
+        columns_count = columns_count + 1
+      end
+      -- nvim-tree | panel | panel = 3
+      if columns_count == 3 then
+        nvim_tree_api.node.open.horizontal()
+        return
+      end
+    end
+    nvim_tree_api.node.open.vertical()
+  end
 end
 
 return M
