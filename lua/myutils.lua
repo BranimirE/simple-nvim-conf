@@ -113,7 +113,7 @@ end
 function M.with_opts(mapping_table, extra_opts)
   local ret = {}
   for _, mapping in pairs(mapping_table) do
-    table.insert(ret, vim.tbl_extend('force', mapping, extra_opts))
+    table.insert(ret, vim.tbl_extend('keep', mapping, extra_opts)) -- Do not overwrite the existings opts
   end
 
   return ret
@@ -149,6 +149,30 @@ end
 
 function M.has(plugin)
   return require("lazy.core.config").spec.plugins[plugin] ~= nil
+end
+
+function M.next_hunk(gitsigns)
+  return function()
+    if vim.wo.diff then
+      return ']c'
+    end
+    vim.schedule(function()
+      gitsigns.next_hunk()
+    end)
+    return '<Ignore>'
+  end
+end
+
+function M.prev_hunk(gitsigns)
+  return function()
+    if vim.wo.diff then
+      return '[c'
+    end
+    vim.schedule(function()
+      gitsigns.prev_hunk()
+    end)
+    return '<Ignore>'
+  end
 end
 
 return M

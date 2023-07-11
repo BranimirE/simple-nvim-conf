@@ -38,12 +38,21 @@ M = {
 
   nvim_cmp = function(cmp)
     return {
-      {'<C-b>', cmp.mapping.scroll_docs(-4)},
-      {'<C-f>', cmp.mapping.scroll_docs(4)},
-      {'<C-Space>', cmp.mapping.complete()},
-      {'<C-e>', cmp.mapping.abort()},
-      {'<CR>', cmp.mapping.confirm({ select = false })}, -- select = false to confirm explicitly selected items
+      { '<C-b>', cmp.mapping.scroll_docs(-4) },
+      { '<C-f>', cmp.mapping.scroll_docs(4) },
+      { '<C-Space>', cmp.mapping.complete() },
+      { '<C-e>', cmp.mapping.abort() },
+      { '<CR>', cmp.mapping.confirm({ select = false }) }, -- select = false to confirm explicitly selected items
     }
+  end,
+
+  gitsigns = function(gs, bufnr)
+    return with_opts({
+      { ']c', util.next_hunk(gs), expr = true },
+      { '[c', util.prev_hunk(gs), expr = true },
+      { '<leader>hd', gs.diffthis }, -- Diff with the current changes
+      { '<leader>hD', function() gs.diffthis('~') end } -- Diff with the last commit
+    }, { buffer = bufnr })
   end,
 
   misc = function()
@@ -54,6 +63,10 @@ M = {
       { '<s-tab>', util.shift_smart_tab, mode = { 'i', 's' } },
       { '<c-n>',  '<esc>:NvimTreeToggle<cr>'},
       { ',', '<cmd>nohlsearch<cr>' }, -- As C-l is used by tmux-navigator, use ',' instead
+      { '<', '<gv', mode = 'v'}, -- Avoid exit visual mode on left shifting
+      { '>', '>gv', mode = 'v'}, -- Avoid exit visual mode on right shifting
+      { '<up>', '<cmd>cprevious<cr>', silent = true}, -- Use up arrow to navigate up quickfix list. TODO: Use only when quickfix list is open
+      { '<down>', '<cmd>cnext<cr>', silent = true}, -- User down to navigate down quickfix list. TODO: The same as above
     }
   end
 }

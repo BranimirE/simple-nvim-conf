@@ -67,17 +67,18 @@ return {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {
-      check_ts = true, -- check treesitter for autopairing
-      enable_moveright = true -- TODO: Remove this line
+      check_ts = true,        -- check treesitter for autopairing
+      enable_moveright = true -- TODO: Remove this line if it is not needed
     }
   },
   { -- Comment plugin
     'numToStr/Comment.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = 'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
-    config = function(_, opts)
-      opts = { pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook() }
-      require('Comment').setup(opts)
+    config = function()
+      require('Comment').setup({
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
+      })
     end,
   },
   { -- Advanced highlighting
@@ -86,28 +87,29 @@ return {
     cmd = { 'TSUpdateSync' },
     dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
-      'windwp/nvim-ts-autotag', -- Autoclose and rename html tags
-      'HiPhish/nvim-ts-rainbow2', -- Colorize parenthesis pairs with distinct colors
+      'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
+      'HiPhish/nvim-ts-rainbow2',                    -- Colorize parenthesis pairs with distinct colors
     },
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript', 'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
+      ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript',
+        'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
       sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
-      auto_install = true, -- Automatically install missing parsers when entering buffer
+      auto_install = true,  -- Automatically install missing parsers when entering buffer
       highlight = {
-        enable = true, -- `false` will disable the whole extension
+        enable = true,      -- `false` will disable the whole extension
         disable = function(lang, bufnr)
           if vim.fn.expand('%:t') == 'lsp.log' or vim.bo.filetype == 'help' then
             return false
           end
           local n_lines = vim.api.nvim_buf_line_count(bufnr)
           -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
-          return  n_lines > 5000 or (n_lines > 0 and  vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
+          return n_lines > 5000 or (n_lines > 0 and vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
         end,
-        use_languagetree = true, -- use this to enable language injection
+        use_languagetree = true,                   -- use this to enable language injection
         additional_vim_regex_highlighting = false, -- Enable syntax on at the same time?
       },
-      indent = { enable = true }, -- Indent with = using treesitter
+      indent = { enable = true },                  -- Indent with = using treesitter
       autotag = { enable = true },
       autopairs = { enable = true },
       context_commentstring = {
@@ -126,7 +128,7 @@ return {
     opts = {
       options = {
         color_icons = true,
-        separator_style = {'', ''},
+        separator_style = { '', '' },
         indicator = {
           style = 'none'
         },
@@ -140,20 +142,27 @@ return {
         hover = {
           enabled = true,
           delay = 200,
-          reveal = {'close'}
+          reveal = { 'close' }
         }
       },
       -- highlights = {
-        -- buffer_selected = {
-        --   fg = '#DDDDDD',
-        -- },
+      -- buffer_selected = {
+      --   fg = '#DDDDDD',
+      -- },
       -- }
     }
   },
   { -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
-    config = true,
+    opts = {
+      background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
+    },
+    config = function(_, opts)
+      local notify = require('notify')
+      notify.setup(opts)
+      vim.notify = notify
+    end,
   },
   { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',
@@ -179,7 +188,7 @@ return {
         topdelete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
         changedelete = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
       },
-      signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+      signcolumn = true,         -- Toggle with `:Gitsigns toggle_signs`
       current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
       current_line_blame_opts = {
         virt_text = true,
@@ -194,56 +203,13 @@ return {
       },
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
-        local function map(mode, l, r, opts)
-          opts = opts or {}
-          opts.buffer = bufnr
-          vim.keymap.set(mode, l, r, opts)
-        end
-
-        -- Navigation
-        map('n', ']c', function()
-          if vim.wo.diff then
-            return ']c'
-          end
-          vim.schedule(function()
-            gs.next_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true })
-        map('n', '[c', function()
-          if vim.wo.diff then
-            return '[c'
-          end
-          vim.schedule(function()
-            gs.prev_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true })
-        map('n', '<leader>hd', gs.diffthis)
-        map('n', '<leader>hD', function()
-          gs.diffthis '~'
-        end)
-
-        -- -- Actions
-        -- map({ 'n', 'v' }, '<leader>hs', gs.stage_hunk)
-        -- map({ 'n', 'v' }, '<leader>hr', gs.reset_hunk)
-        -- map('n', '<leader>hS', gs.stage_buffer)
-        -- map('n', '<leader>hu', gs.undo_stage_hunk)
-        -- map('n', '<leader>hR', gs.reset_buffer)
-        -- map('n', '<leader>hp', gs.preview_hunk)
-        -- map('n', 'gp', gs.preview_hunk)
-        -- map('n', '<leader>hb', function()
-        --   gs.blame_line { full = true }
-        -- end)
-        -- map('n', '<leader>td', gs.toggle_deleted)
-        --
-        -- -- Text object
-        -- map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        myutils.load_mapping(mymappings.gitsigns(gs, bufnr))
       end,
     }
   },
   { -- Telescope - Fuzzy finder
-    'nvim-telescope/telescope.nvim', tag = '0.1.2',
+    'nvim-telescope/telescope.nvim',
+    tag = '0.1.2',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
@@ -305,7 +271,7 @@ return {
   { -- Hihglight TODOs and show a list with all TODOs
     'folke/todo-comments.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
-    cmd = { --[[ 'TodoTrouble',  ]]'TodoTelescope', 'TodoQuickFix' },
+    cmd = { --[[ 'TodoTrouble',  ]] 'TodoTelescope', 'TodoQuickFix' },
     event = { 'BufReadPost', 'BufNewFile' },
     config = true,
   },
@@ -317,7 +283,7 @@ return {
   { -- Bridge between vsnip and nvim-cmp
     'hrsh7th/cmp-vsnip',
     dependencies = {
-      'hrsh7th/vim-vsnip', -- Snippets engine
+      'hrsh7th/vim-vsnip',                                -- Snippets engine
       {
         'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
         build = 'yarn install --frozen-lockfile && yarn compile'
@@ -349,7 +315,7 @@ return {
           completeopt = 'menu,menuone,noselect,noinsert', -- TODO: Check that this one is required
         },
         window = {
-          completion = { -- Move the menu to the left to match the 
+          completion = { -- Move the menu to the left to match the
             col_offset = -3,
             side_padding = 0,
           },
@@ -402,14 +368,14 @@ return {
       -- })
 
       -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' }
-        }, {
-          { name = 'cmdline' }
-        })
-      })
+      -- cmp.setup.cmdline(':', {
+      --   mapping = cmp.mapping.preset.cmdline(),
+      --   sources = cmp.config.sources({
+      --     { name = 'path' }
+      --   }, {
+      --     { name = 'cmdline' }
+      --   })
+      -- })
 
       -- If you want insert `(` after select function or method item
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
@@ -428,7 +394,7 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       {
-        'williamboman/mason-lspconfig.nvim',
+        'williamboman/mason-lspconfig.nvim', -- It need to be setup before nvim-lspconfig
         dependencies = 'williamboman/mason.nvim',
         opts = { automatic_installation = true }
       },
@@ -455,7 +421,7 @@ return {
         'sqlls'
       }
 
-      local opts = { noremap=true, silent=true }
+      local opts = { noremap = true, silent = true }
       -- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
       -- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
       -- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
@@ -465,7 +431,11 @@ return {
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        local bufopts = { noremap=true, silent=true, buffer=bufnr }
+      -- Error = " ",
+      -- Warn = " ",
+      -- Hint = " ",
+      -- Info = " ",
+        local bufopts = { noremap = true, silent = true, buffer = bufnr }
         vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
@@ -508,7 +478,7 @@ return {
               },
               diagnostics = {
                 -- Get the language server to recognize the `vim` global
-                globals = {'vim'},
+                globals = { 'vim' },
               },
               workspace = {
                 -- Make the server aware of Neovim runtime files
@@ -566,7 +536,7 @@ return {
             require('nvim-lsp-ts-utils').setup({
               filter_out_diagnostics_by_code = { 80001 },
             })
-            require('nvim-lsp-ts-utils').setup_client(client)      -- client.resolved_capabilities.document_formatting = false
+            require('nvim-lsp-ts-utils').setup_client(client) -- client.resolved_capabilities.document_formatting = false
 
             client.server_capabilities.documentFormattingProvider = false
           end,
