@@ -9,8 +9,8 @@ return {
       style = 'night',
       transparent = true,
       styles = {
-        sidebars = "transparent",
-        floats = "transparent",
+        sidebars = 'transparent',
+        floats = 'transparent',
       },
     },
     init = function()
@@ -26,7 +26,7 @@ return {
   },
   { -- File tree viewer
     'nvim-tree/nvim-tree.lua',
-    cmd = { "NvimTreeToggle", "NvimTreeFocus" }, -- Lazy-load on commands
+    cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'nvim-tree/nvim-web-devicons',
     opts = {
       on_attach = function(bufnr)
@@ -41,7 +41,7 @@ return {
           enable = true, -- show indent lines(vertical lines)
         },
         icons = {
-          git_placement = "after", -- position files' git status icon
+          git_placement = 'after', -- position files' git status icon
           show = {
             folder_arrow = false,
             git = true, -- show files' git status icons
@@ -65,7 +65,7 @@ return {
   },
   { -- Autoclose ()[]{}
     'windwp/nvim-autopairs',
-    event = "InsertEnter",
+    event = 'InsertEnter',
     opts = {
       check_ts = true, -- check treesitter for autopairing
       enable_moveright = true -- TODO: Remove this line
@@ -73,7 +73,7 @@ return {
   },
   { -- Comment plugin
     'numToStr/Comment.nvim',
-    event = { "BufReadPost", "BufNewFile" },
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = 'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
     config = function(_, opts)
       local success, ts_context_commentstring = pcall(require, 'ts_context_commentstring.integrations.comment_nvim')
@@ -86,26 +86,26 @@ return {
   { -- Advanced highlighting
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    cmd = { "TSUpdateSync" },
+    cmd = { 'TSUpdateSync' },
     dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
       'windwp/nvim-ts-autotag', -- Autoclose and rename html tags
       'HiPhish/nvim-ts-rainbow2', -- Colorize parenthesis pairs with distinct colors
     },
-    event = { "BufReadPost", "BufNewFile" },
+    event = { 'BufReadPost', 'BufNewFile' },
     opts = {
-      ensure_installed = { "vim", "lua", "javascript", "bash", "css", "json", "json5", "jsonc", "python", "typescript", "html", "yaml", 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
+      ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript', 'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
       sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
       auto_install = true, -- Automatically install missing parsers when entering buffer
       highlight = {
         enable = true, -- `false` will disable the whole extension
         disable = function(lang, bufnr)
-          if vim.fn.expand("%:t") == "lsp.log" or vim.bo.filetype == "help" then
+          if vim.fn.expand('%:t') == 'lsp.log' or vim.bo.filetype == 'help' then
             return false
           end
           local n_lines = vim.api.nvim_buf_line_count(bufnr)
           -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
-          return  n_lines > 5000 or (n_lines > 0 and  vim.fn.getfsize(vim.fn.expand("%")) / n_lines > 10000)
+          return  n_lines > 5000 or (n_lines > 0 and  vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
         end,
         use_languagetree = true, -- use this to enable language injection
         additional_vim_regex_highlighting = false, -- Enable syntax on at the same time?
@@ -124,19 +124,19 @@ return {
   { -- Tabline
     'akinsho/bufferline.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
-    event = "VeryLazy",
+    event = 'VeryLazy',
     keys = mymappings.bufferline(),
     opts = {
       options = {
         color_icons = true,
-        separator_style = {"", ""},
+        separator_style = {'', ''},
         indicator = {
           style = 'none'
         },
         always_show_bufferline = false,
         offsets = {
           {
-            filetype = "NvimTree",
+            filetype = 'NvimTree',
             padding = 1 -- For some reason it is not calculating the value correctly, this fix it
           },
         },
@@ -148,7 +148,7 @@ return {
       },
       -- highlights = {
         -- buffer_selected = {
-        --   fg = "#DDDDDD",
+        --   fg = '#DDDDDD',
         -- },
       -- }
     }
@@ -272,7 +272,7 @@ return {
             'ext-all-rtl-sandbox.js'
           },
           mappings = {
-            n = { ["q"] = require("telescope.actions").close },
+            n = { ['q'] = require('telescope.actions').close },
           },
         },
         -- TODO: (a) same
@@ -328,28 +328,29 @@ return {
     }
   },
   {
-    "hrsh7th/nvim-cmp",
+    'hrsh7th/nvim-cmp',
     version = false,
-    event = "InsertEnter",
+    event = 'InsertEnter',
     dependencies = {
-      -- "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
+      -- 'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
       'hrsh7th/cmp-vsnip',
       'onsails/lspkind.nvim'
     },
     opts = function()
-      local cmp = require("cmp")
-      local defaults = require("cmp.config.default")()
+      local cmp = require('cmp')
+      local defaults = require('cmp.config.default')()
       return {
         snippet = {
           expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
+            vim.fn['vsnip#anonymous'](args.body)
           end,
         },
-        -- completion = {
-        --   completeopt = "menu,menuone,noinsert", -- same as vim's completeopt(see :help completeopt)
-        -- },
+        completion = {
+          -- completeopt = 'menu,menuone,noinsert', -- same as vim's completeopt(see :help completeopt)
+          completeopt = 'menu,menuone,noselect,noinsert', -- TODO: Check that this one is required
+        },
         window = {
           completion = { -- Move the menu to the left to match the 
             col_offset = -3,
@@ -366,12 +367,12 @@ return {
           -- { name = 'nvim_lsp_signature_help' },
         }),
         formatting = {
-          fields = { "kind", "abbr", "menu" },
+          fields = { 'kind', 'abbr', 'menu' },
           format = function(entry, vim_item)
-            local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-            local strings = vim.split(kind.kind, "%s", { trimempty = true })
-            kind.kind = " " .. (strings[1] or "") .. " "
-            kind.menu = "    (" .. (strings[2] or "") .. ")"
+            local kind = require('lspkind').cmp_format({ mode = 'symbol_text', maxwidth = 50 })(entry, vim_item)
+            local strings = vim.split(kind.kind, '%s', { trimempty = true })
+            kind.kind = ' ' .. (strings[1] or '') .. ' '
+            kind.menu = '    (' .. (strings[2] or '') .. ')'
 
             return kind
           end,
@@ -420,26 +421,176 @@ return {
         cmp_autopairs.on_confirm_done()
       )
     end
+  },
+  {
+    'williamboman/mason.nvim',
+    config = true
+  },
+  {
+    'neovim/nvim-lspconfig',
+    event = { 'BufReadPre', 'BufNewFile' },
+    dependencies = {
+      {
+        'williamboman/mason-lspconfig.nvim',
+        dependencies = 'williamboman/mason.nvim',
+        opts = { automatic_installation = true }
+      },
+      {
+        'hrsh7th/cmp-nvim-lsp',
+        cond = function()
+          return myutils.has('nvim-cmp')
+        end,
+      },
+    },
+    config = function(_, options)
+      local my_lsp_servers = {
+        'lua_ls',
+        'tsserver',
+        'bashls',
+        'pyright',
+        'vimls',
+        'marksman',
+        'cssls',
+        'cssmodules_ls',
+        'clangd',
+        'yamlls',
+        'html',
+        'sqlls'
+      }
+
+      local opts = { noremap=true, silent=true }
+      -- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+      -- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+      -- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+
+      -- Use an on_attach function to only map the following keys
+      -- after the language server attaches to the current buffer
+      local on_attach = function(client, bufnr)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+        -- Mappings.
+        -- See `:help vim.lsp.*` for documentation on any of the below functions
+        local bufopts = { noremap=true, silent=true, buffer=bufnr }
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+        -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+        vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+        vim.keymap.set('n', '<space>wl', function()
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, bufopts)
+        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+        --vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+        --vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+        -- vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+      end
+
+      -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      -- capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+      local lsp_flags = {
+        -- This is the default in Nvim 0.7+
+        debounce_text_changes = 150,
+      }
+
+      local lspconfig = require('lspconfig');
+
+      local my_lsp_server_config = {
+        -- sumneko_lua = {
+        lua_ls = {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          flags = lsp_flags,
+          settings = {
+            Lua = {
+              runtime = {
+                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                version = 'LuaJIT',
+              },
+              diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = {'vim'},
+              },
+              workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+              },
+              -- Do not send telemetry data containing a randomized but unique identifier
+              telemetry = {
+                enable = false,
+              },
+            },
+          },
+        },
+        yamlls = {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          flags = lsp_flags,
+          settings = {
+            yaml = {
+              format = {
+                enable = true,
+              },
+              hover = true,
+              completion = true,
+              customTags = {
+                "!fn",
+                "!And",
+                "!If",
+                "!If sequence",
+                "!Not",
+                "!Not sequence",
+                "!Equals",
+                "!Equals sequence",
+                "!Or",
+                "!FindInMap sequence",
+                "!Base64",
+                "!Cidr",
+                "!Ref",
+                "!Ref Scalar",
+                "!Sub",
+                "!Sub sequence",
+                "!GetAtt",
+                "!GetAZs",
+                "!ImportValue",
+                "!Select",
+                "!Split",
+                "!Join sequence"
+              },
+            },
+          }
+        },
+        tsserver = {
+          capabilities = capabilities,
+          on_attach = function(client)
+            -- Disable annoying convert JS module message
+            require('nvim-lsp-ts-utils').setup({
+              filter_out_diagnostics_by_code = { 80001 },
+            })
+            require('nvim-lsp-ts-utils').setup_client(client)      -- client.resolved_capabilities.document_formatting = false
+
+            client.server_capabilities.documentFormattingProvider = false
+          end,
+        }
+      }
+
+      for _, server_name in ipairs(my_lsp_servers) do
+        if my_lsp_server_config[server_name] ~= nil then
+          lspconfig[server_name].setup(my_lsp_server_config[server_name])
+        else
+          lspconfig[server_name].setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            flags = lsp_flags,
+          })
+        end
+      end
+    end
   }
-  -- {
-  --   "mason.nvim",
-  --   config = true
-  -- },
-  -- {
-  --   'neovim/nvim-lspconfig',
-  --   event = { "BufReadPre", "BufNewFile" },
-  --   dependencies = {
-  --     {
-  --       "williamboman/mason-lspconfig.nvim"
-  --       dependencies = "mason.nvim",
-  --       opts = { automatic_installation = true }
-  --     },
-  --     {
-  --       "hrsh7th/cmp-nvim-lsp",
-  --       cond = function()
-  --         -- return require("lazyvim.util").has("nvim-cmp")
-  --       end,
-  --     },
-  --   },
-  -- }
 }

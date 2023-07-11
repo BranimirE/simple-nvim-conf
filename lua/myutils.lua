@@ -41,7 +41,6 @@ function M.smart_tab()
   if exist_cmp and cmp.visible() then
     cmp.confirm({ select = true })
   else
-    print("cmp not found")
     local exist_vsnip, vsnip_available = pcall(vim.fn['vsnip#available'])
     if exist_vsnip and vsnip_available == 1 then
       M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
@@ -145,8 +144,11 @@ function M.parse_nvim_cmp_mapping(mapping_table)
   for _, mapping in pairs(mapping_table) do
     parsed[mapping[1]] = mapping[2]
   end
-  print(vim.inspect(parsed))
   return parsed
+end
+
+function M.has(plugin)
+  return require("lazy.core.config").spec.plugins[plugin] ~= nil
 end
 
 return M
