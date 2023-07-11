@@ -155,13 +155,6 @@ end
 -- ######################## END LANGUAGE SERVERS CONFIG ######################## 
 
 -- Highlight line numbers for diagnostics
-vim.fn.sign_define('DiagnosticSignError', { numhl = 'LspDiagnosticsLineNrError', text = '' })
-vim.fn.sign_define('DiagnosticSignWarn', { numhl = 'LspDiagnosticsLineNrWarning', text = '' })
-vim.fn.sign_define('DiagnosticSignInfo', { text = '' })
-vim.fn.sign_define('DiagnosticSignHint', { text = '' })
-
-vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
-vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
 
 -- Configure diagnostics displaying
 --vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {

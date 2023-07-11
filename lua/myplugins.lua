@@ -76,10 +76,7 @@ return {
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = 'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
     config = function(_, opts)
-      local success, ts_context_commentstring = pcall(require, 'ts_context_commentstring.integrations.comment_nvim')
-      if sucess then
-        opts = { pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook() }
-      end
+      opts = { pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook() }
       require('Comment').setup(opts)
     end,
   },
@@ -222,26 +219,26 @@ return {
           end)
           return '<Ignore>'
         end, { expr = true })
-
-        -- Actions
-        map({ 'n', 'v' }, '<leader>hs', gs.stage_hunk)
-        map({ 'n', 'v' }, '<leader>hr', gs.reset_hunk)
-        map('n', '<leader>hS', gs.stage_buffer)
-        map('n', '<leader>hu', gs.undo_stage_hunk)
-        map('n', '<leader>hR', gs.reset_buffer)
-        map('n', '<leader>hp', gs.preview_hunk)
-        map('n', 'gp', gs.preview_hunk)
-        map('n', '<leader>hb', function()
-          gs.blame_line { full = true }
-        end)
         map('n', '<leader>hd', gs.diffthis)
         map('n', '<leader>hD', function()
           gs.diffthis '~'
         end)
-        map('n', '<leader>td', gs.toggle_deleted)
 
-        -- Text object
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        -- -- Actions
+        -- map({ 'n', 'v' }, '<leader>hs', gs.stage_hunk)
+        -- map({ 'n', 'v' }, '<leader>hr', gs.reset_hunk)
+        -- map('n', '<leader>hS', gs.stage_buffer)
+        -- map('n', '<leader>hu', gs.undo_stage_hunk)
+        -- map('n', '<leader>hR', gs.reset_buffer)
+        -- map('n', '<leader>hp', gs.preview_hunk)
+        -- map('n', 'gp', gs.preview_hunk)
+        -- map('n', '<leader>hb', function()
+        --   gs.blame_line { full = true }
+        -- end)
+        -- map('n', '<leader>td', gs.toggle_deleted)
+        --
+        -- -- Text object
+        -- map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
       end,
     }
   },
@@ -317,17 +314,17 @@ return {
     event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
     config = true,
   },
-  {
+  { -- Bridge between vsnip and nvim-cmp
     'hrsh7th/cmp-vsnip',
     dependencies = {
-      'hrsh7th/vim-vsnip',
+      'hrsh7th/vim-vsnip', -- Snippets engine
       {
         'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
         build = 'yarn install --frozen-lockfile && yarn compile'
       }
     }
   },
-  {
+  { -- Autocompletion plugin
     'hrsh7th/nvim-cmp',
     version = false,
     event = 'InsertEnter',
@@ -360,10 +357,10 @@ return {
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
         sources = cmp.config.sources({
           { name = 'git' },
-          -- { name = 'nvim_lsp' },
           { name = 'vsnip' },
           { name = 'path' },
           { name = 'buffer' },
+          -- { name = 'nvim_lsp' },
           -- { name = 'nvim_lsp_signature_help' },
         }),
         formatting = {
@@ -464,25 +461,21 @@ return {
       -- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
       vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-      -- Use an on_attach function to only map the following keys
-      -- after the language server attaches to the current buffer
       local on_attach = function(client, bufnr)
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        -- Mappings.
-        -- See `:help vim.lsp.*` for documentation on any of the below functions
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
         vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
         -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-        vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-        vim.keymap.set('n', '<space>wl', function()
-          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, bufopts)
+        -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+        -- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+        -- vim.keymap.set('n', '<space>wl', function()
+        --   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        -- end, bufopts)
         vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
         --vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
         --vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
@@ -591,6 +584,14 @@ return {
           })
         end
       end
+
+      vim.fn.sign_define('DiagnosticSignError', { numhl = 'LspDiagnosticsLineNrError', text = '' })
+      vim.fn.sign_define('DiagnosticSignWarn', { numhl = 'LspDiagnosticsLineNrWarning', text = '' })
+      vim.fn.sign_define('DiagnosticSignInfo', { text = '' })
+      vim.fn.sign_define('DiagnosticSignHint', { text = '' })
+
+      vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
+      vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
     end
   }
 }
