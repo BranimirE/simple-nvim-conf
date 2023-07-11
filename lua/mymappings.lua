@@ -6,8 +6,8 @@ local with_opts = util.with_opts
 M = {
   telescope = function()
     return with_opts({
-      { '<leader>fg', util.telescope_auto_input(util.getLastSearch, true) },
-      { '<leader>fg', util.telescope_auto_input(util.getVisualSelection, false), mode = 'v' },
+      { '<leader>fg', util.telescope_auto_input(util.get_last_search, true) },
+      { '<leader>fg', util.telescope_auto_input(util.get_visual_selection, false), mode = 'v' },
       { '<leader>fb', '<cmd>Telescope buffers<cr>' },
       { '<leader>ff', '<cmd>Telescope find_files<cr>' },
     }, { noremap = true, silent = true })
@@ -36,13 +36,23 @@ M = {
     return mapping
   end,
 
+  nvim_cmp = function(cmp)
+    return {
+      {'<C-b>', cmp.mapping.scroll_docs(-4)},
+      {'<C-f>', cmp.mapping.scroll_docs(4)},
+      {'<C-Space>', cmp.mapping.complete()},
+      {'<C-e>', cmp.mapping.abort()},
+      {'<CR>', cmp.mapping.confirm({ select = false })}, -- select = false to confirm explicitly selected items
+    }
+  end,
+
   misc = function()
     return {
       { 'jk', '<esc>', mode = 'i' }, -- Go to normal mode in insert mode
       { '<leader>bd', '<esc>:bd<cr>' }, -- Close the current buffer
       { '<tab>', util.smart_tab, mode = { 'i', 's' } },
       { '<s-tab>', util.shift_smart_tab, mode = { 'i', 's' } },
-      { '<c-n>',  '<esc>:NvimTreeToggle<cr>', mode = { 'i', 'n' } },
+      { '<c-n>',  '<esc>:NvimTreeToggle<cr>'},
       { ',', '<cmd>nohlsearch<cr>' }, -- As C-l is used by tmux-navigator, use ',' instead
     }
   end

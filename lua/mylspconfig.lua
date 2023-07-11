@@ -57,21 +57,20 @@ local cmp = require'cmp'
 
 cmp.setup({
   snippet = {
-    -- REQUIRED - you must specify a snippet engine
     expand = function(args)
       vim.fn["vsnip#anonymous"](args.body)
     end,
   },
-  window = {
+  -- window = {
     completion = {
       winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
       col_offset = -3,
       side_padding = 0,
     },
-    documentation = {
-      winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
-    },
-  },
+    -- documentation = {
+    --   winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
+    -- },
+  -- },
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -83,7 +82,7 @@ cmp.setup({
     { name = 'git' },
     { name = 'nvim_lsp' },
     { name = 'vsnip' }, -- For vsnip users.
-    -- { name = 'path' },
+    { name = 'path' },
     { name = 'buffer' },
     { name = 'nvim_lsp_signature_help' },
   }),
@@ -101,6 +100,7 @@ cmp.setup({
   experimental = {
     ghost_text = true,
   },
+  sorting = defaults.sorting,
 })
 
 -- Set configuration for specific filetype.

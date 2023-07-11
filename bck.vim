@@ -7,6 +7,7 @@ Plug 'onsails/lspkind.nvim'
 " Language-Server-Protocol(LSP) completion plugins
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
+
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'

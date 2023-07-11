@@ -1,4 +1,6 @@
 local mymappings = require('mymappings')
+local myutils = require('myutils')
+
 return {
   { -- Theme
     'folke/tokyonight.nvim',
@@ -30,7 +32,7 @@ return {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
         api.config.mappings.default_on_attach(bufnr)
-        require('myutils').load_mapping(mymappings.nvim_tree(api, bufnr))
+        myutils.load_mapping(mymappings.nvim_tree(api, bufnr))
       end,
       renderer = {
         root_folder_label = false,
@@ -72,7 +74,7 @@ return {
   { -- Comment plugin
     'numToStr/Comment.nvim',
     event = { "BufReadPost", "BufNewFile" },
-    dependencies = {'JoosepAlviste/nvim-ts-context-commentstring'}, -- Comment embedded scripts
+    dependencies = 'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
     config = function(_, opts)
       local success, ts_context_commentstring = pcall(require, 'ts_context_commentstring.integrations.comment_nvim')
       if sucess then
@@ -315,4 +317,129 @@ return {
     event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
     config = true,
   },
+  {
+    'hrsh7th/cmp-vsnip',
+    dependencies = {
+      'hrsh7th/vim-vsnip',
+      {
+        'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
+        build = 'yarn install --frozen-lockfile && yarn compile'
+      }
+    }
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    version = false,
+    event = "InsertEnter",
+    dependencies = {
+      -- "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      'hrsh7th/cmp-vsnip',
+      'onsails/lspkind.nvim'
+    },
+    opts = function()
+      local cmp = require("cmp")
+      local defaults = require("cmp.config.default")()
+      return {
+        snippet = {
+          expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+          end,
+        },
+        -- completion = {
+        --   completeopt = "menu,menuone,noinsert", -- same as vim's completeopt(see :help completeopt)
+        -- },
+        window = {
+          completion = { -- Move the menu to the left to match the 
+            col_offset = -3,
+            side_padding = 0,
+          },
+        },
+        mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
+        sources = cmp.config.sources({
+          { name = 'git' },
+          -- { name = 'nvim_lsp' },
+          { name = 'vsnip' },
+          { name = 'path' },
+          { name = 'buffer' },
+          -- { name = 'nvim_lsp_signature_help' },
+        }),
+        formatting = {
+          fields = { "kind", "abbr", "menu" },
+          format = function(entry, vim_item)
+            local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+            local strings = vim.split(kind.kind, "%s", { trimempty = true })
+            kind.kind = " " .. (strings[1] or "") .. " "
+            kind.menu = "    (" .. (strings[2] or "") .. ")"
+
+            return kind
+          end,
+        },
+        experimental = {
+          ghost_text = true,
+        },
+        sorting = defaults.sorting,
+      }
+    end,
+    config = function(_, opts)
+      local cmp = require('cmp')
+      cmp.setup(opts)
+
+      -- Set configuration for specific filetype.
+      cmp.setup.filetype('gitcommit', {
+        sources = cmp.config.sources({
+          { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+        }, {
+          { name = 'buffer' },
+        })
+      })
+
+      -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+      -- cmp.setup.cmdline('/', {
+      --   mapping = cmp.mapping.preset.cmdline(),
+      --   sources = {
+      --     { name = 'buffer' }
+      --   }
+      -- })
+
+      -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          { name = 'cmdline' }
+        })
+      })
+
+      -- If you want insert `(` after select function or method item
+      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+      cmp.event:on(
+        'confirm_done',
+        cmp_autopairs.on_confirm_done()
+      )
+    end
+  }
+  -- {
+  --   "mason.nvim",
+  --   config = true
+  -- },
+  -- {
+  --   'neovim/nvim-lspconfig',
+  --   event = { "BufReadPre", "BufNewFile" },
+  --   dependencies = {
+  --     {
+  --       "williamboman/mason-lspconfig.nvim"
+  --       dependencies = "mason.nvim",
+  --       opts = { automatic_installation = true }
+  --     },
+  --     {
+  --       "hrsh7th/cmp-nvim-lsp",
+  --       cond = function()
+  --         -- return require("lazyvim.util").has("nvim-cmp")
+  --       end,
+  --     },
+  --   },
+  -- }
 }

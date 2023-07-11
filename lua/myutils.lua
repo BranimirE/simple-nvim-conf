@@ -8,7 +8,7 @@ function M.feedkey(key, mode)
   vim.api.nvim_feedkeys(M.t(key), mode, true)
 end
 
-function M.getVisualSelection()
+function M.get_visual_selection()
   vim.cmd('noau normal! "vy"')
   local text = vim.fn.getreg('v')
   vim.fn.setreg('v', {})
@@ -21,7 +21,7 @@ function M.getVisualSelection()
   end
 end
 
-function M.getLastSearch()
+function M.get_last_search()
   local text = vim.fn.histget('/')
 
   if #text > 3 and text:find("^\\<.*\\>$") then
@@ -35,12 +35,13 @@ function M.getLastSearch()
   end
 end
 
-local exist_cmp, cmp = pcall(require, 'cmp')
 
 function M.smart_tab()
+  local exist_cmp, cmp = pcall(require, 'cmp')
   if exist_cmp and cmp.visible() then
     cmp.confirm({ select = true })
   else
+    print("cmp not found")
     local exist_vsnip, vsnip_available = pcall(vim.fn['vsnip#available'])
     if exist_vsnip and vsnip_available == 1 then
       M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
@@ -51,6 +52,7 @@ function M.smart_tab()
 end
 
 function M.shift_smart_tab()
+  local exist_cmp, cmp = pcall(require, 'cmp')
   if exist_cmp and cmp.visible() then
     cmp.select_prev_item()
   else
@@ -136,6 +138,15 @@ function M.nvim_tree_smart_split(nvim_tree_api)
     end
     nvim_tree_api.node.open.vertical()
   end
+end
+
+function M.parse_nvim_cmp_mapping(mapping_table)
+  local parsed = {}
+  for _, mapping in pairs(mapping_table) do
+    parsed[mapping[1]] = mapping[2]
+  end
+  print(vim.inspect(parsed))
+  return parsed
 end
 
 return M
