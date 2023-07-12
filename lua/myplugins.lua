@@ -8,11 +8,11 @@ return {
     event = 'VeryLazy',
     opts = {
       style = 'night',
-      transparent = true,
-      styles = {
-        sidebars = 'transparent',
-        floats = 'transparent',
-      },
+      -- transparent = true,
+      -- styles = {
+      --   sidebars = 'transparent',
+      --   floats = 'transparent',
+      -- },
     },
     init = function()
       vim.cmd('colorscheme tokyonight')
@@ -132,7 +132,7 @@ return {
     'akinsho/bufferline.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
     event = 'VeryLazy',
-    keys = mymappings.bufferline(),
+    -- keys = mymappings.bufferline(),
     opts = {
       options = {
         color_icons = true,
@@ -158,19 +158,35 @@ return {
       --   fg = '#DDDDDD',
       -- },
       -- }
-    }
+    },
+    config = function (_, opts)
+      local bl = require('bufferline')
+      bl.setup(opts)
+      myutils.load_mapping(mymappings.bufferline(bl))
+    end
   },
   {
     -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
-    opts = {
-      background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
-    },
+    -- opts = {
+    --   background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
+    -- },
     config = function(_, opts)
       local notify = require('notify')
       notify.setup(opts)
-      vim.notify = notify
+      vim.notify = function(msg, ...)
+        if type(msg) == 'string' then
+          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available'
+          if is_suppressed_message then
+            -- Do not show some messages
+            return
+          end
+        end
+
+        notify(msg, ...)
+      end
+
     end,
   },
   {
@@ -451,6 +467,7 @@ return {
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         myutils.load_mapping(mymappings.lsp(bufnr))
+        myutils.load_mapping(mymappings.lsp_saga(bufnr))
       end
 
       local capabilities = vim.tbl_deep_extend(
@@ -583,7 +600,6 @@ return {
     },
     config = function(_, opts)
       require('lspsaga').setup(opts)
-      myutils.load_mapping(mymappings.lsp_saga())
     end
   }
 }

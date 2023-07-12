@@ -24,14 +24,22 @@ M = {
     }, { noremap = true, silent = true, nowait = true, buffer = bufnr })
   end,
 
-  bufferline = function()
+  bufferline = function(bl)
     local mapping = {
-      { '<A-9>', '<cmd>BufferLineGoToBuffer -1<cr>', mode = { 'i', 'n', 'v' } }
+      { '<A-9>', function ()
+        pcall(bl.go_to, -1)
+      end, mode = { 'i', 'n', 'v' }, silent = true }
     }
 
     for index = 1, 8 do
-      table.insert(mapping, { '<A-' .. index .. '>', '<cmd>BufferLineGoToBuffer ' .. index .. '<cr>',
-        mode = { 'i', 'n', 'v' } })                                                                                      -- TODO: Feature - Check if the tab has splits, if so then instead of replacing the current window with the new buffer, change the focus to the windows that is displaying that buffer, or replace the buffer if it is not displayed
+      table.insert(mapping, {
+        '<A-' .. index .. '>',
+        function ()
+          pcall(bl.go_to, index)
+        end,
+        mode = { 'i', 'n', 'v' }, silent = true
+      })
+      -- TODO: Feature - Check if the tab has splits, if so then instead of replacing the current window with the new buffer, change the focus to the windows that is displaying that buffer, or replace the buffer if it is not displayed
       -- keymap.set({'i', 'n', 'v'}, '<M-S-'..index..'>', '<Cmd>tabn '..index..'<CR>', { noremap = true })
     end
     return mapping
@@ -70,7 +78,7 @@ M = {
     }, { noremap = true, silent = true, buffer = bufnr })
   end,
 
-  lsp_saga = function()
+  lsp_saga = function(bufnr)
     local diagnostic = require("lspsaga.diagnostic")
     return with_opts({
       { "gh",         "<cmd>Lspsaga lsp_finder<CR>" },
@@ -85,9 +93,8 @@ M = {
       { "]E",         function() diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end }, -- Only jump to errors
       { "<leader>o",  "<cmd>Lspsaga outline<CR>" },
       { "<leader>k",  "<cmd>Lspsaga hover_doc<CR>" },
-      { "<A-d>",      "<cmd>Lspsaga term_toggle lazygit<CR>",                                                              mode = {
-        "n", "t" } }
-    }, { silent = true })
+      { "<A-d>",      "<cmd>Lspsaga term_toggle lazygit<CR>", mode = { "n", "t" } }
+    }, { silent = true, buffer = bufnr })
   end,
 
   misc = function()
@@ -98,7 +105,7 @@ M = {
       { ',',          '<cmd>nohlsearch<cr>' },        -- As C-l is used by tmux-navigator, use ',' instead
       { '<',          '<gv',                     mode = 'v' }, -- Avoid exit visual mode on left shifting
       { '>',          '>gv',                     mode = 'v' }, -- Avoid exit visual mode on right shifting
-      { '<up>',       '<cmd>cprevious<cr>',      silent = true }, -- Use up arrow to navigate up quickfix list. TODO: Use only when quickfix list is open
+      { '<up>',       '<cmd>cprevious<cr>',      silent = true }, -- Use up arrow to navigate up quickfix list. TODO: Use only when a quickfix or loclist list is open
       { '<down>',     '<cmd>cnext<cr>',          silent = true }, -- User down to navigate down quickfix list. TODO: The same as above
     }
   end

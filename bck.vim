@@ -73,18 +73,6 @@ require('mylspconfig')
 --   notify(msg, ...)
 -- end
 
--- " lukas-reineke/indent-blankline.nvim
--- Disable the plugin in very big files
--- https://github.com/lukas-reineke/indent-blankline.nvim/issues/440#issuecomment-1165399724
-vim.api.nvim_create_autocmd("BufEnter", {
-  group = vim.api.nvim_create_augroup("IndentBlanklineBigFile", {}),
-  pattern = "*",
-  callback = function()
-    if vim.api.nvim_buf_line_count(0) > 5000 then
-      require("indent_blankline.commands").disable()
-    end
-  end,
-})
 EOF
 
 " Remove background colors
