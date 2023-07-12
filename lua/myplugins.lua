@@ -24,7 +24,7 @@ return {
       require('myconfig/evil_lualine')
     end
   },
-  { -- File tree viewer
+  {                                              -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'nvim-tree/nvim-web-devicons',
@@ -293,12 +293,12 @@ return {
   { -- Autocompletion plugin
     'hrsh7th/nvim-cmp',
     version = false,
-    event = 'InsertEnter',
+    event = { 'InsertEnter', 'CmdlineEnter' },
     dependencies = {
-      -- 'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-vsnip',
+      'hrsh7th/cmp-cmdline',
       'onsails/lspkind.nvim'
     },
     opts = function()
@@ -326,8 +326,8 @@ return {
           { name = 'vsnip' },
           { name = 'path' },
           { name = 'buffer' },
-          -- { name = 'nvim_lsp' },
-          -- { name = 'nvim_lsp_signature_help' },
+          { name = 'nvim_lsp' },
+          { name = 'nvim_lsp_signature_help' },
         }),
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
@@ -368,14 +368,14 @@ return {
       -- })
 
       -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-      -- cmp.setup.cmdline(':', {
-      --   mapping = cmp.mapping.preset.cmdline(),
-      --   sources = cmp.config.sources({
-      --     { name = 'path' }
-      --   }, {
-      --     { name = 'cmdline' }
-      --   })
-      -- })
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          { name = 'cmdline' }
+        })
+      })
 
       -- If you want insert `(` after select function or method item
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
@@ -404,8 +404,15 @@ return {
           return myutils.has('nvim-cmp')
         end,
       },
+      {
+        'hrsh7th/cmp-nvim-lsp-signature-help',
+        cond = function()
+          return myutils.has('nvim-cmp')
+        end,
+      },
+      'jose-elias-alvarez/nvim-lsp-ts-utils', -- TODO: Load only for javascript files
     },
-    config = function(_, options)
+    config = function()
       local my_lsp_servers = {
         'lua_ls',
         'tsserver',
@@ -421,68 +428,36 @@ return {
         'sqlls'
       }
 
-      local opts = { noremap = true, silent = true }
-      -- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-      -- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-      -- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-
-      local on_attach = function(client, bufnr)
+      local on_attach = function(_, bufnr)
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-      -- Error = " ",
-      -- Warn = " ",
-      -- Hint = " ",
-      -- Info = " ",
-        local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-        -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-        -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-        -- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-        -- vim.keymap.set('n', '<space>wl', function()
-        --   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        -- end, bufopts)
-        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-        --vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-        --vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-        -- vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+        myutils.load_mapping(mymappings.lsp(bufnr))
       end
 
-      -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local capabilities = vim.tbl_deep_extend(
+        "force",
+        {},
+        vim.lsp.protocol.make_client_capabilities(),
+        require("cmp_nvim_lsp").default_capabilities()
+      )
       -- capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-      local lsp_flags = {
-        -- This is the default in Nvim 0.7+
-        debounce_text_changes = 150,
-      }
 
       local lspconfig = require('lspconfig');
 
       local my_lsp_server_config = {
-        -- sumneko_lua = {
         lua_ls = {
           on_attach = on_attach,
           capabilities = capabilities,
-          flags = lsp_flags,
           settings = {
             Lua = {
               runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
                 version = 'LuaJIT',
               },
               diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = { 'vim' },
+                globals = { 'vim' }, -- Get the language server to recognize the `vim` global
               },
               workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = vim.api.nvim_get_runtime_file("", true),
+                library = vim.api.nvim_get_runtime_file("", true), -- Make the server aware of Neovim runtime files
               },
               -- Do not send telemetry data containing a randomized but unique identifier
               telemetry = {
@@ -494,7 +469,6 @@ return {
         yamlls = {
           on_attach = on_attach,
           capabilities = capabilities,
-          flags = lsp_flags,
           settings = {
             yaml = {
               format = {
@@ -531,14 +505,14 @@ return {
         },
         tsserver = {
           capabilities = capabilities,
-          on_attach = function(client)
+          on_attach = function(client, bufnr)
+            on_attach(client, bufnr)
             -- Disable annoying convert JS module message
             require('nvim-lsp-ts-utils').setup({
               filter_out_diagnostics_by_code = { 80001 },
             })
             require('nvim-lsp-ts-utils').setup_client(client) -- client.resolved_capabilities.document_formatting = false
-
-            client.server_capabilities.documentFormattingProvider = false
+            -- client.server_capabilities.documentFormattingProvider = false
           end,
         }
       }
@@ -550,7 +524,6 @@ return {
           lspconfig[server_name].setup({
             on_attach = on_attach,
             capabilities = capabilities,
-            flags = lsp_flags,
           })
         end
       end

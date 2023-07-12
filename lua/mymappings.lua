@@ -43,6 +43,8 @@ M = {
       { '<C-Space>', cmp.mapping.complete() },
       { '<C-e>', cmp.mapping.abort() },
       { '<CR>', cmp.mapping.confirm({ select = false }) }, -- select = false to confirm explicitly selected items
+      { '<tab>', util.smart_tab(cmp), mode = { 'i', 's' } },
+      { '<s-tab>', util.shift_smart_tab(cmp), mode = { 'i', 's' } },
     }
   end,
 
@@ -55,12 +57,22 @@ M = {
     }, { buffer = bufnr })
   end,
 
+  lsp = function(bufnr)
+    return with_opts({
+      { '<leader>q', vim.diagnostic.setloclist },
+      { 'gD', vim.lsp.buf.declaration },
+      { 'gd', vim.lsp.buf.definition },
+      { 'gi', vim.lsp.buf.implementation },
+      { 'K', vim.lsp.buf.hover },
+      { '<leader>D', vim.lsp.buf.type_definition },
+      { 'gr', vim.lsp.buf.references },
+    }, { noremap = true, silent = true, buffer = bufnr })
+  end,
+
   misc = function()
     return {
       { 'jk', '<esc>', mode = 'i' }, -- Go to normal mode in insert mode
       { '<leader>bd', '<esc>:bd<cr>' }, -- Close the current buffer
-      { '<tab>', util.smart_tab, mode = { 'i', 's' } },
-      { '<s-tab>', util.shift_smart_tab, mode = { 'i', 's' } },
       { '<c-n>',  '<esc>:NvimTreeToggle<cr>'},
       { ',', '<cmd>nohlsearch<cr>' }, -- As C-l is used by tmux-navigator, use ',' instead
       { '<', '<gv', mode = 'v'}, -- Avoid exit visual mode on left shifting

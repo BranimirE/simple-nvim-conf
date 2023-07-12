@@ -35,31 +35,32 @@ function M.get_last_search()
   end
 end
 
-
-function M.smart_tab()
-  local exist_cmp, cmp = pcall(require, 'cmp')
-  if exist_cmp and cmp.visible() then
-    cmp.confirm({ select = true })
-  else
-    local exist_vsnip, vsnip_available = pcall(vim.fn['vsnip#available'])
-    if exist_vsnip and vsnip_available == 1 then
-      M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
+function M.smart_tab(cmp)
+  return function()
+    if cmp.visible() then
+      cmp.confirm({ select = true })
     else
-      M.feedkey([[<Tab>]], 'n')
+      local exist_vsnip, vsnip_available = pcall(vim.fn['vsnip#available'])
+      if exist_vsnip and vsnip_available == 1 then
+        M.feedkey('<Plug>(vsnip-expand-or-jump)', '')
+      else
+        M.feedkey([[<Tab>]], 'n')
+      end
     end
   end
 end
 
-function M.shift_smart_tab()
-  local exist_cmp, cmp = pcall(require, 'cmp')
-  if exist_cmp and cmp.visible() then
-    cmp.select_prev_item()
-  else
-    local exist_vsnip, vsnip_jumpable = pcall(vim.fn['vsnip#jumpable'], -1)
-    if exist_vsnip and vsnip_jumpable == 1 then
-      M.feedkey('<Plug>(vsnip-jump-prev)', '')
+function M.shift_smart_tab(cmp)
+  return function()
+    if cmp.visible() then
+      cmp.select_prev_item()
     else
-      M.feedkey([[<S-Tab>]], 'n')
+      local exist_vsnip, vsnip_jumpable = pcall(vim.fn['vsnip#jumpable'], -1)
+      if exist_vsnip and vsnip_jumpable == 1 then
+        M.feedkey('<Plug>(vsnip-jump-prev)', '')
+      else
+        M.feedkey([[<S-Tab>]], 'n')
+      end
     end
   end
 end
