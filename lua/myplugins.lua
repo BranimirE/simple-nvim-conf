@@ -2,8 +2,7 @@ local mymappings = require('mymappings')
 local myutils = require('myutils')
 
 return {
-  {
-    -- Theme
+  { -- Theme
     'folke/tokyonight.nvim',
     event = 'VeryLazy',
     opts = {
@@ -18,16 +17,14 @@ return {
       vim.cmd('colorscheme tokyonight')
     end
   },
-  {
-    -- Status line
+  { -- Status line
     'nvim-lualine/lualine.nvim',
     lazy = false,
     config = function()
       require('myconfig/evil_lualine')
     end
   },
-  {
-                                                 -- File tree viewer
+  { -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'nvim-tree/nvim-web-devicons',
@@ -62,13 +59,11 @@ return {
       },
     }
   },
-  {
-    -- Tmux switch panels keys integration
+  { -- Tmux switch panels keys integration
     'christoomey/vim-tmux-navigator',
     lazy = false
   },
-  {
-    -- Autoclose ()[]{}
+  { -- Autoclose ()[]{}
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {
@@ -76,8 +71,7 @@ return {
       enable_moveright = true -- TODO: Remove this line if it is not needed
     }
   },
-  {
-    -- Comment plugin
+  { -- Comment plugin
     'numToStr/Comment.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = 'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
@@ -87,8 +81,7 @@ return {
       })
     end,
   },
-  {
-    -- Advanced highlighting
+  { -- Advanced highlighting
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     cmd = { 'TSUpdateSync' },
@@ -127,8 +120,7 @@ return {
     },
     main = 'nvim-treesitter.configs'
   },
-  {
-    -- Tabline
+  { -- Tabline
     'akinsho/bufferline.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
     event = 'VeryLazy',
@@ -165,8 +157,7 @@ return {
       myutils.load_mapping(mymappings.bufferline(bl))
     end
   },
-  {
-    -- Notifications windows
+  { -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
     -- opts = {
@@ -189,8 +180,7 @@ return {
 
     end,
   },
-  {
-    -- Vertical lines on indentation
+  { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
@@ -203,8 +193,7 @@ return {
       max_indent_increase = 1
     }
   },
-  {
-    -- Git signs on the number column and git blame as virtual text
+  { -- Git signs on the number column and git blame as virtual text
     'lewis6991/gitsigns.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
@@ -234,8 +223,7 @@ return {
       end,
     }
   },
-  {
-    -- Telescope - Fuzzy finder
+  { -- Telescope - Fuzzy finder
     'nvim-telescope/telescope.nvim',
     tag = '0.1.2',
     dependencies = {
@@ -292,27 +280,23 @@ return {
       -- telescope.load_extension('ui-select') -- TODO: (a) same
     end
   },
-  {
-    -- Auto detect file indent settings
+  { -- Auto detect file indent settings
     'tpope/vim-sleuth',
     event = { 'BufReadPre', 'BufNewFile' },
   },
-  {
-    -- Hihglight TODOs and show a list with all TODOs
+  { -- Hihglight TODOs and show a list with all TODOs
     'folke/todo-comments.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     cmd = { --[[ 'TodoTrouble',  ]] 'TodoTelescope', 'TodoQuickFix' },
     event = { 'BufReadPost', 'BufNewFile' },
     config = true,
   },
-  {
-    -- Colorize color strings like #00afff or magenta
+  { -- Colorize color strings like #00afff or magenta
     'NvChad/nvim-colorizer.lua',
     event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
     config = true,
   },
-  {
-    -- Bridge between vsnip and nvim-cmp
+  { -- Bridge between vsnip and nvim-cmp
     'hrsh7th/cmp-vsnip',
     dependencies = {
       'hrsh7th/vim-vsnip',                                -- Snippets engine
@@ -322,8 +306,7 @@ return {
       }
     }
   },
-  {
-    -- Autocompletion plugin
+  { -- Autocompletion plugin
     'hrsh7th/nvim-cmp',
     version = false,
     event = { 'InsertEnter', 'CmdlineEnter' },
@@ -430,7 +413,10 @@ return {
       {
         'williamboman/mason-lspconfig.nvim', -- It need to be setup before nvim-lspconfig
         dependencies = 'williamboman/mason.nvim',
-        opts = { automatic_installation = true }
+        opts = { automatic_installation = true },
+        config = function(_, opts)
+          require("mason-lspconfig").setup(opts)
+        end,
       },
       {
         'hrsh7th/cmp-nvim-lsp',
