@@ -15,12 +15,12 @@ M = {
 
   nvim_tree = function(nvim_tree_api, bufnr)
     return with_opts({
-      { 'l', nvim_tree_api.node.open.edit, desc = 'nvim-tree: Open file' },
-      { 'o', nvim_tree_api.node.open.edit, desc = 'nvim-tree: Open file' },
-      { '<cr>', nvim_tree_api.node.open.edit, desc = 'nvim-tree: Open file' },
-      { 'h', nvim_tree_api.node.navigate.parent_close, desc = 'nvim-tree: Close Directory' },
-      { 'v', nvim_tree_api.node.open.vertical, desc = 'nvim-tree: Open on vertical split' },
-      { 'L', util.nvim_tree_smart_split(nvim_tree_api), desc = 'nvim-tree: Smart Split' },
+      { 'l',    nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
+      { 'o',    nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
+      { '<cr>', nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
+      { 'h',    nvim_tree_api.node.navigate.parent_close,  desc = 'nvim-tree: Close Directory' },
+      { 'v',    nvim_tree_api.node.open.vertical,          desc = 'nvim-tree: Open on vertical split' },
+      { 'L',    util.nvim_tree_smart_split(nvim_tree_api), desc = 'nvim-tree: Smart Split' },
     }, { noremap = true, silent = true, nowait = true, buffer = bufnr })
   end,
 
@@ -29,8 +29,9 @@ M = {
       { '<A-9>', '<cmd>BufferLineGoToBuffer -1<cr>', mode = { 'i', 'n', 'v' } }
     }
 
-    for index = 1,8 do
-      table.insert(mapping, { '<A-'..index..'>', '<cmd>BufferLineGoToBuffer '..index..'<cr>', mode = {'i', 'n', 'v'} } ) -- TODO: Feature - Check if the tab has splits, if so then instead of replacing the current window with the new buffer, change the focus to the windows that is displaying that buffer, or replace the buffer if it is not displayed
+    for index = 1, 8 do
+      table.insert(mapping, { '<A-' .. index .. '>', '<cmd>BufferLineGoToBuffer ' .. index .. '<cr>',
+        mode = { 'i', 'n', 'v' } })                                                                                      -- TODO: Feature - Check if the tab has splits, if so then instead of replacing the current window with the new buffer, change the focus to the windows that is displaying that buffer, or replace the buffer if it is not displayed
       -- keymap.set({'i', 'n', 'v'}, '<M-S-'..index..'>', '<Cmd>tabn '..index..'<CR>', { noremap = true })
     end
     return mapping
@@ -38,21 +39,21 @@ M = {
 
   nvim_cmp = function(cmp)
     return {
-      { '<C-b>', cmp.mapping.scroll_docs(-4) },
-      { '<C-f>', cmp.mapping.scroll_docs(4) },
+      { '<C-b>',     cmp.mapping.scroll_docs(-4) },
+      { '<C-f>',     cmp.mapping.scroll_docs(4) },
       { '<C-Space>', cmp.mapping.complete() },
-      { '<C-e>', cmp.mapping.abort() },
-      { '<CR>', cmp.mapping.confirm({ select = false }) }, -- select = false to confirm explicitly selected items
-      { '<tab>', util.smart_tab(cmp), mode = { 'i', 's' } },
-      { '<s-tab>', util.shift_smart_tab(cmp), mode = { 'i', 's' } },
+      { '<C-e>',     cmp.mapping.abort() },
+      { '<CR>',      cmp.mapping.confirm({ select = false }) }, -- select = false to confirm explicitly selected items
+      { '<tab>',     util.smart_tab(cmp),                    mode = { 'i', 's' } },
+      { '<s-tab>',   util.shift_smart_tab(cmp),              mode = { 'i', 's' } },
     }
   end,
 
   gitsigns = function(gs, bufnr)
     return with_opts({
-      { ']c', util.next_hunk(gs), expr = true },
-      { '[c', util.prev_hunk(gs), expr = true },
-      { '<leader>hd', gs.diffthis }, -- Diff with the current changes
+      { ']c',         util.next_hunk(gs),             expr = true },
+      { '[c',         util.prev_hunk(gs),             expr = true },
+      { '<leader>hd', gs.diffthis },                    -- Diff with the current changes
       { '<leader>hD', function() gs.diffthis('~') end } -- Diff with the last commit
     }, { buffer = bufnr })
   end,
@@ -60,25 +61,45 @@ M = {
   lsp = function(bufnr)
     return with_opts({
       { '<leader>q', vim.diagnostic.setloclist },
-      { 'gD', vim.lsp.buf.declaration },
-      { 'gd', vim.lsp.buf.definition },
-      { 'gi', vim.lsp.buf.implementation },
-      { 'K', vim.lsp.buf.hover },
+      { 'gD',        vim.lsp.buf.declaration },
+      { 'gd',        vim.lsp.buf.definition },
+      { 'gi',        vim.lsp.buf.implementation },
+      { 'K',         vim.lsp.buf.hover },
       { '<leader>D', vim.lsp.buf.type_definition },
-      { 'gr', vim.lsp.buf.references },
+      { 'gr',        vim.lsp.buf.references },
     }, { noremap = true, silent = true, buffer = bufnr })
+  end,
+
+  lsp_saga = function()
+    local diagnostic = require("lspsaga.diagnostic")
+    return with_opts({
+      { "gh",         "<cmd>Lspsaga lsp_finder<CR>" },
+      { "<leader>ca", "<cmd>Lspsaga code_action<CR>" },
+      { "<leader>ca", "<cmd>Lspsaga range_code_action<CR>" },
+      { "<leader>rn", "<cmd>Lspsaga rename<CR>" },
+      { "<leader>gd", "<cmd>Lspsaga preview_definition<CR>" },
+      { "<leader>cd", "<cmd>Lspsaga show_line_diagnostics<CR>" },
+      { "[e",         "<cmd>Lspsaga diagnostic_jump_prev<CR>" },
+      { "]e",         "<cmd>Lspsaga diagnostic_jump_next<CR>" },
+      { "[E",         function() diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end }, -- Only jump to errors
+      { "]E",         function() diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end }, -- Only jump to errors
+      { "<leader>o",  "<cmd>Lspsaga outline<CR>" },
+      { "<leader>k",  "<cmd>Lspsaga hover_doc<CR>" },
+      { "<A-d>",      "<cmd>Lspsaga term_toggle lazygit<CR>",                                                              mode = {
+        "n", "t" } }
+    }, { silent = true })
   end,
 
   misc = function()
     return {
-      { 'jk', '<esc>', mode = 'i' }, -- Go to normal mode in insert mode
-      { '<leader>bd', '<esc>:bd<cr>' }, -- Close the current buffer
-      { '<c-n>',  '<esc>:NvimTreeToggle<cr>'},
-      { ',', '<cmd>nohlsearch<cr>' }, -- As C-l is used by tmux-navigator, use ',' instead
-      { '<', '<gv', mode = 'v'}, -- Avoid exit visual mode on left shifting
-      { '>', '>gv', mode = 'v'}, -- Avoid exit visual mode on right shifting
-      { '<up>', '<cmd>cprevious<cr>', silent = true}, -- Use up arrow to navigate up quickfix list. TODO: Use only when quickfix list is open
-      { '<down>', '<cmd>cnext<cr>', silent = true}, -- User down to navigate down quickfix list. TODO: The same as above
+      { 'jk',         '<esc>',                   mode = 'i' }, -- Go to normal mode in insert mode
+      { '<leader>bd', '<esc>:bd<cr>' },               -- Close the current buffer
+      { '<c-n>',      '<esc>:NvimTreeToggle<cr>' },
+      { ',',          '<cmd>nohlsearch<cr>' },        -- As C-l is used by tmux-navigator, use ',' instead
+      { '<',          '<gv',                     mode = 'v' }, -- Avoid exit visual mode on left shifting
+      { '>',          '>gv',                     mode = 'v' }, -- Avoid exit visual mode on right shifting
+      { '<up>',       '<cmd>cprevious<cr>',      silent = true }, -- Use up arrow to navigate up quickfix list. TODO: Use only when quickfix list is open
+      { '<down>',     '<cmd>cnext<cr>',          silent = true }, -- User down to navigate down quickfix list. TODO: The same as above
     }
   end
 }

@@ -165,29 +165,7 @@ end
 
 -- ######################## BEGIN LSP SAGA CONFIG ########################
 local keymap = vim.keymap.set
-require('lspsaga').setup({
-  ui = {
-    title = true,
-    -- border = 'solid'
-  },
-  lightbulb = {
-    enable = false,
-    enable_in_insert = false,
-    sign = false, -- Don't put lightbulb on the numbers line
-    sign_priority = 40,
-    virtual_text = true, -- Puth the lightbulb on the virtual text
-  },
-  symbol_in_winbar = {
-    enable = true,
-    separator = " > ",
-    ignore_patterns={},
-    hide_keyword = true,
-    show_file = false,
-    folder_level = 2,
-    respect_root = false,
-    color_mode = true,
-  },
-})
+require('lspsaga').setup()
 
 
 -- Lsp finder find the symbol definition implement reference
