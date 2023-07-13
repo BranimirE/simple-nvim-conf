@@ -26,3 +26,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+
+vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
+vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')
+vim.cmd('hi NvimTreeFolderName guifg=#00afff')
+vim.cmd('hi NvimTreeOpenedFolderName guifg=#00afff')
+
+

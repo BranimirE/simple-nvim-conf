@@ -78,7 +78,7 @@ M = {
     }, { noremap = true, silent = true, buffer = bufnr })
   end,
 
-  lsp_saga = function(bufnr)
+  lsp_saga = function()
     return with_opts({
       { 'gh',         '<cmd>Lspsaga finder<CR>' },
       { '<leader>rn', '<cmd>Lspsaga rename<CR>' },
@@ -90,10 +90,10 @@ M = {
       { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<CR>' },
       { '<leader>o',  '<cmd>Lspsaga outline<CR>' },
       { '<leader>k',  '<cmd>Lspsaga hover_doc<CR>' },
+      { '<leader>ca', '<cmd>Lspsaga code_action<CR>' },
+      { '<leader>ca', '<cmd>Lspsaga code_action<CR>', mode = 'v' },
       { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<CR>', mode = { 'n', 't' } }
-    -- }, { silent = true })
-    -- }, { silent = true, buffer = bufnr })
-    }, { buffer = bufnr })
+    }, { silent = true })
   end,
 
   misc = function()
@@ -106,9 +106,6 @@ M = {
       { '>',          '>gv',                     mode = 'v' }, -- Avoid exit visual mode on right shifting
       { '<up>',       '<cmd>cprevious<cr>',      silent = true }, -- Use up arrow to navigate up quickfix list. TODO: Use only when a quickfix or loclist list is open
       { '<down>',     '<cmd>cnext<cr>',          silent = true }, -- User down to navigate down quickfix list. TODO: The same as above
-
-      { '<leader>ca', '<cmd>Lspsaga code_action<CR>' }, -- It can be triggered even if there is not lps attached to the buffer
-      { '<leader>ca', '<cmd>Lspsaga code_action<CR>', mode = 'v' },
     }
   end
 }

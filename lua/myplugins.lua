@@ -213,7 +213,7 @@ return {
         ignore_whitespace = false,
       },
       current_line_blame_formatter = ' <author>, <author_time:%R> ● <summary>',
-      current_line_blame_formatter_nc = ' <author>, <author_time:%R> ● Uncommitted changes',
+      current_line_blame_formatter_nc = ' <You>, <author_time:%R> ● Uncommitted changes',
       preview_config = {
         border = 'rounded',
       },
@@ -446,14 +446,17 @@ return {
         'clangd',
         'yamlls',
         'html',
-        'sqlls'
+        'sqlls',
+        'eslint'
       }
+
+      -- Most of lspsaga key mappings can be triggered using null-ls sources
+      myutils.load_mapping(mymappings.lsp_saga())
 
       local on_attach = function(_, bufnr)
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         myutils.load_mapping(mymappings.lsp(bufnr))
-        myutils.load_mapping(mymappings.lsp_saga(bufnr))
       end
 
       local capabilities = vim.tbl_deep_extend(
@@ -575,7 +578,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { "prettier" }
+      ensure_installed = { 'prettier' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -585,12 +588,14 @@ return {
           local null_ls = require('null-ls')
 
           local formatting = null_ls.builtins.formatting
-          -- local diagnostic = null_ls.builtins.diagnostics
+          -- local diagnostics = null_ls.builtins.diagnostics
           local code_actions = null_ls.builtins.code_actions
           return {
             sources = {
               code_actions.gitsigns,
+              -- code_actions.eslint,
               formatting.prettier,
+              -- diagnostics.eslint
             }
           }
         end
@@ -599,5 +604,9 @@ return {
     config = function(_, opts)
       require('mason-null-ls').setup(opts)
     end,
+  },
+  { -- Useful Git commands. Ex: Git blame
+    'tpope/vim-fugitive',
+    event = { 'BufReadPre', 'BufNewFile' },
   }
 }
