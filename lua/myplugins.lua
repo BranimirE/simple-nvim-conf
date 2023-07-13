@@ -212,8 +212,8 @@ return {
         delay = 100,
         ignore_whitespace = false,
       },
-      current_line_blame_formatter = '<author>, <author_time:%R> ● <summary>',
-      current_line_blame_formatter_nc = 'You, <author_time:%R> ● Uncommitted changes',
+      current_line_blame_formatter = ' <author>, <author_time:%R> ● <summary>',
+      current_line_blame_formatter_nc = ' <author>, <author_time:%R> ● Uncommitted changes',
       preview_config = {
         border = 'rounded',
       },
@@ -415,7 +415,7 @@ return {
         dependencies = 'williamboman/mason.nvim',
         opts = { automatic_installation = true },
         config = function(_, opts)
-          require("mason-lspconfig").setup(opts)
+          require('mason-lspconfig').setup(opts)
         end,
       },
       {
@@ -457,10 +457,10 @@ return {
       end
 
       local capabilities = vim.tbl_deep_extend(
-        "force",
+        'force',
         {},
         vim.lsp.protocol.make_client_capabilities(),
-        require("cmp_nvim_lsp").default_capabilities()
+        require('cmp_nvim_lsp').default_capabilities()
       )
       -- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
@@ -479,7 +479,7 @@ return {
                 globals = { 'vim' }, -- Get the language server to recognize the `vim` global
               },
               workspace = {
-                library = vim.api.nvim_get_runtime_file("", true), -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file('', true), -- Make the server aware of Neovim runtime files
               },
               -- Do not send telemetry data containing a randomized but unique identifier
               telemetry = {
@@ -499,28 +499,28 @@ return {
               hover = true,
               completion = true,
               customTags = {
-                "!fn",
-                "!And",
-                "!If",
-                "!If sequence",
-                "!Not",
-                "!Not sequence",
-                "!Equals",
-                "!Equals sequence",
-                "!Or",
-                "!FindInMap sequence",
-                "!Base64",
-                "!Cidr",
-                "!Ref",
-                "!Ref Scalar",
-                "!Sub",
-                "!Sub sequence",
-                "!GetAtt",
-                "!GetAZs",
-                "!ImportValue",
-                "!Select",
-                "!Split",
-                "!Join sequence"
+                '!fn',
+                '!And',
+                '!If',
+                '!If sequence',
+                '!Not',
+                '!Not sequence',
+                '!Equals',
+                '!Equals sequence',
+                '!Or',
+                '!FindInMap sequence',
+                '!Base64',
+                '!Cidr',
+                '!Ref',
+                '!Ref Scalar',
+                '!Sub',
+                '!Sub sequence',
+                '!GetAtt',
+                '!GetAZs',
+                '!ImportValue',
+                '!Select',
+                '!Split',
+                '!Join sequence'
               },
             },
           }
@@ -534,7 +534,7 @@ return {
               filter_out_diagnostics_by_code = { 80001 },
             })
             require('nvim-lsp-ts-utils').setup_client(client) -- client.resolved_capabilities.document_formatting = false
-            -- client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentFormattingProvider = false
           end,
         }
       }
@@ -562,10 +562,6 @@ return {
   {
     'nvimdev/lspsaga.nvim',
     opts = {
-      ui = {
-        title = true,
-        -- border = 'solid'
-      },
       lightbulb = {
         enable = false,
         enable_in_insert = false,
@@ -573,19 +569,35 @@ return {
         sign_priority = 40,
         virtual_text = true, -- Puth the lightbulb on the virtual text
       },
-      symbol_in_winbar = {
-        enable = true,
-        separator = " > ",
-        ignore_patterns = {},
-        hide_keyword = true,
-        show_file = false,
-        folder_level = 2,
-        respect_root = false,
-        color_mode = true,
+    }
+  },
+  {
+    'jay-babu/mason-null-ls.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {
+      ensure_installed = { "prettier" }
+    },
+    dependencies = {
+      'williamboman/mason.nvim',
+      {
+        'jose-elias-alvarez/null-ls.nvim',
+        opts = function ()
+          local null_ls = require('null-ls')
+
+          local formatting = null_ls.builtins.formatting
+          -- local diagnostic = null_ls.builtins.diagnostics
+          local code_actions = null_ls.builtins.code_actions
+          return {
+            sources = {
+              code_actions.gitsigns,
+              formatting.prettier,
+            }
+          }
+        end
       },
     },
     config = function(_, opts)
-      require('lspsaga').setup(opts)
-    end
+      require('mason-null-ls').setup(opts)
+    end,
   }
 }

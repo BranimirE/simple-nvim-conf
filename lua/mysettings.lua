@@ -1,7 +1,8 @@
 local opt = vim.opt
 local g = vim.g
 local api = vim.api
-
+vim.keymap.set({'n'}, '<space>', '<nop>', {noremap = true})
+vim.keymap.set({'v'}, '<space>', '<nop>', {noremap = true})
 g.mapleader = " " -- Set space as leader key
 
 opt.splitright = true -- Open new split to the right

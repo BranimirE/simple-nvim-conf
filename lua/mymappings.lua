@@ -79,22 +79,21 @@ M = {
   end,
 
   lsp_saga = function(bufnr)
-    local diagnostic = require("lspsaga.diagnostic")
     return with_opts({
-      { "gh",         "<cmd>Lspsaga lsp_finder<CR>" },
-      { "<leader>ca", "<cmd>Lspsaga code_action<CR>" },
-      { "<leader>ca", "<cmd>Lspsaga range_code_action<CR>" },
-      { "<leader>rn", "<cmd>Lspsaga rename<CR>" },
-      { "<leader>gd", "<cmd>Lspsaga preview_definition<CR>" },
-      { "<leader>cd", "<cmd>Lspsaga show_line_diagnostics<CR>" },
-      { "[e",         "<cmd>Lspsaga diagnostic_jump_prev<CR>" },
-      { "]e",         "<cmd>Lspsaga diagnostic_jump_next<CR>" },
-      { "[E",         function() diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end }, -- Only jump to errors
-      { "]E",         function() diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end }, -- Only jump to errors
-      { "<leader>o",  "<cmd>Lspsaga outline<CR>" },
-      { "<leader>k",  "<cmd>Lspsaga hover_doc<CR>" },
-      { "<A-d>",      "<cmd>Lspsaga term_toggle lazygit<CR>", mode = { "n", "t" } }
-    }, { silent = true, buffer = bufnr })
+      { 'gh',         '<cmd>Lspsaga finder<CR>' },
+      { '<leader>rn', '<cmd>Lspsaga rename<CR>' },
+      -- { '<leader>gd', '<cmd>Lspsaga peek_definition<CR>' }, -- TODO: Enable when the bug is fixed
+      { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<CR>' },
+      { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<CR>' },
+      { ']e',         '<cmd>Lspsaga diagnostic_jump_next<CR>' },
+      { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<CR>' },
+      { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<CR>' },
+      { '<leader>o',  '<cmd>Lspsaga outline<CR>' },
+      { '<leader>k',  '<cmd>Lspsaga hover_doc<CR>' },
+      { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<CR>', mode = { 'n', 't' } }
+    -- }, { silent = true })
+    -- }, { silent = true, buffer = bufnr })
+    }, { buffer = bufnr })
   end,
 
   misc = function()
@@ -107,6 +106,9 @@ M = {
       { '>',          '>gv',                     mode = 'v' }, -- Avoid exit visual mode on right shifting
       { '<up>',       '<cmd>cprevious<cr>',      silent = true }, -- Use up arrow to navigate up quickfix list. TODO: Use only when a quickfix or loclist list is open
       { '<down>',     '<cmd>cnext<cr>',          silent = true }, -- User down to navigate down quickfix list. TODO: The same as above
+
+      { '<leader>ca', '<cmd>Lspsaga code_action<CR>' }, -- It can be triggered even if there is not lps attached to the buffer
+      { '<leader>ca', '<cmd>Lspsaga code_action<CR>', mode = 'v' },
     }
   end
 }
