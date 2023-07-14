@@ -84,8 +84,6 @@ end
 
 ins_left {
   function()
-    -- return ' '
-    -- return '▊'
     return ''
   end,
   color = { fg = colors.blue }, -- Sets highlighting of component
@@ -93,11 +91,10 @@ ins_left {
 }
 
 ins_left {
-  -- mode component
-  function()
-    return '[]'
-    -- return ''
-  end,
+  'mode',
+  -- function()
+  --   return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
+  -- end,
   color = function()
     -- auto change color according to neovims mode
     local mode_color = {
@@ -171,11 +168,18 @@ ins_left {
     if next(clients) == nil then
       return msg
     end
+    local lsp_servers = ''
     for _, client in ipairs(clients) do
       local filetypes = client.config.filetypes
       if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-        return client.name
+        if lsp_servers ~= '' then
+          lsp_servers = lsp_servers..', '
+        end
+        lsp_servers = lsp_servers..client.name
       end
+    end
+    if lsp_servers ~= '' then
+      return '< '..lsp_servers..' >'
     end
     return msg
   end,
@@ -218,13 +222,18 @@ ins_right {
 
 ins_right {
   function()
-    return ''
-    -- return '▊'
+    return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
   end,
   color = { fg = colors.blue },
   padding = { left = 1 },
 }
-
+ins_right {
+  function()
+    return ''
+  end,
+  color = { fg = colors.blue }, -- Sets highlighting of component
+  padding = { left = 1, right = 0 }, -- We don't need space before this
+}
 -- Now don't forget to initialize lualine
 lualine.setup(config)
 
