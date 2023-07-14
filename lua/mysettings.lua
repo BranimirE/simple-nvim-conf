@@ -30,6 +30,7 @@ opt.fillchars:append [[eob: ]] -- Remove ~ chars at the end of the buffer
 opt.termguicolors = true -- User GUI version colors(without it, only basic terminal colors will be available)
 opt.list = true -- Enable list mode. It shows invisible chars as visible chars(using listchars values)
 opt.listchars:append [[tab:→ ,trail:•]] -- Replace some default listchars
+opt.showmode = false
 
 opt.expandtab = true
 opt.shiftwidth = 2

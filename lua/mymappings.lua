@@ -80,7 +80,7 @@ M = {
 
   lsp_saga = function()
     return with_opts({
-      { 'gh',         '<cmd>Lspsaga finder<CR>' },
+      -- { 'gh',         '<cmd>Lspsaga finder<CR>' },
       { '<leader>rn', '<cmd>Lspsaga rename<CR>' },
       { '<leader>gd', '<cmd>Lspsaga peek_definition<CR>' }, -- TODO: Enable when the bug is fixed
       { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<CR>' },

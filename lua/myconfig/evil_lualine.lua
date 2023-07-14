@@ -10,14 +10,19 @@ local colors = {
   bg       = '#16161E',
   fg       = '#bbc2cf',
   yellow   = '#ECBE7B',
-  cyan     = '#008080',
+  -- cyan     = '#008080',
+  cyan     = '#00AFFF',
   darkblue = '#081633',
-  green    = '#98be65',
+  -- green    = '#98be65',
+  green    = '#A6E22E',
   orange   = '#FF8800',
   violet   = '#a9a1e1',
-  magenta  = '#c678dd',
-  blue     = '#51afef',
-  red      = '#ec5f67',
+  -- magenta  = '#c678dd',
+  magenta  = '#FF00FF',
+  -- blue     = '#51afef',
+  blue     = '#283457',
+  -- red      = '#ec5f67',
+  red      = '#FF0000',
 }
 
 local conditions = {
@@ -82,13 +87,13 @@ local function ins_right(component)
   table.insert(config.sections.lualine_x, component)
 end
 
-ins_left {
-  function()
-    return ''
-  end,
-  color = { fg = colors.blue }, -- Sets highlighting of component
-  padding = { left = 0, right = 1 }, -- We don't need space before this
-}
+-- ins_left {
+--   function()
+--     return ''
+--   end,
+--   color = { fg = colors.blue }, -- Sets highlighting of component
+--   padding = { left = 0, right = 1 }, -- We don't need space before this
+-- }
 
 ins_left {
   'mode',
@@ -96,9 +101,12 @@ ins_left {
   --   return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
   -- end,
   color = function()
+    local dark = '#16161E'
+    local light = '#ffffff'
     -- auto change color according to neovims mode
     local mode_color = {
-      n = colors.red,
+      -- n = colors.red,
+      n = colors.cyan,
       i = colors.green,
       v = colors.blue,
       [''] = colors.blue,
@@ -119,21 +127,47 @@ ins_left {
       ['!'] = colors.red,
       t = colors.red,
     }
-    return { fg = mode_color[vim.fn.mode()] }
+    local mode_color_fg = {
+      n = dark,
+      i = dark,
+      v = light,
+      [''] = light,
+      V = light,
+      c = light,
+      no = light,
+      s = dark,
+      S = dark,
+      [''] = dark,
+      ic = dark,
+      R = dark,
+      Rv = dark,
+      cv = light,
+      ce = light,
+      r = dark,
+      rm = dark,
+      ['r?'] = dark,
+      ['!'] = light,
+      t = light,
+    }
+    -- return { fg = mode_color[vim.fn.mode()] }
+    local mode_val = vim.fn.mode()
+    return { bg = mode_color[mode_val], fg = mode_color_fg[mode_val], gui = 'bold' }
+
   end,
-  padding = { right = 1 },
+  padding = { left = 1, right = 1 },
 }
 
-ins_left {
-  -- filesize component
-  'filesize',
-  cond = conditions.buffer_not_empty,
-}
+-- ins_left {
+--   -- filesize component
+--   'filesize',
+--   cond = conditions.buffer_not_empty,
+-- }
 
 ins_left {
   'filename',
   cond = conditions.buffer_not_empty,
-  color = { fg = colors.magenta, gui = 'bold' },
+  -- color = { fg = colors.magenta, gui = 'bold' },
+  color = { fg = colors.cyan, gui = 'bold' },
 }
 
 ins_left { 'location' }
@@ -220,20 +254,21 @@ ins_right {
   cond = conditions.hide_in_width,
 }
 
-ins_right {
-  function()
-    return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
-  end,
-  color = { fg = colors.blue },
-  padding = { left = 1 },
-}
-ins_right {
-  function()
-    return ''
-  end,
-  color = { fg = colors.blue }, -- Sets highlighting of component
-  padding = { left = 1, right = 0 }, -- We don't need space before this
-}
+-- ins_right {
+--   function()
+--     return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
+--   end,
+--   color = { fg = colors.blue },
+--   padding = { left = 1 },
+-- }
+
+-- ins_right {
+--   function()
+--     return ''
+--   end,
+--   color = { fg = colors.blue }, -- Sets highlighting of component
+--   padding = { left = 1, right = 0 }, -- We don't need space before this
+-- }
 -- Now don't forget to initialize lualine
 lualine.setup(config)
 
