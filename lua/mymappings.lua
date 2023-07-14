@@ -100,7 +100,7 @@ M = {
     return {
       { 'jk',         '<esc>',                   mode = 'i' }, -- Go to normal mode in insert mode
       { '<leader>bd', '<esc>:bd<cr>' },               -- Close the current buffer
-      { '<c-n>',      '<esc>:NvimTreeToggle<cr>' },
+      { '<c-n>',      '<esc>:NvimTreeToggle<cr>', silent = true },
       { ',',          '<cmd>nohlsearch<cr>' },        -- As C-l is used by tmux-navigator, use ',' instead
       { '<',          '<gv',                     mode = 'v' }, -- Avoid exit visual mode on left shifting
       { '>',          '>gv',                     mode = 'v' }, -- Avoid exit visual mode on right shifting

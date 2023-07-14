@@ -431,7 +431,11 @@ return {
         end,
       },
       'jose-elias-alvarez/nvim-lsp-ts-utils', -- TODO: Load only for javascript files
-      'nvimdev/lspsaga.nvim'
+      'nvimdev/lspsaga.nvim',
+      { -- Collection of json schemas for json lsp
+        'b0o/schemastore.nvim',
+        ft = {'json', 'yaml'},
+      }
     },
     config = function()
       local my_lsp_servers = {
@@ -447,7 +451,8 @@ return {
         'yamlls',
         'html',
         'sqlls',
-        'eslint'
+        'eslint',
+        'jsonls'
       }
 
       -- Most of lspsaga key mappings can be triggered using null-ls sources
@@ -501,6 +506,12 @@ return {
               },
               hover = true,
               completion = true,
+              schemaStore = {
+                -- You must disable built-in schemaStore support if you want to use
+                -- this plugin and its advanced options like `ignore`.
+                enable = false,
+              },
+              schemas = require('schemastore').yaml.schemas(),
               -- customTags = {
               --   '!fn',
               --   '!And',
@@ -539,9 +550,18 @@ return {
             require('nvim-lsp-ts-utils').setup_client(client) -- client.resolved_capabilities.document_formatting = false
             client.server_capabilities.documentFormattingProvider = false
           end,
+        },
+        jsonls = {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          settings = {
+            json = {
+              schemas = require('schemastore').json.schemas(),
+              validate = { enable = true },
+            },
+          },
         }
       }
-
       for _, server_name in ipairs(my_lsp_servers) do
         if my_lsp_server_config[server_name] ~= nil then
           lspconfig[server_name].setup(my_lsp_server_config[server_name])
@@ -608,5 +628,6 @@ return {
   { -- Useful Git commands. Ex: Git blame
     'tpope/vim-fugitive',
     event = { 'BufReadPre', 'BufNewFile' },
-  }
+  },
+  
 }
