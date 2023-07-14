@@ -168,7 +168,7 @@ return {
       notify.setup(opts)
       vim.notify = function(msg, ...)
         if type(msg) == 'string' then
-          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available'
+          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or msg:match '%[Lspsaga] response of request method textDocument/definition is empty'
           if is_suppressed_message then
             -- Do not show some messages
             return
@@ -501,30 +501,30 @@ return {
               },
               hover = true,
               completion = true,
-              customTags = {
-                '!fn',
-                '!And',
-                '!If',
-                '!If sequence',
-                '!Not',
-                '!Not sequence',
-                '!Equals',
-                '!Equals sequence',
-                '!Or',
-                '!FindInMap sequence',
-                '!Base64',
-                '!Cidr',
-                '!Ref',
-                '!Ref Scalar',
-                '!Sub',
-                '!Sub sequence',
-                '!GetAtt',
-                '!GetAZs',
-                '!ImportValue',
-                '!Select',
-                '!Split',
-                '!Join sequence'
-              },
+              -- customTags = {
+              --   '!fn',
+              --   '!And',
+              --   '!If',
+              --   '!If sequence',
+              --   '!Not',
+              --   '!Not sequence',
+              --   '!Equals',
+              --   '!Equals sequence',
+              --   '!Or',
+              --   '!FindInMap sequence',
+              --   '!Base64',
+              --   '!Cidr',
+              --   '!Ref',
+              --   '!Ref Scalar',
+              --   '!Sub',
+              --   '!Sub sequence',
+              --   '!GetAtt',
+              --   '!GetAZs',
+              --   '!ImportValue',
+              --   '!Select',
+              --   '!Split',
+              --   '!Join sequence'
+              -- },
             },
           }
         },
