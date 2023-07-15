@@ -26,7 +26,7 @@ local conditions = {
     return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
   end,
   hide_in_width = function()
-    return vim.fn.winwidth(0) > 80
+    return vim.fn.winwidth(0) > 85
   end,
   check_git_workspace = function()
     local filepath = vim.fn.expand('%:p:h')
@@ -192,12 +192,13 @@ ins_left {
       end
     end
     if lsp_servers ~= '' then
-      return '< ' .. lsp_servers .. ' >'
+      return lsp_servers
     end
     return msg
   end,
   icon = ' LSP:',
   color = { fg = '#ffffff', gui = 'bold' },
+  cond = conditions.hide_in_width,
 }
 
 -- Add components to right sections

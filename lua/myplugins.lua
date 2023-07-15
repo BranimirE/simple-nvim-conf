@@ -435,6 +435,11 @@ return {
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
         ft = {'json', 'yaml', 'yml'},
+      },
+      {
+        'j-hui/fidget.nvim',
+        tag = 'legacy',
+        config = true
       }
     },
     config = function()
@@ -629,5 +634,4 @@ return {
     'tpope/vim-fugitive',
     event = { 'BufReadPre', 'BufNewFile' },
   },
-  
 }
