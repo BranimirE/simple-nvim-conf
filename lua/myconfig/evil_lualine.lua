@@ -6,23 +6,17 @@ local lualine = require('lualine')
 -- Color table for highlights
 -- stylua: ignore
 local colors = {
-  -- bg       = '#202328',
   bg       = '#16161E',
   fg       = '#bbc2cf',
   yellow   = '#ECBE7B',
-  -- cyan     = '#008080',
   cyan     = '#00AFFF',
   darkblue = '#081633',
-  -- green    = '#98be65',
   green    = '#A6E22E',
   orange   = '#FF8800',
   violet   = '#a9a1e1',
-  -- magenta  = '#c678dd',
   magenta  = '#FF00FF',
-  -- blue     = '#51afef',
   blue     = '#283457',
-  -- red      = '#ec5f67',
-  red      = '#FF0000',
+  red      = '#ec5f67',
 }
 
 local conditions = {
@@ -179,7 +173,7 @@ ins_left {
 ins_left {
   'diff',
   -- Is it me or the symbol for modified us really weird
-  symbols = { added = ' ', modified = '柳 ', removed = ' ' },
+  symbols = { added = ' ', modified = ' ', removed = ' ' },
   diff_color = {
     added = { fg = colors.green },
     modified = { fg = colors.orange },
@@ -188,10 +182,6 @@ ins_left {
   cond = conditions.hide_in_width,
 }
 
-
--- ins_left { 'location' }
-
--- ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
 
 ins_left {
   'diagnostics',
@@ -258,24 +248,6 @@ ins_right {
 ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
 
 ins_right { 'location' }
--- ins_right {
---   'branch',
---   icon = '',
---   color = { fg = colors.violet, gui = 'bold' },
--- }
-
-
--- ins_right {
---   'diff',
---   -- Is it me or the symbol for modified us really weird
---   symbols = { added = ' ', modified = '柳 ', removed = ' ' },
---   diff_color = {
---     added = { fg = colors.green },
---     modified = { fg = colors.orange },
---     removed = { fg = colors.red },
---   },
---   cond = conditions.hide_in_width,
--- }
 
 -- ins_right {
 --   function()
@@ -285,13 +257,5 @@ ins_right { 'location' }
 --   padding = { left = 1 },
 -- }
 
--- ins_right {
---   function()
---     return ''
---   end,
---   color = { fg = colors.blue }, -- Sets highlighting of component
---   padding = { left = 1, right = 0 }, -- We don't need space before this
--- }
--- Now don't forget to initialize lualine
 lualine.setup(config)
 
