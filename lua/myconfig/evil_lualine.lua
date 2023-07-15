@@ -17,8 +17,8 @@ local colors = {
   magenta  = '#FF00FF',
   blue     = '#283457',
   red      = '#ec5f67',
-  dark = '#16161E',
-  light = '#ffffff',
+  dark     = '#16161E',
+  light    = '#ffffff',
 }
 
 local conditions = {
@@ -70,7 +70,7 @@ local config = {
     lualine_x = {},
   },
   -- extensions = {'quickfix', 'nvim-tree'},
-  extensions = {'nvim-tree'},
+  extensions = { 'nvim-tree' },
 }
 
 -- Inserts a component in lualine_c at left section
@@ -135,7 +135,6 @@ ins_left {
     }
     local mode_val = vim.fn.mode()
     return { bg = mode_color[mode_val], fg = mode_color_fg[mode_val], gui = 'bold' }
-
   end,
   padding = { left = 1, right = 1 },
 }
@@ -187,13 +186,13 @@ ins_left {
       local filetypes = client.config.filetypes
       if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
         if lsp_servers ~= '' then
-          lsp_servers = lsp_servers..', '
+          lsp_servers = lsp_servers .. ', '
         end
-        lsp_servers = lsp_servers..client.name
+        lsp_servers = lsp_servers .. client.name
       end
     end
     if lsp_servers ~= '' then
-      return '< '..lsp_servers..' >'
+      return '< ' .. lsp_servers .. ' >'
     end
     return msg
   end,
@@ -203,7 +202,7 @@ ins_left {
 
 -- Add components to right sections
 ins_right {
-  'o:encoding', -- option component same as &encoding in viml
+  'o:encoding',       -- option component same as &encoding in viml
   fmt = string.upper, -- I'm not sure why it's upper case either ;)
   cond = conditions.hide_in_width,
   color = { fg = colors.green, gui = 'bold' },
@@ -220,24 +219,8 @@ ins_right {
   },
 }
 
--- ins_right {
---   'fileformat',
---   fmt = string.upper,
---   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
---   color = { fg = colors.green, gui = 'bold' },
--- }
-
 ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
 
 ins_right { 'location' }
 
--- ins_right {
---   function()
---     return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
---   end,
---   color = { fg = colors.blue },
---   padding = { left = 1 },
--- }
-
 lualine.setup(config)
-
