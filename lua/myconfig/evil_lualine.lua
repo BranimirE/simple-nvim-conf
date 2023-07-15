@@ -17,6 +17,8 @@ local colors = {
   magenta  = '#FF00FF',
   blue     = '#283457',
   red      = '#ec5f67',
+  dark = '#16161E',
+  light = '#ffffff',
 }
 
 local conditions = {
@@ -81,25 +83,13 @@ local function ins_right(component)
   table.insert(config.sections.lualine_x, component)
 end
 
--- ins_left {
---   function()
---     return ''
---   end,
---   color = { fg = colors.blue }, -- Sets highlighting of component
---   padding = { left = 0, right = 1 }, -- We don't need space before this
--- }
-
 ins_left {
   'mode',
-  -- function()
-  --   return '['..vim.api.nvim_buf_get_option(0, 'filetype')..']'
-  -- end,
   color = function()
     local dark = '#16161E'
     local light = '#ffffff'
     -- auto change color according to neovims mode
     local mode_color = {
-      -- n = colors.red,
       n = colors.cyan,
       i = colors.green,
       v = colors.blue,
@@ -122,28 +112,27 @@ ins_left {
       t = colors.red,
     }
     local mode_color_fg = {
-      n = dark,
-      i = dark,
-      v = light,
-      [''] = light,
-      V = light,
-      c = light,
-      no = light,
-      s = dark,
-      S = dark,
-      [''] = dark,
-      ic = dark,
-      R = dark,
-      Rv = dark,
-      cv = light,
-      ce = light,
-      r = dark,
-      rm = dark,
-      ['r?'] = dark,
-      ['!'] = light,
-      t = light,
+      n = colors.dark,
+      i = colors.dark,
+      v = colors.light,
+      [''] = colors.light,
+      V = colors.light,
+      c = colors.light,
+      no = colors.light,
+      s = colors.dark,
+      S = colors.dark,
+      [''] = colors.dark,
+      ic = colors.dark,
+      R = colors.dark,
+      Rv = colors.dark,
+      cv = colors.light,
+      ce = colors.light,
+      r = colors.dark,
+      rm = colors.dark,
+      ['r?'] = colors.dark,
+      ['!'] = colors.light,
+      t = colors.light,
     }
-    -- return { fg = mode_color[vim.fn.mode()] }
     local mode_val = vim.fn.mode()
     return { bg = mode_color[mode_val], fg = mode_color_fg[mode_val], gui = 'bold' }
 
@@ -151,16 +140,9 @@ ins_left {
   padding = { left = 1, right = 1 },
 }
 
--- ins_left {
---   -- filesize component
---   'filesize',
---   cond = conditions.buffer_not_empty,
--- }
-
 ins_left {
   'filename',
   cond = conditions.buffer_not_empty,
-  -- color = { fg = colors.magenta, gui = 'bold' },
   color = { fg = colors.cyan, gui = 'bold' },
 }
 
@@ -175,23 +157,12 @@ ins_left {
   -- Is it me or the symbol for modified us really weird
   symbols = { added = ' ', modified = ' ', removed = ' ' },
   diff_color = {
-    added = { fg = colors.green },
+    -- added = { fg = colors.green },
+    added = { fg = colors.cyan },
     modified = { fg = colors.orange },
     removed = { fg = colors.red },
   },
   cond = conditions.hide_in_width,
-}
-
-
-ins_left {
-  'diagnostics',
-  sources = { 'nvim_diagnostic' },
-  symbols = { error = ' ', warn = ' ', info = ' ' },
-  diagnostics_color = {
-    color_error = { fg = colors.red },
-    color_warn = { fg = colors.yellow },
-    color_info = { fg = colors.cyan },
-  },
 }
 
 -- Insert mid section. You can make any number of sections in neovim :)
@@ -239,11 +210,22 @@ ins_right {
 }
 
 ins_right {
-  'fileformat',
-  fmt = string.upper,
-  icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
-  color = { fg = colors.green, gui = 'bold' },
+  'diagnostics',
+  sources = { 'nvim_diagnostic' },
+  symbols = { error = ' ', warn = ' ', info = ' ' },
+  diagnostics_color = {
+    color_error = { fg = colors.red },
+    color_warn = { fg = colors.yellow },
+    color_info = { fg = colors.cyan },
+  },
 }
+
+-- ins_right {
+--   'fileformat',
+--   fmt = string.upper,
+--   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+--   color = { fg = colors.green, gui = 'bold' },
+-- }
 
 ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
 
