@@ -603,7 +603,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'prettier' }
+      ensure_installed = { 'prettier', 'flake8', 'black' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -613,14 +613,16 @@ return {
           local null_ls = require('null-ls')
 
           local formatting = null_ls.builtins.formatting
-          -- local diagnostics = null_ls.builtins.diagnostics
+          local diagnostics = null_ls.builtins.diagnostics
           local code_actions = null_ls.builtins.code_actions
           return {
             sources = {
               code_actions.gitsigns,
               -- code_actions.eslint,
               formatting.prettier,
+              formatting.black,
               -- diagnostics.eslint
+              diagnostics.flake8,
             }
           }
         end

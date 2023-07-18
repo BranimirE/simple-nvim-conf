@@ -1,11 +1,16 @@
+local myutils = require "myutils"
 -- Create "Format" command to format the document
 vim.api.nvim_create_user_command('Format', function(cmd_opts)
-  vim.lsp.buf.format({
-    range = {
-      ['start'] = { cmd_opts.line1, 0 },
-      ['end'] = { cmd_opts.line2, 0 }
-    }
-  })
+  if cmd_opts.range == 0 then
+    vim.lsp.buf.format({})
+  else
+    vim.lsp.buf.format({
+      range = {
+        ['start'] = { cmd_opts.line1, 0 },
+        ['end'] = { cmd_opts.line2, 0 }
+      }
+    })
+  end
 end, { range = '%' })
 
 -- Create "Format" command to format the document
