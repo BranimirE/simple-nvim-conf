@@ -89,6 +89,7 @@ return {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
       'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
       'HiPhish/nvim-ts-rainbow2',                    -- Colorize parenthesis pairs with distinct colors
+      'nvim-treesitter/nvim-treesitter-textobjects', -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
     },
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
@@ -98,6 +99,7 @@ return {
       auto_install = true,  -- Automatically install missing parsers when entering buffer
       highlight = {
         enable = true,      -- `false` will disable the whole extension
+        ---@diagnostic disable-next-line: unused-local
         disable = function(lang, bufnr)
           if vim.fn.expand('%:t') == 'lsp.log' or vim.bo.filetype == 'help' then
             return false
@@ -116,7 +118,20 @@ return {
         enable = true,
         enable_autocmd = false,
       },
-      rainbow = { enable = true }
+      rainbow = { enable = true },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+            ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
+          },
+        },
+      },
     },
     main = 'nvim-treesitter.configs'
   },
@@ -124,7 +139,6 @@ return {
     'akinsho/bufferline.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
     event = 'VeryLazy',
-    -- keys = mymappings.bufferline(),
     opts = {
       options = {
         color_icons = true,
@@ -145,11 +159,6 @@ return {
           reveal = { 'close' }
         }
       },
-      -- highlights = {
-      -- buffer_selected = {
-      --   fg = '#DDDDDD',
-      -- },
-      -- }
     },
     config = function (_, opts)
       local bl = require('bufferline')
@@ -166,6 +175,7 @@ return {
     config = function(_, opts)
       local notify = require('notify')
       notify.setup(opts)
+      ---@diagnostic disable-next-line: duplicate-set-field
       vim.notify = function(msg, ...)
         if type(msg) == 'string' then
           local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or msg:match '%[Lspsaga] response of request method textDocument/definition is empty'
@@ -587,7 +597,7 @@ return {
       vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
     end
   },
-  {
+  { -- Extra tools for lsp
     'nvimdev/lspsaga.nvim',
     opts = {
       lightbulb = {
