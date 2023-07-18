@@ -86,8 +86,6 @@ end
 ins_left {
   'mode',
   color = function()
-    local dark = '#16161E'
-    local light = '#ffffff'
     -- auto change color according to neovims mode
     local mode_color = {
       n = colors.cyan,
