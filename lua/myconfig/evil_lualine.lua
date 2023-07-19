@@ -1,24 +1,25 @@
 -- Eviline config for lualine
--- Author: shadmansaleh
+-- Author: shadmansaleh(modfied by Branimir)
 -- Credit: glepnir
 local lualine = require('lualine')
 
 -- Color table for highlights
 -- stylua: ignore
 local colors = {
-  bg       = '#16161E',
-  fg       = '#bbc2cf',
-  yellow   = '#ECBE7B',
-  cyan     = '#00AFFF',
-  darkblue = '#081633',
-  green    = '#A6E22E',
-  orange   = '#FF8800',
-  violet   = '#a9a1e1',
-  magenta  = '#FF00FF',
-  blue     = '#283457',
-  red      = '#ec5f67',
-  dark     = '#16161E',
-  light    = '#ffffff',
+  bg          = '#16161E',
+  bg_inactive = '#181821',
+  fg          = '#bbc2cf',
+  yellow      = '#ECBE7B',
+  cyan        = '#00AFFF',
+  darkblue    = '#081633',
+  green       = '#A6E22E',
+  orange      = '#FF8800',
+  violet      = '#a9a1e1',
+  magenta     = '#FF00FF',
+  blue        = '#283457',
+  red         = '#ec5f67',
+  dark        = '#16161E',
+  light       = '#ffffff',
 }
 
 local conditions = {
@@ -46,7 +47,7 @@ local config = {
       -- right section. Both are highlighted by c theme .  So we
       -- are just setting default looks o statusline
       normal = { c = { fg = colors.fg, bg = colors.bg } },
-      inactive = { c = { fg = colors.fg, bg = colors.bg } },
+      inactive = { c = { fg = colors.fg, bg = colors.bg_inactive } },
     },
     disabled_filetypes = { 'NvimTree' },
   },
@@ -61,13 +62,22 @@ local config = {
     lualine_x = {},
   },
   inactive_sections = {
-    -- these are to remove the defaults
-    lualine_a = {},
+    lualine_a = {
+      {
+        function ()
+        --return '      '
+          return '████████'
+        end,
+        -- color = { bg = colors.fg, fg = colors.dark },
+        color = { fg = colors.blue },
+        padding = { left = 0, right = 0 },
+      },
+    },
     lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
     lualine_y = {},
-    lualine_z = {},
-    lualine_c = {},
-    lualine_x = {},
+    lualine_z = {}
   },
   -- extensions = {'quickfix', 'nvim-tree'},
   extensions = { 'nvim-tree' },
@@ -151,10 +161,8 @@ ins_left {
 
 ins_left {
   'diff',
-  -- Is it me or the symbol for modified us really weird
   symbols = { added = ' ', modified = ' ', removed = ' ' },
   diff_color = {
-    -- added = { fg = colors.green },
     added = { fg = colors.cyan },
     modified = { fg = colors.orange },
     removed = { fg = colors.red },
@@ -171,7 +179,7 @@ ins_left {
 }
 
 ins_left {
-  -- Lsp server name .
+  -- Lsp servers' name .
   function()
     local msg = 'No Active Lsp'
     local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
