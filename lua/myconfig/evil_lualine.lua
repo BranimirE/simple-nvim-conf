@@ -20,6 +20,7 @@ local colors = {
   red         = '#ec5f67',
   dark        = '#16161E',
   light       = '#ffffff',
+  inactive    = '#8E95B5',
 }
 
 local conditions = {
@@ -65,11 +66,9 @@ local config = {
     lualine_a = {
       {
         function ()
-        --return '      '
           return '████████'
         end,
-        -- color = { bg = colors.fg, fg = colors.dark },
-        color = { fg = colors.blue },
+        color = { fg = colors.inactive },
         padding = { left = 0, right = 0 },
       },
     },
