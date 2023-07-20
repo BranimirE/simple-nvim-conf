@@ -150,12 +150,18 @@ ins_left {
   'filename',
   cond = conditions.buffer_not_empty,
   color = { fg = colors.cyan, gui = 'bold' },
+  on_click = function ()
+    vim.cmd('NvimTreeToggle')
+  end
 }
 
 ins_left {
   'branch',
-  icon = '',
+  icon = '',
   color = { gui = 'bold' },
+  on_click = function ()
+    vim.cmd('Lspsaga term_toggle lazygit')
+  end
 }
 
 ins_left {
@@ -167,6 +173,9 @@ ins_left {
     removed = { fg = colors.red },
   },
   cond = conditions.hide_in_width,
+  on_click = function ()
+    vim.cmd('Git difftool')
+  end
 }
 
 -- Insert mid section. You can make any number of sections in neovim :)
@@ -178,7 +187,7 @@ ins_left {
 }
 
 ins_left {
-  -- Lsp servers' name .
+  -- Lsp servers' name
   function()
     local msg = 'No Active Lsp'
     local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
@@ -204,6 +213,9 @@ ins_left {
   icon = ' LSP:',
   color = { fg = '#ffffff', gui = 'bold' },
   cond = conditions.hide_in_width,
+  on_click = function ()
+    vim.cmd('LspInfo')
+  end
 }
 
 -- Add components to right sections
