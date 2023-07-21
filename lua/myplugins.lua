@@ -460,7 +460,7 @@ return {
         'yamlls',
         'html',
         'sqlls',
-        'eslint',
+        -- 'eslint',
         'jsonls'
       }
 
