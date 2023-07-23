@@ -473,9 +473,8 @@ return {
         myutils.load_mapping(mymappings.lsp(bufnr))
         require('lsp_signature').on_attach({
           bind = true,
-          handler_opts = { border = 'none' },
+          handler_opts = { border = 'rounded' },
           hint_enable = false,
-          always_trigger = false,
         }, bufnr)
       end
 
