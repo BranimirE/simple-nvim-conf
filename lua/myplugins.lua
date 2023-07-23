@@ -644,6 +644,6 @@ return {
   },
   { -- Useful Git commands. Ex: Git blame
     'tpope/vim-fugitive',
-    event = { 'BufReadPre', 'BufNewFile' },
+    cmd = { 'Git' }
   },
 }
