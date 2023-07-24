@@ -325,7 +325,8 @@ return {
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-vsnip',
       'hrsh7th/cmp-cmdline',
-      'onsails/lspkind.nvim'
+      'onsails/lspkind.nvim',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     opts = function()
       local cmp = require('cmp')
@@ -354,6 +355,7 @@ return {
           { name = 'path' },
           { name = 'buffer' },
           { name = 'nvim_lsp' },
+          { name = 'nvim_lsp_signature_help' },
         }),
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
@@ -361,7 +363,7 @@ return {
             local kind = require('lspkind').cmp_format({ mode = 'symbol_text', maxwidth = 50 })(entry, vim_item)
             local strings = vim.split(kind.kind, '%s', { trimempty = true })
             kind.kind = ' ' .. (strings[1] or '') .. ' '
-            kind.menu = '    (' .. (strings[2] or '') .. ')'
+            kind.menu = '  ' .. (strings[2] or '')
 
             return kind
           end,
@@ -433,7 +435,6 @@ return {
           return myutils.has('nvim-cmp')
         end,
       },
-      'ray-x/lsp_signature.nvim',
       'jose-elias-alvarez/nvim-lsp-ts-utils', -- TODO: Load only for javascript files
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
@@ -471,11 +472,6 @@ return {
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         myutils.load_mapping(mymappings.lsp(bufnr))
-        require('lsp_signature').on_attach({
-          bind = true,
-          handler_opts = { border = 'rounded' },
-          hint_enable = false,
-        }, bufnr)
       end
 
       local capabilities = vim.tbl_deep_extend(
