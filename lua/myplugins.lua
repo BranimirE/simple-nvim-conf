@@ -349,13 +349,13 @@ return {
           },
         },
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
-        sources = cmp.config.sources({
-          { name = 'git' },
+        sources = cmp.config.sources({ -- The order matters!!!
+          { name = 'nvim_lsp_signature_help' },
+          { name = 'nvim_lsp' },
           { name = 'vsnip' },
+          { name = 'git' },
           { name = 'path' },
           { name = 'buffer' },
-          { name = 'nvim_lsp' },
-          { name = 'nvim_lsp_signature_help' },
         }),
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
