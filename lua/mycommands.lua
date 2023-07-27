@@ -38,3 +38,4 @@ vim.cmd('hi NvimTreeFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeOpenedFolderName guifg=#00afff')
 
 
+-- TODO: Create a command to close all the other buffers excepts the current one
