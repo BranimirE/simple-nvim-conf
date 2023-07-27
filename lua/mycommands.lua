@@ -1,4 +1,7 @@
-local myutils = require "myutils"
+vim.api.nvim_create_user_command('CloseOthers', function(cmd_opts)
+  vim.cmd[[%bd|e#]]
+end, {})
+
 -- Create "Format" command to format the document
 vim.api.nvim_create_user_command('Format', function(cmd_opts)
   if cmd_opts.range == 0 then
@@ -13,7 +16,7 @@ vim.api.nvim_create_user_command('Format', function(cmd_opts)
   end
 end, { range = '%' })
 
--- Create "Format" command to format the document
+-- Create "Todos" command to list all the TODOS in the project
 vim.api.nvim_create_user_command('Todos', 'TodoTelescope', {})
 
 -- Disable indent-blankline plugin in big files
@@ -36,6 +39,3 @@ vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')
 vim.cmd('hi NvimTreeFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeOpenedFolderName guifg=#00afff')
-
-
--- TODO: Create a command to close all the other buffers excepts the current one
