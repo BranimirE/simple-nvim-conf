@@ -82,31 +82,31 @@ M = {
   lsp_saga = function()
     return with_opts({
       -- { 'gh',         '<cmd>Lspsaga finder<CR>' }, -- It is used by nvim to go to selection mode
-      { '<leader>rn', '<cmd>Lspsaga rename<CR>' },
-      { '<leader>gd', '<cmd>Lspsaga peek_definition<CR>' }, -- TODO: Enable when the bug is fixed
-      { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<CR>' },
-      { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<CR>' },
-      { ']e',         '<cmd>Lspsaga diagnostic_jump_next<CR>' },
-      { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<CR>' },
-      { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<CR>' },
-      { '<leader>o',  '<cmd>Lspsaga outline<CR>' },
-      { '<leader>k',  '<cmd>Lspsaga hover_doc<CR>' },
-      { '<leader>ca', '<cmd>Lspsaga code_action<CR>' },
-      { '<leader>ca', '<cmd>Lspsaga code_action<CR>', mode = 'v' },
-      { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<CR>', mode = { 'n', 't' } }
+      { '<leader>rn', '<cmd>Lspsaga rename<cr>' },
+      { '<leader>gd', '<cmd>Lspsaga peek_definition<cr>' },
+      { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<cr>' },
+      { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<cr>' },
+      { ']e',         '<cmd>Lspsaga diagnostic_jump_next<cr>' },
+      { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<cr>' },
+      { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>' },
+      { '<leader>o',  '<cmd>Lspsaga outline<cr>' },
+      { '<leader>k',  '<cmd>Lspsaga hover_doc<cr>' },
+      { '<leader>ca', '<cmd>Lspsaga code_action<cr>' },
+      { '<leader>ca', '<cmd>Lspsaga code_action<cr>', mode = 'v' },
+      { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<cr>', mode = { 'n', 't' } }
     }, { silent = true })
   end,
 
   misc = function()
     return {
-      { 'jk',         '<esc>',                   mode = 'i' }, -- Go to normal mode in insert mode
-      { '<leader>bd', '<esc>:bd<cr>' },               -- Close the current buffer
-      { '<c-n>',      '<esc>:NvimTreeToggle<cr>', silent = true },
-      { ',',          '<cmd>nohlsearch<cr>' },        -- As C-l is used by tmux-navigator, use ',' instead
-      { '<',          '<gv',                     mode = 'v' }, -- Avoid exit visual mode on left shifting
-      { '>',          '>gv',                     mode = 'v' }, -- Avoid exit visual mode on right shifting
-      { '<up>',       '<cmd>cprevious<cr>',      silent = true }, -- Use up arrow to navigate up quickfix list. TODO: Use only when a quickfix or loclist list is open
-      { '<down>',     '<cmd>cnext<cr>',          silent = true }, -- User down to navigate down quickfix list. TODO: The same as above
+      { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode
+      { '<leader>bd', '<esc>:bd<cr>' },                                    -- Close the current buffer
+      { '<c-n>',      '<esc>:NvimTreeToggle<cr>',       silent = true },
+      { ',',          '<cmd>nohlsearch<cr>' },                             -- As C-l is used by tmux-navigator, use ',' instead
+      { '<',          '<gv',                            mode = 'v' },      -- Avoid exit visual mode on left shifting
+      { '>',          '>gv',                            mode = 'v' },      -- Avoid exit visual mode on right shifting
+      { '<up>',       util.move_in_quick_fix('<up>'),   silent = true },   -- Use up arrow to navigate up in quickfix list.
+      { '<down>',     util.move_in_quick_fix('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
     }
   end
 }

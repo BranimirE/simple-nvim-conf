@@ -187,4 +187,32 @@ function M.is_range_formatting_supported()
   return false
 end
 
+function M.is_win_type_visible(win_type)
+  local wins = vim.fn.getwininfo()
+  for _, win in ipairs(wins) do
+    if win[win_type] > 0 then
+      return true
+    end
+  end
+  return false
+end
+
+function M.move_in_quick_fix(direction)
+  return function ()
+    if M.is_win_type_visible('quickfix') then
+      if direction == '<up>' then
+        if not pcall(vim.cmd, 'cprevious') then
+          pcall(vim.cmd, 'clast')
+        end
+      else
+        if not pcall(vim.cmd, 'cnext') then
+          pcall(vim.cmd, 'cfirst')
+        end
+      end
+      return
+    end
+    M.feedkey(direction, 'n')
+  end
+end
+
 return M
