@@ -197,7 +197,30 @@ function M.is_win_type_visible(win_type)
   return false
 end
 
-function M.move_in_quick_fix(direction)
+function M.get_opened_filetypes()
+  local filetypes = {}
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buffer in ipairs(buffers) do
+    local buf_filetype = vim.api.nvim_buf_get_option(buffer, 'filetype')
+    if buf_filetype and not vim.tbl_contains(filetypes, buf_filetype) then
+      table.insert(filetypes, buf_filetype)
+    end
+  end
+  return filetypes
+end
+
+function M.is_buffer_type_visible(buffer_type)
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buffer in ipairs(buffers) do
+    local buf_filetype = vim.api.nvim_buf_get_option(buffer, 'filetype')
+    if buf_filetype == buffer_type then
+      return true
+    end
+  end
+  return false
+end
+
+function M.move_with_arrows(direction)
   return function ()
     if M.is_win_type_visible('quickfix') then
       if direction == '<up>' then
@@ -208,6 +231,15 @@ function M.move_in_quick_fix(direction)
         if not pcall(vim.cmd, 'cnext') then
           pcall(vim.cmd, 'cfirst')
         end
+      end
+      return
+    end
+    if M.is_buffer_type_visible('Trouble') then
+      local trouble = require('trouble')
+      if direction == '<up>' then
+        trouble.previous({skip_groups = true, jump = true})
+      else
+        trouble.next({skip_groups = true, jump = true})
       end
       return
     end

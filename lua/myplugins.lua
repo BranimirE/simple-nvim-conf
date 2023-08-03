@@ -641,4 +641,18 @@ return {
     'tpope/vim-fugitive',
     cmd = { 'Git' }
   },
+  { -- Pretty list component
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      action_keys = { -- key mappings for actions in the trouble list
+        open_split = { "<c-x>", "|" }, -- open buffer in new split
+        open_vsplit = { "<c-v>", "-" }, -- open buffer in new vsplit
+        toggle_fold = {"zA", "za", "h", "l"} -- toggle fold of current file
+      },
+      auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+      auto_fold = true, -- automatically fold a file trouble list at creation
+    },
+    cmd = { 'Trouble' }, -- Lazy-load on commands
+  }
 }

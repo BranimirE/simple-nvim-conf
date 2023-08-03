@@ -105,8 +105,9 @@ M = {
       { ',',          '<cmd>nohlsearch<cr>' },                             -- As C-l is used by tmux-navigator, use ',' instead
       { '<',          '<gv',                            mode = 'v' },      -- Avoid exit visual mode on left shifting
       { '>',          '>gv',                            mode = 'v' },      -- Avoid exit visual mode on right shifting
-      { '<up>',       util.move_in_quick_fix('<up>'),   silent = true },   -- Use up arrow to navigate up in quickfix list.
-      { '<down>',     util.move_in_quick_fix('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
+      { '<up>',       util.move_with_arrows('<up>'),   silent = true },   -- Use up arrow to navigate up in quickfix list.
+      { '<down>',     util.move_with_arrows('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
+      { '<f9>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true } -- Open diagnostics with F9
     }
   end
 }

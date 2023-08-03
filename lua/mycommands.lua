@@ -17,7 +17,7 @@ vim.api.nvim_create_user_command('Format', function(cmd_opts)
 end, { range = '%' })
 
 -- Create "Todos" command to list all the TODOS in the project
-vim.api.nvim_create_user_command('Todos', 'TodoTelescope', {})
+vim.api.nvim_create_user_command('Todos', 'TodoTrouble', {})
 
 -- Disable indent-blankline plugin in big files
 -- https://github.com/lukas-reineke/indent-blankline.nvim/issues/440#issuecomment-1165399724
@@ -33,7 +33,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
   end,
 })
-
 
 vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')
