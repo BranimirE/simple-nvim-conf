@@ -17,6 +17,7 @@ M = {
     return with_opts({
       { 'l',    nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
       { 'o',    nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
+      { 't',    nvim_tree_api.node.open.tab,              desc = 'nvim-tree: Open file' },
       { '<cr>', nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
       { 'h',    nvim_tree_api.node.navigate.parent_close,  desc = 'nvim-tree: Close Directory' },
       { 'v',    nvim_tree_api.node.open.vertical,          desc = 'nvim-tree: Open on vertical split' },
@@ -107,6 +108,8 @@ M = {
       { '>',          '>gv',                            mode = 'v' },      -- Avoid exit visual mode on right shifting
       { '<up>',       util.move_with_arrows('<up>'),   silent = true },   -- Use up arrow to navigate up in quickfix list.
       { '<down>',     util.move_with_arrows('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
+      { '<right>',    '<cmd>tabnext<cr>',              silent = true },   -- Go to next tab. TODO: enable only if there is more than 1 tab opened
+      { '<left>',     '<cmd>tabprevious<cr>',          silent = true },   -- Go to previous tab. TODO: The same as above
       { '<f9>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true } -- Open diagnostics with F9
     }
   end
