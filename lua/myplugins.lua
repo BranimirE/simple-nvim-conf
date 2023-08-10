@@ -462,7 +462,9 @@ return {
         'html',
         'sqlls',
         'eslint',
-        'jsonls'
+        'jsonls',
+        'docker_compose_language_service',
+        'dockerls'
       }
 
       -- Most of lspsaga key mappings can be triggered using null-ls sources
