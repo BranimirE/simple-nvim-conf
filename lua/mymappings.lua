@@ -73,8 +73,7 @@ M = {
       { 'gD',        vim.lsp.buf.declaration },
       { 'gd',        vim.lsp.buf.definition },
       { 'gi',        vim.lsp.buf.implementation },
-      { 'K',         vim.lsp.buf.hover },
-      { '<c-k>',     vim.lsp.buf.signature_help },
+      { 'K',     vim.lsp.buf.signature_help },
       { '<leader>D', vim.lsp.buf.type_definition },
       { 'gr',        vim.lsp.buf.references },
     }, { noremap = true, silent = true, buffer = bufnr })
