@@ -1,3 +1,5 @@
+![sample](https://github.com/BranimirE/simple-nvim-conf/assets/4145502/de2df5ec-700f-4219-a55a-8e56a48713cc)
+
 To make it run in Ubuntu:
 ```bash
 #Add the unstable sources in order to get the latest neovim
