@@ -424,7 +424,7 @@ return {
       {
         'williamboman/mason-lspconfig.nvim', -- It need to be setup before nvim-lspconfig
         dependencies = 'williamboman/mason.nvim',
-        opts = { automatic_installation = true },
+        opts = { automatic_installation = true }, -- Automatically install the lsp server with mason if it is configured
         config = function(_, opts)
           require('mason-lspconfig').setup(opts)
         end,
