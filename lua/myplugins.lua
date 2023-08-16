@@ -577,6 +577,7 @@ return {
         emmet_ls = {
           on_attach = on_attach,
           capabilities = capabilities,
+          filetypes = { "css", "eruby", "html", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
           init_options = {
             html = {
               options = {
