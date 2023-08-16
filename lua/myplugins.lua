@@ -93,8 +93,7 @@ return {
     },
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript',
-        'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
+      ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript', 'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
       sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
       auto_install = true,  -- Automatically install missing parsers when entering buffer
       highlight = {
@@ -465,7 +464,8 @@ return {
         'eslint',
         'jsonls',
         'docker_compose_language_service',
-        'dockerls'
+        'dockerls',
+        'emmet_ls'
       }
 
       -- Most of lspsaga key mappings can be triggered using null-ls sources
@@ -573,6 +573,18 @@ return {
               validate = { enable = true },
             },
           },
+        },
+        emmet_ls = {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          init_options = {
+            html = {
+              options = {
+                -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+                ["bem.enabled"] = true,
+              },
+            },
+          }
         }
       }
       for _, server_name in ipairs(my_lsp_servers) do
