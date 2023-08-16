@@ -124,11 +124,11 @@ return {
           enable = true,
           lookahead = true,
           keymaps = {
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-            ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = { query = '@class.inner', desc = 'Select inner part of a class region' },
+            ['as'] = { query = '@scope', query_group = 'locals', desc = 'Select language scope' },
           },
         },
       },
@@ -342,11 +342,12 @@ return {
           completeopt = 'menu,menuone,noselect,noinsert', -- TODO: Check that this one is required
         },
         window = {
-          completion = {
-                         -- Move the menu to the left to match the
+          completion = vim.tbl_deep_extend('force', cmp.config.window.bordered(), {
+            -- Move the menu to the left to match the completion string
             col_offset = -3,
             side_padding = 0,
-          },
+          }),
+          documentation = cmp.config.window.bordered(),
         },
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
         sources = cmp.config.sources({ -- The order matters!!!
@@ -644,17 +645,47 @@ return {
     cmd = { 'Git' }
   },
   { -- Pretty list component
-    "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    'folke/trouble.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       action_keys = { -- key mappings for actions in the trouble list
-        open_split = { "<c-x>", "|" }, -- open buffer in new split
-        open_vsplit = { "<c-v>", "-" }, -- open buffer in new vsplit
-        toggle_fold = {"zA", "za", "h", "l"} -- toggle fold of current file
+        open_split = { '<c-x>', '|' }, -- open buffer in new split
+        open_vsplit = { '<c-v>', '-' }, -- open buffer in new vsplit
+        toggle_fold = {'zA', 'za', 'h', 'l'} -- toggle fold of current file
       },
       auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
       auto_fold = true, -- automatically fold a file trouble list at creation
     },
     cmd = { 'Trouble' }, -- Lazy-load on commands
+  },
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'antoinemadec/FixCursorHold.nvim',
+      'haydenmeade/neotest-jest',
+      {
+        'folke/neodev.nvim',
+        opts = {
+          library = { plugins = { 'neotest' }, types = true },
+        }
+      }
+    },
+    opts = function ()
+      return {
+        adapters = {
+          require('neotest-jest')
+        },
+        summary = {
+          mappings = {
+            jumpto = {'i', 'g', 'l'},
+            stop = {'u', 's'},
+          },
+        },
+      }
+    end,
+    keys = mymappings.neotest(),
+    ft = {'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'},
   }
 }

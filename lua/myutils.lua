@@ -247,4 +247,11 @@ function M.move_with_arrows(direction)
   end
 end
 
+function M.run_current_file_tests()
+  require('neotest').summary.open()
+  vim.defer_fn(function ()
+    require('neotest').run.run(vim.fn.expand('%'))
+  end, 100)
+end
+
 return M

@@ -97,6 +97,12 @@ M = {
     }, { silent = true })
   end,
 
+  neotest = function ()
+    return {
+      { '<f9>', util.run_current_file_tests},
+    }
+  end,
+
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode
@@ -109,7 +115,7 @@ M = {
       { '<down>',     util.move_with_arrows('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
       { '<right>',    '<cmd>tabnext<cr>',              silent = true },   -- Go to next tab. TODO: enable only if there is more than 1 tab opened
       { '<left>',     '<cmd>tabprevious<cr>',          silent = true },   -- Go to previous tab. TODO: The same as above
-      { '<f9>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true } -- Open diagnostics with F9
+      { '<f10>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true } -- Open diagnostics with F9
     }
   end
 }
