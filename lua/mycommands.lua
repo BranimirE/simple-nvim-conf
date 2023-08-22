@@ -4,14 +4,19 @@ end, {})
 
 -- Create "Format" command to format the document
 vim.api.nvim_create_user_command('Format', function(cmd_opts)
+  local filter = function (client)
+    vim.notify('Formatting with: '..client.name)
+    return true
+  end
   if cmd_opts.range == 0 then
-    vim.lsp.buf.format({})
+    vim.lsp.buf.format({filter = filter})
   else
     vim.lsp.buf.format({
       range = {
         ['start'] = { cmd_opts.line1, 0 },
         ['end'] = { cmd_opts.line2, 0 }
-      }
+      },
+      filter = filter
     })
   end
 end, { range = '%' })
