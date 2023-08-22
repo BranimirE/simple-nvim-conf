@@ -17,6 +17,35 @@ return {
       vim.cmd('colorscheme tokyonight')
     end
   },
+  -- { -- Theme
+  --   'cpea2506/one_monokai.nvim',
+  --   event = 'VeryLazy',
+  --   opts = {
+  --     transparent = true,
+  --     colors = {
+  --       gray = "#676e7b",
+  --       pink = "#F92672",
+  --       green = "#A6E22E",
+  --       cyan = "#00afff",
+  --       aqua = "#61afef",
+  --       yellow = "#E6DB74",
+  --       purple = "#AE81FF",
+  --       peanut = "#f6d5a4",
+  --       orange = "#FD971F",
+  --       none = "NONE",
+  --
+  --       -- support colors
+  --       red = "#ff0000",
+  --       white = "#ffffff",
+  --       light_gray = "#9ca3b2",
+  --       dark_gray = "#4b5261",
+  --       vulcan = "#080a0e",
+  --       dark_green = "#2d2e27",
+  --       dark_blue = "#26292f",
+  --       black = "#1e2024",
+  --     }
+  --   }
+  -- },
   { -- Status line
     'nvim-lualine/lualine.nvim',
     lazy = false,
