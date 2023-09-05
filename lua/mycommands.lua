@@ -39,7 +39,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
--- Automatically disable relativenumber on editing a buffer
+-- Automatically have relative numbers on normal mode for only the focused window, disable it on other modes and windows
 -- Taken from: https://jeffkreeftmeijer.com/vim-number/
 local autoSetNumberGroup = vim.api.nvim_create_augroup("AutoSetNumberGroup", {})
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" }, {
