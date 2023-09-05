@@ -730,10 +730,16 @@ return {
     keys = mymappings.neotest(),
     ft = {'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'},
   },
-  {
-    "m4xshen/hardtime.nvim",
-    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+  { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+    'm4xshen/hardtime.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     opts = {},
     event = { 'BufReadPost', 'BufNewFile' },
   },
+  { -- Change surrounds more easily
+    'kylechui/nvim-surround',
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = 'VeryLazy',
+    config = true
+  }
 }
