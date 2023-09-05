@@ -38,6 +38,7 @@ opt.shiftwidth = 2
 opt.smartindent = true
 opt.tabstop = 2
 opt.softtabstop = 2
+opt.relativenumber = true
 
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened

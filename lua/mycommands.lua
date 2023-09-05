@@ -1,15 +1,15 @@
 vim.api.nvim_create_user_command('CloseOthers', function(cmd_opts)
-  vim.cmd[[%bd|e#]]
+  vim.cmd [[%bd|e#]]
 end, {})
 
 -- Create "Format" command to format the document
 vim.api.nvim_create_user_command('Format', function(cmd_opts)
-  local filter = function (client)
-    vim.notify('Formatting with: '..client.name)
+  local filter = function(client)
+    vim.notify('Formatting with: ' .. client.name)
     return true
   end
   if cmd_opts.range == 0 then
-    vim.lsp.buf.format({filter = filter})
+    vim.lsp.buf.format({ filter = filter })
   else
     vim.lsp.buf.format({
       range = {
@@ -38,6 +38,29 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
   end,
 })
+
+-- Automatically disable relativenumber on editing a buffer
+-- Taken from: https://jeffkreeftmeijer.com/vim-number/
+local autoSetNumberGroup = vim.api.nvim_create_augroup("AutoSetNumberGroup", {})
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" }, {
+  group = autoSetNumberGroup,
+  pattern = "*",
+  callback = function()
+    if vim.opt.number._value and vim.api.nvim_get_mode()["mode"] ~= 'i' then
+      vim.opt.relativenumber = true
+    end
+  end,
+})
+vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" }, {
+  group = autoSetNumberGroup,
+  pattern = "*",
+  callback = function()
+    if vim.opt.number._value then
+      vim.opt.relativenumber = false
+    end
+  end,
+})
+
 
 vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')

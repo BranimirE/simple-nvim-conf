@@ -729,5 +729,11 @@ return {
     end,
     keys = mymappings.neotest(),
     ft = {'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'},
-  }
+  },
+  {
+    "m4xshen/hardtime.nvim",
+    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+    opts = {},
+    event = { 'BufReadPost', 'BufNewFile' },
+  },
 }
