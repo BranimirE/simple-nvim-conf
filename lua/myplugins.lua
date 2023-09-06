@@ -606,12 +606,12 @@ return {
         emmet_ls = {
           on_attach = on_attach,
           capabilities = capabilities,
-          filetypes = { "css", "eruby", "html", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
+          filetypes = { 'css', 'eruby', 'html', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'pug', 'typescriptreact', 'vue' },
           init_options = {
             html = {
               options = {
                 -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-                ["bem.enabled"] = true,
+                ['bem.enabled'] = true,
               },
             },
           }
@@ -733,12 +733,14 @@ return {
   { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
     'm4xshen/hardtime.nvim',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
-    opts = {},
+    opts = {
+      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
+    },
     event = { 'BufReadPost', 'BufNewFile' },
   },
   { -- Change surrounds more easily
     'kylechui/nvim-surround',
-    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    version = '*', -- Use for stability; omit to use `main` branch for the latest features
     event = 'VeryLazy',
     config = true
   }

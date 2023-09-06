@@ -3,7 +3,7 @@ local g = vim.g
 local api = vim.api
 vim.keymap.set({'n'}, '<space>', '<nop>', {noremap = true})
 vim.keymap.set({'v'}, '<space>', '<nop>', {noremap = true})
-g.mapleader = " " -- Set space as leader key
+g.mapleader = ' ' -- Set space as leader key
 
 opt.splitright = true -- Open new split to the right
 opt.splitbelow = true -- Open new split below
@@ -13,7 +13,7 @@ opt.smartcase = true -- Make search sensitive if there is a capital letter
 -- opt.signcolumn = 'yes' -- Show the signcolumn always
 opt.path = '**' -- Make the project root directory as the dir to search when we use :find or similar commands
 opt.foldcolumn = '0' -- How many columns use to show the folding icons, '0' to disable it
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- Set nvim treesitter script to define the folding
+opt.foldexpr = 'nvim_treesitter#foldexpr()' -- Set nvim treesitter script to define the folding
 opt.foldmethod = 'expr' -- opt.foldexpr option value will give the fold method
 opt.foldlevel = 20 -- Automatically open 20 levels of folding when opening a file
 -- opt.foldenable = false -- Disable folding at startup
