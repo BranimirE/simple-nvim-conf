@@ -7,11 +7,11 @@ return {
     event = 'VeryLazy',
     opts = {
       style = 'night',
-      -- transparent = true,
-      -- styles = {
-      --   sidebars = 'transparent',
-      --   floats = 'transparent',
-      -- },
+      transparent = true,
+      styles = {
+        sidebars = 'transparent',
+        floats = 'transparent',
+      },
     },
     init = function()
       vim.cmd('colorscheme tokyonight')
