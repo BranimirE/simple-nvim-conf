@@ -115,7 +115,10 @@ M = {
       { '<down>',     util.move_with_arrows('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
       { '<right>',    '<cmd>tabnext<cr>',              silent = true },   -- Go to next tab. TODO: enable only if there is more than 1 tab opened
       { '<left>',     '<cmd>tabprevious<cr>',          silent = true },   -- Go to previous tab. TODO: The same as above
-      { '<f10>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true } -- Open diagnostics with F9
+      { '<f10>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true }, -- Open diagnostics with F9
+      { 'J',          ":m '>+1<CR>gv=gv",               mode = 'v' },     -- Move visual block one line up
+      { 'K',          ":m '<-2<CR>gv=gv",               mode = 'v' },     -- Move visual block one line down
+      { '<leader>y',  '"+y',                            mode = { 'n', 'v' } }
     }
   end
 }
