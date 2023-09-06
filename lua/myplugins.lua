@@ -267,7 +267,6 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      -- 'nvim-telescope/telescope-ui-select.nvim' -- Show code actions in Telescope dropdown TODO: (a) check if this is still necessary with LspSaga
       'nvim-treesitter/nvim-treesitter'
     },
     cmd = 'Telescope',
@@ -292,12 +291,6 @@ return {
             n = { ['q'] = require('telescope.actions').close },
           },
         },
-        -- TODO: (a) same
-        -- extensions = {
-        --   ['ui-select'] = {
-        --     require('telescope.themes').get_dropdown({})
-        --   }
-        -- },
         pickers = {
           find_files = {
             theme = 'dropdown',
