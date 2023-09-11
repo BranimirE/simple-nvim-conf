@@ -86,6 +86,9 @@ return {
       git = {
         ignore = false -- hide files/dirs in gitignore?
       },
+      view = {
+        adaptive_size = true,
+      }
     }
   },
   { -- Tmux switch panels keys integration
