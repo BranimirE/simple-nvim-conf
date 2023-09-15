@@ -118,7 +118,8 @@ M = {
       { '<f10>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true }, -- Open diagnostics with F9
       { 'J',          ":m '>+1<CR>gv=gv",               mode = 'v' },     -- Move visual block one line up
       { 'K',          ":m '<-2<CR>gv=gv",               mode = 'v' },     -- Move visual block one line down
-      { '<leader>y',  '"+y',                            mode = { 'n', 'v' } }
+      { '<leader>y',  '"+y',                            mode = { 'n', 'v' } }, -- Copy to the systemclipboard
+      { '<leader>d',  '"_d',                            mode = { 'n', 'v' } } -- Delete without without overwriting the clipboard
     }
   end
 }
