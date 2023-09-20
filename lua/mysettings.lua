@@ -55,3 +55,8 @@ api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
   pattern = {'*.tyb', '*.typ', '*.tyc', '*.pkb', '*.pks', '*.PKB', '*.PKS'},
   command = [[setf sql]]
 })
+
+api.nvim_create_autocmd({'TermOpen'}, {
+  pattern = '*',
+  command = [[setlocal nonumber norelativenumber]]
+})
