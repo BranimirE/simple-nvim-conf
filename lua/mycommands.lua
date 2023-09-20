@@ -1,3 +1,4 @@
+local myutils = require "myutils"
 vim.api.nvim_create_user_command('CloseOthers', function(cmd_opts)
   vim.cmd [[%bd|e#]]
 end, {})
@@ -61,6 +62,7 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave'
   end,
 })
 
+vim.api.nvim_create_user_command('RunNpmCommand', myutils.run_npm_command, {})
 
 vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')

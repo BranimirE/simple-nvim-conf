@@ -696,36 +696,6 @@ return {
     },
     cmd = { 'Trouble' }, -- Lazy-load on commands
   },
-  {
-    'nvim-neotest/neotest',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-treesitter/nvim-treesitter',
-      'antoinemadec/FixCursorHold.nvim',
-      'haydenmeade/neotest-jest',
-      {
-        'folke/neodev.nvim',
-        opts = {
-          library = { plugins = { 'neotest' }, types = true },
-        }
-      }
-    },
-    opts = function ()
-      return {
-        adapters = {
-          require('neotest-jest')
-        },
-        summary = {
-          mappings = {
-            jumpto = {'i', 'g', 'l'},
-            stop = {'u', 's'},
-          },
-        },
-      }
-    end,
-    keys = mymappings.neotest(),
-    ft = {'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx'},
-  },
   { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
     'm4xshen/hardtime.nvim',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
@@ -739,5 +709,21 @@ return {
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
     event = 'VeryLazy',
     config = true
+  },
+  { -- Improve input and select nvim UI components
+    'stevearc/dressing.nvim',
+    dependencies = {'benmills/vimux'}, -- Execute tmux commands from neovim. Used by my custom command 'RunNpmCommand'
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require('lazy').load({ plugins = { 'dressing.nvim' } })
+        return vim.ui.input(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require('lazy').load({ plugins = { 'dressing.nvim' } })
+        return vim.ui.select(...)
+      end
+    end,
   }
 }

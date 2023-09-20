@@ -224,11 +224,15 @@ function M.move_with_arrows(direction)
   return function ()
     if M.is_win_type_visible('quickfix') then
       if direction == '<up>' then
+        ---@diagnostic disable-next-line: param-type-mismatch
         if not pcall(vim.cmd, 'cprevious') then
+          ---@diagnostic disable-next-line: param-type-mismatch
           pcall(vim.cmd, 'clast')
         end
       else
+        ---@diagnostic disable-next-line: param-type-mismatch
         if not pcall(vim.cmd, 'cnext') then
+          ---@diagnostic disable-next-line: param-type-mismatch
           pcall(vim.cmd, 'cfirst')
         end
       end
@@ -254,4 +258,37 @@ function M.run_current_file_tests()
   end, 100)
 end
 
+function M.list_npm_commands()
+  local npm_commands = {}
+  local success,commands_str = pcall(vim.fn.system, "node -e \"process.stdout.write(Object.keys(require('.' + require('path').sep + 'package.json').scripts || {}).join(','))\"")
+  if success then
+    for command in string.gmatch(commands_str, '([^,]+)') do
+      npm_commands[#npm_commands+1] = command
+    end
+  end
+
+  return npm_commands
+end
+
+function M.select_npm_command(cb)
+  local npm_commands = M.list_npm_commands()
+
+  if next(npm_commands) == nil then
+    print("No npm command found")
+    return
+  end
+
+  vim.ui.select(npm_commands, { prompt = 'Select command:' }, cb)
+end
+
+function M.run_npm_command()
+  M.select_npm_command(function (command_str)
+    if command_str ~= nil then
+      local prev_vimux_orientation = vim.g.VimuxOrientation
+      vim.g.VimuxOrientation = 'h'
+      vim.api.nvim_call_function("VimuxRunCommand", {"npm run "..command_str})
+      vim.g.VimuxOrientation = prev_vimux_orientation
+    end
+  end)
+end
 return M
