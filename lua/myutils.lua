@@ -260,7 +260,7 @@ end
 
 function M.list_npm_commands()
   local npm_commands = {}
-  local success,commands_str = pcall(vim.fn.system, "node -e \"process.stdout.write(Object.keys(require('.' + require('path').sep + 'package.json').scripts || {}).join(','))\"")
+  local success,commands_str = pcall(vim.fn.system, "node -e \"var filePath='.' + require('path').sep + 'package.json'; process.stdout.write(Object.keys((require('fs').existsSync(filePath) && require(filePath).scripts) || {}).join(','))\"")
   if success then
     for command in string.gmatch(commands_str, '([^,]+)') do
       npm_commands[#npm_commands+1] = command
