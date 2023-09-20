@@ -13,6 +13,7 @@ function M.get_visual_selection()
   local text = vim.fn.getreg('v')
   vim.fn.setreg('v', {})
 
+  ---@diagnostic disable-next-line: param-type-mismatch
   text = string.gsub(text, "\n", "")
   if #text > 0 then
     return text
@@ -177,6 +178,7 @@ function M.prev_hunk(gitsigns)
 end
 
 function M.is_range_formatting_supported()
+  ---@diagnostic disable-next-line: deprecated
   local clients = vim.lsp.get_active_clients()
   for _, client in ipairs(clients) do
     if client.server_capabilities.documentRangeFormattingProvider then
@@ -293,6 +295,7 @@ function M.run_npm_command()
         vim.cmd('vsp | terminal npm run '..command_str)
         -- Move the terminal to the right side of the screen
         M.feedkey([[<c-w>L]], 'n')
+        M.feedkey([[54<c-w>|]], 'n')
       end
     end
   end)
