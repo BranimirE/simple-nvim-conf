@@ -460,7 +460,8 @@ return {
           return myutils.has('nvim-cmp')
         end,
       },
-      'jose-elias-alvarez/nvim-lsp-ts-utils', -- TODO: Load only for javascript files
+      'jose-elias-alvarez/typescript.nvim',
+      'pmizio/typescript-tools.nvim',
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
@@ -510,7 +511,8 @@ return {
       )
       -- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-      local lspconfig = require('lspconfig');
+      local lspconfig = require('lspconfig')
+      local lspconfig_util = require('lspconfig.util')
 
       local my_lsp_server_config = {
         lua_ls = {
@@ -581,12 +583,15 @@ return {
           capabilities = capabilities,
           on_attach = function(client, bufnr)
             on_attach(client, bufnr)
-            -- Disable annoying convert JS module message
-            require('nvim-lsp-ts-utils').setup({
-              filter_out_diagnostics_by_code = { 80001 },
+            local api = require('typescript-tools.api')
+            require('typescript-tools').setup({
+              handlers = {
+                ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
+                  -- Ignore this kind of error
+                  { 80001 }
+                ),
+              },
             })
-            require('nvim-lsp-ts-utils').setup_client(client) -- client.resolved_capabilities.document_formatting = false
-            client.server_capabilities.documentFormattingProvider = false
           end,
         },
         jsonls = {
@@ -611,6 +616,14 @@ return {
               },
             },
           }
+        },
+        eslint = {
+          capabilities = capabilities,
+          on_attach = function(client, bufnr)
+            on_attach(client, bufnr)
+            client.server_capabilities.documentFormattingProvider = true
+          end,
+          root_dir = lspconfig_util.root_pattern('.eslintrc.js', '.eslintrc.cjs', '.eslintrc.json', '.eslintrc')
         }
       }
       for _, server_name in ipairs(my_lsp_servers) do
@@ -649,7 +662,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'prettier', 'flake8', 'black' }
+      ensure_installed = { 'eslint_d', 'flake8', 'black' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -665,11 +678,32 @@ return {
             sources = {
               code_actions.gitsigns,
               -- code_actions.eslint,
-              formatting.prettier,
+              formatting.prettier.with {
+                filetypes = { 'typescriptreact', 'typescript', 'vue', 'javascript' },
+                condition = function(null_ls_utils)
+                  local has_prettier = null_ls_utils.root_has_file('.prettierrc.json', '.prettierrc')
+                  if not has_prettier then
+                    return false
+                  end
+
+                  local has_eslint_prettier_integration = myutils.is_npm_package_installed('eslint-plugin-prettier')
+
+                  return not has_eslint_prettier_integration
+                end,
+                command = './node_modules/.bin/prettier',
+              },
+              formatting.prettier.with {
+                filetypes = { 'graphql', 'css' },
+                condition = function(utils)
+                  return utils.root_has_file { '.prettierrc.json', 'prettier.config.js' }
+                end,
+                command = './node_modules/.bin/prettier',
+              },
               formatting.black,
               -- diagnostics.eslint
               diagnostics.flake8,
-            }
+            },
+            root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json'),
           }
         end
       },
