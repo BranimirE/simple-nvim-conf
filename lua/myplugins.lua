@@ -741,7 +741,7 @@ return {
   { -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
-    event = 'VeryLazy',
+    event = 'InsertEnter',
     config = true
   },
   { -- Improve input and select nvim UI components
@@ -759,5 +759,10 @@ return {
         return vim.ui.select(...)
       end
     end,
+  },
+  {
+    'declancm/cinnamon.nvim',
+    config = true,
+    event = 'VeryLazy'
   }
 }
