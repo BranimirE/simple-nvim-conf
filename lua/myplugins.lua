@@ -223,6 +223,7 @@ return {
   },
   { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',
+    version = 'v2.20.8',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
       char = '▏',
