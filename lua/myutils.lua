@@ -340,4 +340,15 @@ function M.is_npm_package_installed(package)
   return false
 end
 
+function M.log(message)
+  local file = io.open('/home/branimir/nvimlogs.log', "a")
+
+  if file then
+    file:write(message .. "\n")
+    file:close()
+  else
+    print("Error: Unable to open the file for appending.")
+  end
+end
+
 return M

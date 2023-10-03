@@ -6,6 +6,7 @@ end, {})
 -- Create 'Format' command to format the document
 vim.api.nvim_create_user_command('Format', function(cmd_opts)
   local formatting_disabled_ls = { 'tsserver', 'typescript-tools' }
+  myutils.log('Formating!!')
   local filter = function(client)
     if vim.tbl_contains(formatting_disabled_ls, client.name) then
       return false
