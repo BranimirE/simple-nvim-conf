@@ -462,7 +462,7 @@ return {
         end,
       },
       'jose-elias-alvarez/typescript.nvim',
-      -- 'pmizio/typescript-tools.nvim',
+      'pmizio/typescript-tools.nvim',
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
@@ -477,7 +477,6 @@ return {
     config = function()
       local my_lsp_servers = {
         'lua_ls',
-        'tsserver',
         'bashls',
         'pyright',
         'vimls',
@@ -488,12 +487,17 @@ return {
         'yamlls',
         'html',
         'sqlls',
-        -- 'eslint', We are going to use node_modules package instead
         'jsonls',
         'docker_compose_language_service',
         'dockerls',
-        'emmet_ls'
+        'emmet_ls',
+        'tsserver'
       }
+
+      if not myutils.is_npm_package_installed('eslint') then
+        myutils.log('eslint is not installed in package.json. Using eslint lsp')
+        table.insert(my_lsp_servers, 'eslint')
+      end
 
       -- Most of lspsaga key mappings can be triggered using null-ls sources
       myutils.load_mapping(mymappings.lsp_saga())
@@ -504,6 +508,7 @@ return {
         myutils.load_mapping(mymappings.lsp(bufnr))
         myutils.log('client.name='..client.name)
         myutils.log('client.server_capabilities.documentFormattingProvider='..vim.inspect(client.server_capabilities.documentFormattingProvider))
+        myutils.log('client.server_capabilities.documentRangeFormattingProvider='..vim.inspect(client.server_capabilities.documentRangeFormattingProvider))
       end
 
       local capabilities = vim.tbl_deep_extend(
@@ -584,21 +589,18 @@ return {
         tsserver = {
           capabilities = capabilities,
           on_attach = function(client, bufnr)
-            -- myutils.disable_formatting(client)
-            if client.name == 'tsserver' then
-              client.server_capabilities.documentFormattingProvider = false
-            end
+            myutils.disable_formatting(client)
             on_attach(client, bufnr)
 
-            -- local api = require('typescript-tools.api')
-            -- require('typescript-tools').setup({
-            --   handlers = {
-            --     ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
-            --       -- Ignore this kind of error
-            --       { 80001 }
-            --     ),
-            --   },
-            -- })
+            local api = require('typescript-tools.api')
+            require('typescript-tools').setup({
+              handlers = {
+                ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
+                  -- Ignore this kind of error
+                  { 80001 }
+                ),
+              },
+            })
           end,
         },
         jsonls = {
@@ -623,16 +625,9 @@ return {
               },
             },
           }
-        },
-        -- eslint = {
-        --   capabilities = capabilities,
-        --   on_attach = function(client, bufnr)
-        --     on_attach(client, bufnr)
-        --     client.server_capabilities.documentFormattingProvider = true
-        --   end,
-        --   root_dir = lspconfig_util.root_pattern('.eslintrc.js', '.eslintrc.cjs', '.eslintrc.json', '.eslintrc')
-        -- }
+        }
       }
+
       for _, server_name in ipairs(my_lsp_servers) do
         if my_lsp_server_config[server_name] ~= nil then
           lspconfig[server_name].setup(my_lsp_server_config[server_name])
@@ -669,7 +664,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'eslint', 'flake8', 'black' }
+      ensure_installed = { 'flake8', 'black', 'prettier' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -688,14 +683,18 @@ return {
             diagnostics.flake8,
           }
 
+          if myutils.is_npm_package_installed('eslint') then
+              myutils.log('has eslint. Setting up null-ls eslint diagnostics and code_actions')
+            -- Use node_modules EsLint for diagnostics and code actions
+            -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
+            table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
+            table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
+          end
+
           if myutils.is_npm_package_installed('prettier') then
             myutils.log('has prettier')
             if myutils.is_npm_package_installed('eslint') then
               myutils.log('has eslint')
-              -- Use node_modules EsLint for diagnostics and code actions
-              -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
-              table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
-              table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
               if myutils.is_npm_package_installed('eslint-plugin-prettier') then
                 myutils.log('has eslint-prettier integration')
                 -- Use EsLint as formatter(It will use prettier internally)
@@ -704,20 +703,19 @@ return {
                 }))
               else
                 myutils.log('it does not have eslint-prettier integration. Using only prettier')
-                -- Use Prettier as formatter
-                -- local has_prettier = null_ls_utils.root_has_file('.prettierrc.json', '.prettierrc')
                 table.insert(sources, formatting.prettier.with({
-                  command = './node_modules/.bin/myprettier',
+                  command = './node_modules/.bin/prettier',
                 }))
               end
             else
               myutils.log('it does not have eslint. Using only prettier 2')
               table.insert(sources, formatting.prettier.with({
-                command = './node_modules/.bin/myprettier',
+                command = './node_modules/.bin/prettier',
               }))
             end
           else
-            myutils.log('it does not have prettier')
+            myutils.log('Project does not have prettier. Using global(mason-null-ls) prettier')
+            table.insert(sources, formatting.prettier)
           end
 
           return {

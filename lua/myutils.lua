@@ -340,10 +340,10 @@ function M.is_npm_package_installed(package)
   return false
 end
 
-function M.disable_formatting(client)
-  -- M.log("disabling format"..vim.inspect(client))
-  -- client.server_capabilities.documentFormattingProvider = false
-  -- client.server_capabilities.documentRangeFormattingProvider = false
+function M.disable_formatting(lsp_client)
+  M.log("Disabling formatting for client="..lsp_client.name)
+  lsp_client.server_capabilities.documentFormattingProvider = false
+  lsp_client.server_capabilities.documentRangeFormattingProvider = false
 end
 
 function M.log(message)
