@@ -342,8 +342,8 @@ end
 
 function M.disable_formatting(client)
   -- M.log("disabling format"..vim.inspect(client))
-  client.server_capabilities.documentFormattingProvider = false
-  client.server_capabilities.documentRangeFormattingProvider = false
+  -- client.server_capabilities.documentFormattingProvider = false
+  -- client.server_capabilities.documentRangeFormattingProvider = false
 end
 
 function M.log(message)

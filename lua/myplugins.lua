@@ -498,10 +498,12 @@ return {
       -- Most of lspsaga key mappings can be triggered using null-ls sources
       myutils.load_mapping(mymappings.lsp_saga())
 
-      local on_attach = function(_, bufnr)
+      local on_attach = function(client, bufnr)
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         myutils.load_mapping(mymappings.lsp(bufnr))
+        myutils.log('client.name='..client.name)
+        myutils.log('client.server_capabilities.documentFormattingProvider='..vim.inspect(client.server_capabilities.documentFormattingProvider))
       end
 
       local capabilities = vim.tbl_deep_extend(
@@ -510,7 +512,6 @@ return {
         vim.lsp.protocol.make_client_capabilities(),
         require('cmp_nvim_lsp').default_capabilities()
       )
-      -- capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       local lspconfig = require('lspconfig')
       local lspconfig_util = require('lspconfig.util')
@@ -583,8 +584,12 @@ return {
         tsserver = {
           capabilities = capabilities,
           on_attach = function(client, bufnr)
-            myutils.disable_formatting(client)
+            -- myutils.disable_formatting(client)
+            if client.name == 'tsserver' then
+              client.server_capabilities.documentFormattingProvider = false
+            end
             on_attach(client, bufnr)
+
             -- local api = require('typescript-tools.api')
             -- require('typescript-tools').setup({
             --   handlers = {
@@ -683,37 +688,37 @@ return {
             diagnostics.flake8,
           }
 
-          -- if myutils.is_npm_package_installed('prettier') then
-          --   myutils.log('has prettier')
-          --   if myutils.is_npm_package_installed('eslint') then
-          --     myutils.log('has eslint')
-          --     -- Use node_modules EsLint for diagnostics and code actions
-          --     -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
-          --     table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
-          --     table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
-          --     if myutils.is_npm_package_installed('eslint-plugin-prettier') then
-          --       myutils.log('has eslint-prettier integration')
-          --       -- Use EsLint as formatter(It will use prettier internally)
-          --       table.insert(sources, formatting.eslint.with({
-          --         command = './node_modules/.bin/eslint',
-          --       }))
-          --     else
-          --       myutils.log('it does not have eslint-prettier integration. Using only prettier')
-          --       -- Use Prettier as formatter
-          --       -- local has_prettier = null_ls_utils.root_has_file('.prettierrc.json', '.prettierrc')
-          --       table.insert(sources, formatting.prettier.with({
-          --         command = './node_modules/.bin/prettier',
-          --       }))
-          --     end
-          --   else
-          --     myutils.log('it does not have eslint. Using only prettier 2')
-          --     table.insert(sources, formatting.prettier.with({
-          --       command = './node_modules/.bin/prettier',
-          --     }))
-          --   end
-          -- else
-          --   myutils.log('It does not have prettier')
-          -- end
+          if myutils.is_npm_package_installed('prettier') then
+            myutils.log('has prettier')
+            if myutils.is_npm_package_installed('eslint') then
+              myutils.log('has eslint')
+              -- Use node_modules EsLint for diagnostics and code actions
+              -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
+              table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
+              table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
+              if myutils.is_npm_package_installed('eslint-plugin-prettier') then
+                myutils.log('has eslint-prettier integration')
+                -- Use EsLint as formatter(It will use prettier internally)
+                table.insert(sources, formatting.eslint.with({
+                  command = './node_modules/.bin/eslint',
+                }))
+              else
+                myutils.log('it does not have eslint-prettier integration. Using only prettier')
+                -- Use Prettier as formatter
+                -- local has_prettier = null_ls_utils.root_has_file('.prettierrc.json', '.prettierrc')
+                table.insert(sources, formatting.prettier.with({
+                  command = './node_modules/.bin/myprettier',
+                }))
+              end
+            else
+              myutils.log('it does not have eslint. Using only prettier 2')
+              table.insert(sources, formatting.prettier.with({
+                command = './node_modules/.bin/myprettier',
+              }))
+            end
+          else
+            myutils.log('it does not have prettier')
+          end
 
           return {
             sources = sources,
