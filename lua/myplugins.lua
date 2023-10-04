@@ -462,7 +462,7 @@ return {
         end,
       },
       'jose-elias-alvarez/typescript.nvim',
-      'pmizio/typescript-tools.nvim',
+      -- 'pmizio/typescript-tools.nvim',
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
@@ -488,7 +488,7 @@ return {
         'yamlls',
         'html',
         'sqlls',
-        'eslint',
+        -- 'eslint', We are going to use node_modules package instead
         'jsonls',
         'docker_compose_language_service',
         'dockerls',
@@ -583,16 +583,17 @@ return {
         tsserver = {
           capabilities = capabilities,
           on_attach = function(client, bufnr)
+            myutils.disable_formatting(client)
             on_attach(client, bufnr)
-            local api = require('typescript-tools.api')
-            require('typescript-tools').setup({
-              handlers = {
-                ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
-                  -- Ignore this kind of error
-                  { 80001 }
-                ),
-              },
-            })
+            -- local api = require('typescript-tools.api')
+            -- require('typescript-tools').setup({
+            --   handlers = {
+            --     ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
+            --       -- Ignore this kind of error
+            --       { 80001 }
+            --     ),
+            --   },
+            -- })
           end,
         },
         jsonls = {
@@ -618,14 +619,14 @@ return {
             },
           }
         },
-        eslint = {
-          capabilities = capabilities,
-          on_attach = function(client, bufnr)
-            on_attach(client, bufnr)
-            client.server_capabilities.documentFormattingProvider = true
-          end,
-          root_dir = lspconfig_util.root_pattern('.eslintrc.js', '.eslintrc.cjs', '.eslintrc.json', '.eslintrc')
-        }
+        -- eslint = {
+        --   capabilities = capabilities,
+        --   on_attach = function(client, bufnr)
+        --     on_attach(client, bufnr)
+        --     client.server_capabilities.documentFormattingProvider = true
+        --   end,
+        --   root_dir = lspconfig_util.root_pattern('.eslintrc.js', '.eslintrc.cjs', '.eslintrc.json', '.eslintrc')
+        -- }
       }
       for _, server_name in ipairs(my_lsp_servers) do
         if my_lsp_server_config[server_name] ~= nil then
@@ -663,7 +664,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'eslint_d', 'flake8', 'black' }
+      ensure_installed = { 'eslint', 'flake8', 'black' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -675,35 +676,47 @@ return {
           local formatting = null_ls.builtins.formatting
           local diagnostics = null_ls.builtins.diagnostics
           local code_actions = null_ls.builtins.code_actions
+
+          local sources = {
+            code_actions.gitsigns,
+            formatting.black,
+            diagnostics.flake8,
+          }
+
+          -- if myutils.is_npm_package_installed('prettier') then
+          --   myutils.log('has prettier')
+          --   if myutils.is_npm_package_installed('eslint') then
+          --     myutils.log('has eslint')
+          --     -- Use node_modules EsLint for diagnostics and code actions
+          --     -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
+          --     table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
+          --     table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
+          --     if myutils.is_npm_package_installed('eslint-plugin-prettier') then
+          --       myutils.log('has eslint-prettier integration')
+          --       -- Use EsLint as formatter(It will use prettier internally)
+          --       table.insert(sources, formatting.eslint.with({
+          --         command = './node_modules/.bin/eslint',
+          --       }))
+          --     else
+          --       myutils.log('it does not have eslint-prettier integration. Using only prettier')
+          --       -- Use Prettier as formatter
+          --       -- local has_prettier = null_ls_utils.root_has_file('.prettierrc.json', '.prettierrc')
+          --       table.insert(sources, formatting.prettier.with({
+          --         command = './node_modules/.bin/prettier',
+          --       }))
+          --     end
+          --   else
+          --     myutils.log('it does not have eslint. Using only prettier 2')
+          --     table.insert(sources, formatting.prettier.with({
+          --       command = './node_modules/.bin/prettier',
+          --     }))
+          --   end
+          -- else
+          --   myutils.log('It does not have prettier')
+          -- end
+
           return {
-            sources = {
-              code_actions.gitsigns,
-              -- code_actions.eslint,
-              formatting.prettier.with {
-                filetypes = { 'typescriptreact', 'typescript', 'vue', 'javascript' },
-                condition = function(null_ls_utils)
-                  local has_prettier = null_ls_utils.root_has_file('.prettierrc.json', '.prettierrc')
-                  if not has_prettier then
-                    return false
-                  end
-
-                  local has_eslint_prettier_integration = myutils.is_npm_package_installed('eslint-plugin-prettier')
-
-                  return not has_eslint_prettier_integration
-                end,
-                command = './node_modules/.bin/prettier',
-              },
-              formatting.prettier.with {
-                filetypes = { 'graphql', 'css' },
-                condition = function(utils)
-                  return utils.root_has_file { '.prettierrc.json', 'prettier.config.js' }
-                end,
-                command = './node_modules/.bin/prettier',
-              },
-              formatting.black,
-              -- diagnostics.eslint
-              diagnostics.flake8,
-            },
+            sources = sources,
             root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json'),
           }
         end
