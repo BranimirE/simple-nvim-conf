@@ -1,32 +1,27 @@
 local myutils = require "myutils"
+
+vim.api.nvim_create_user_command('EnableFormatOnSave', function()
+  vim.g.FORMAT_ON_SAVE = true
+end, {})
+
+vim.api.nvim_create_user_command('DisableFormatOnSave', function()
+  vim.g.FORMAT_ON_SAVE = false
+end, {})
+
+vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
+  if vim.g.FORMAT_ON_SAVE then
+    vim.g.FORMAT_ON_SAVE = false
+  else
+    vim.g.FORMAT_ON_SAVE = true
+  end
+end, {})
+
 vim.api.nvim_create_user_command('CloseOthers', function(cmd_opts)
   vim.cmd [[%bd|e#]]
 end, {})
 
 -- Create 'Format' command to format the document
-vim.api.nvim_create_user_command('Format', function(cmd_opts)
-  myutils.log('Formating!!')
-
-  local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'
-  local filter = function(client)
-    if client.supports_method(method) then
-      vim.notify('Formatting with: ' .. client.name)
-      return true
-    end
-    return false
-  end
-  if cmd_opts.range == 0 then
-    vim.lsp.buf.format({ filter = filter })
-  else
-    vim.lsp.buf.format({
-      range = {
-        ['start'] = { cmd_opts.line1, 0 },
-        ['end'] = { cmd_opts.line2, 0 }
-      },
-      filter = filter
-    })
-  end
-end, { range = '%' })
+vim.api.nvim_create_user_command('Format', myutils.format, { range = '%' })
 
 -- Create 'Todos' command to list all the TODOS in the project
 vim.api.nvim_create_user_command('Todos', 'TodoTrouble', {})
@@ -44,6 +39,14 @@ vim.api.nvim_create_autocmd('BufEnter', {
       end
     end
   end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('LspFormatting', {}),
+  pattern = '*',
+  callback = function()
+    myutils.format()
+  end
 })
 
 -- Automatically have relative numbers on normal mode for only the focused window, disable it on other modes and windows

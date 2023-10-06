@@ -223,7 +223,7 @@ function M.is_buffer_type_visible(buffer_type)
 end
 
 function M.move_with_arrows(direction)
-  return function ()
+  return function()
     if M.is_win_type_visible('quickfix') then
       if direction == '<up>' then
         ---@diagnostic disable-next-line: param-type-mismatch
@@ -243,9 +243,9 @@ function M.move_with_arrows(direction)
     if M.is_buffer_type_visible('Trouble') then
       local trouble = require('trouble')
       if direction == '<up>' then
-        trouble.previous({skip_groups = true, jump = true})
+        trouble.previous({ skip_groups = true, jump = true })
       else
-        trouble.next({skip_groups = true, jump = true})
+        trouble.next({ skip_groups = true, jump = true })
       end
       return
     end
@@ -255,17 +255,18 @@ end
 
 function M.run_current_file_tests()
   require('neotest').summary.open()
-  vim.defer_fn(function ()
+  vim.defer_fn(function()
     require('neotest').run.run(vim.fn.expand('%'))
   end, 100)
 end
 
 function M.list_npm_commands()
   local npm_commands = {}
-  local success,commands_str = pcall(vim.fn.system, "node -e \"var filePath='.' + require('path').sep + 'package.json'; process.stdout.write(Object.keys((require('fs').existsSync(filePath) && require(filePath).scripts) || {}).join(','))\"")
+  local success, commands_str = pcall(vim.fn.system,
+    "node -e \"var filePath='.' + require('path').sep + 'package.json'; process.stdout.write(Object.keys((require('fs').existsSync(filePath) && require(filePath).scripts) || {}).join(','))\"")
   if success then
     for command in string.gmatch(commands_str, '([^,]+)') do
-      npm_commands[#npm_commands+1] = command
+      npm_commands[#npm_commands + 1] = command
     end
   end
 
@@ -284,15 +285,15 @@ function M.select_npm_command(cb)
 end
 
 function M.run_npm_command()
-  M.select_npm_command(function (command_str)
+  M.select_npm_command(function(command_str)
     if command_str ~= nil then
       if vim.fn.exists('$TMUX') ~= 0 then
         local prev_vimux_orientation = vim.g.VimuxOrientation
         vim.g.VimuxOrientation = 'h'
-        vim.api.nvim_call_function("VimuxRunCommand", {"npm run "..command_str})
+        vim.api.nvim_call_function("VimuxRunCommand", { "npm run " .. command_str })
         vim.g.VimuxOrientation = prev_vimux_orientation
       else
-        vim.cmd('vsp | terminal npm run '..command_str)
+        vim.cmd('vsp | terminal npm run ' .. command_str)
         -- Move the terminal to the right side of the screen
         M.feedkey([[<c-w>L]], 'n')
         M.feedkey([[54<c-w>|]], 'n')
@@ -341,19 +342,47 @@ function M.is_npm_package_installed(package)
 end
 
 function M.disable_formatting(lsp_client)
-  M.log("Disabling formatting for client="..lsp_client.name)
+  M.log("Disabling formatting for client=" .. lsp_client.name)
   lsp_client.server_capabilities.documentFormattingProvider = false
   lsp_client.server_capabilities.documentRangeFormattingProvider = false
 end
 
 function M.log(message)
-  local file = io.open('/home/branimir/nvimlogs.log', "a")
+  if vim.g.ENABLE_CUSTOM_LOGS == false then
+    local file = io.open('/home/branimir/nvimlogs.log', "a")
 
-  if file then
-    file:write(message .. "\n")
-    file:close()
-  else
-    print("Error: Unable to open the file for appending.")
+    if file then
+      file:write(message .. "\n")
+      file:close()
+    else
+      print("Error: Unable to open the file for appending.")
+    end
+  end
+end
+
+function M.format(cmd_opts)
+  if vim.g.FORMAT_ON_SAVE then
+    M.log('Formating!!')
+    cmd_opts = cmd_opts or { range = 0 }
+    local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'
+    local filter = function(client)
+      if client.supports_method(method) then
+        vim.notify('Formatting with: ' .. client.name)
+        return true
+      end
+      return false
+    end
+    if cmd_opts.range == 0 then
+      vim.lsp.buf.format({ filter = filter })
+    else
+      vim.lsp.buf.format({
+        range = {
+          ['start'] = { cmd_opts.line1, 0 },
+          ['end'] = { cmd_opts.line2, 0 }
+        },
+        filter = filter
+      })
+    end
   end
 end
 
