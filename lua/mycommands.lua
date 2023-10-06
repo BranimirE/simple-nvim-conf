@@ -1,18 +1,18 @@
 local myutils = require "myutils"
 
 vim.api.nvim_create_user_command('EnableFormatOnSave', function()
-  vim.g.FORMAT_ON_SAVE = true
+  vim.g.DISABLE_FORMAT_ON_SAVE = false
 end, {})
 
 vim.api.nvim_create_user_command('DisableFormatOnSave', function()
-  vim.g.FORMAT_ON_SAVE = false
+  vim.g.DISABLE_FORMAT_ON_SAVE = true
 end, {})
 
 vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
-  if vim.g.FORMAT_ON_SAVE then
-    vim.g.FORMAT_ON_SAVE = false
+  if vim.g.DISABLE_FORMAT_ON_SAVE then
+    vim.g.DISABLE_FORMAT_ON_SAVE = true
   else
-    vim.g.FORMAT_ON_SAVE = true
+    vim.g.DISABLE_FORMAT_ON_SAVE = false
   end
 end, {})
 
@@ -41,12 +41,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
   end,
 })
 
+-- Format on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('LspFormatting', {}),
-  pattern = '*',
-  callback = function()
-    myutils.format()
-  end
+  command = 'Format'
 })
 
 -- Automatically have relative numbers on normal mode for only the focused window, disable it on other modes and windows

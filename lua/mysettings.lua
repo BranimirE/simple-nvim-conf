@@ -3,15 +3,16 @@ local g = vim.g
 local api = vim.api
 vim.keymap.set({ 'n' }, '<space>', '<nop>', { noremap = true })
 vim.keymap.set({ 'v' }, '<space>', '<nop>', { noremap = true })
-g.mapleader = ' '                           -- Set space as leader key
+g.mapleader = ' '      -- Set space as leader key
 
-opt.splitright = true                       -- Open new split to the right
-opt.splitbelow = true                       -- Open new split below
-opt.joinspaces = false                      -- prevent joining spaces with J
-opt.ignorecase = true                       -- Make search insensitive
-opt.smartcase = true                        -- Make search sensitive if there is a capital letter
+opt.splitright = true  -- Open new split to the right
+opt.splitbelow = true  -- Open new split below
+opt.joinspaces = false -- prevent joining spaces with J
+opt.ignorecase = true  -- Make search insensitive
+opt.smartcase = true   -- Make search sensitive if there is a capital letter
 -- opt.signcolumn = 'yes' -- Show the signcolumn always
-opt.path = '**'                             -- Make the project root directory as the dir to search when we use :find or similar commands
+opt.path =
+'**'                                        -- Make the project root directory as the dir to search when we use :find or similar commands
 opt.foldcolumn = '0'                        -- How many columns use to show the folding icons, '0' to disable it
 opt.foldexpr = 'nvim_treesitter#foldexpr()' -- Set nvim treesitter script to define the folding
 opt.foldmethod = 'expr'                     -- opt.foldexpr option value will give the fold method
@@ -62,5 +63,5 @@ api.nvim_create_autocmd({ 'TermOpen' }, {
   command = [[setlocal nonumber norelativenumber]]
 })
 
-vim.g.ENABLE_CUSTOM_LOGS = false
-vim.g.FORMAT_ON_SAVE = false
+vim.g.DISABLE_FORMAT_ON_SAVE = true
+vim.g.DISABLE_CUSTOM_LOGS = true
