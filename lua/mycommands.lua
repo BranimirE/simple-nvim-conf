@@ -1,18 +1,19 @@
-local myutils = require "myutils"
+local myutils = require('myutils')
+local myconfig = require('myconfig')
 
 vim.api.nvim_create_user_command('EnableFormatOnSave', function()
-  vim.g.DISABLE_FORMAT_ON_SAVE = false
+  myconfig.FORMAT_ON_SAVE = true
 end, {})
 
 vim.api.nvim_create_user_command('DisableFormatOnSave', function()
-  vim.g.DISABLE_FORMAT_ON_SAVE = true
+  myconfig.FORMAT_ON_SAVE = false
 end, {})
 
 vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
-  if vim.g.DISABLE_FORMAT_ON_SAVE then
-    vim.g.DISABLE_FORMAT_ON_SAVE = true
+  if myconfig.FORMAT_ON_SAVE then
+    myconfig.FORMAT_ON_SAVE = false
   else
-    vim.g.DISABLE_FORMAT_ON_SAVE = false
+    myconfig.FORMAT_ON_SAVE = true
   end
 end, {})
 

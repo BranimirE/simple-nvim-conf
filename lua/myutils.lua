@@ -348,7 +348,7 @@ function M.disable_formatting(lsp_client)
 end
 
 function M.log(message)
-  if not vim.g.DISABLE_CUSTOM_LOGS then
+  if not vim.g.CUSTOM_LOGS then
     local file = io.open('/home/branimir/nvimlogs.log', "a")
 
     if file then
@@ -361,7 +361,7 @@ function M.log(message)
 end
 
 function M.format(cmd_opts)
-  if not vim.g.DISABLE_FORMAT_ON_SAVE then
+  if require('myconfig').FORMAT_ON_SAVE then
     M.log('Formating!!')
     cmd_opts = cmd_opts or { range = 0 }
     local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'

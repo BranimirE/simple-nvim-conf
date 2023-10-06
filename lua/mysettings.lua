@@ -62,6 +62,3 @@ api.nvim_create_autocmd({ 'TermOpen' }, {
   pattern = '*',
   command = [[setlocal nonumber norelativenumber]]
 })
-
-vim.g.DISABLE_FORMAT_ON_SAVE = true
-vim.g.DISABLE_CUSTOM_LOGS = true
