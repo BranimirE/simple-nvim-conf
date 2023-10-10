@@ -45,7 +45,11 @@ vim.api.nvim_create_autocmd('BufEnter', {
 -- Format on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('LspFormatting', {}),
-  command = 'Format'
+  callback = function ()
+    if require('myconfig').FORMAT_ON_SAVE then
+      myutils.format()
+    end
+  end
 })
 
 -- Automatically have relative numbers on normal mode for only the focused window, disable it on other modes and windows

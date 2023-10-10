@@ -361,28 +361,26 @@ function M.log(message)
 end
 
 function M.format(cmd_opts)
-  if require('myconfig').FORMAT_ON_SAVE then
-    M.log('Formating!!')
-    cmd_opts = cmd_opts or { range = 0 }
-    local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'
-    local filter = function(client)
-      if client.supports_method(method) then
-        vim.notify('Formatting with: ' .. client.name)
-        return true
-      end
-      return false
+  M.log('Formating!!')
+  cmd_opts = cmd_opts or { range = 0 }
+  local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'
+  local filter = function(client)
+    if client.supports_method(method) then
+      vim.notify('Formatting with: ' .. client.name)
+      return true
     end
-    if cmd_opts.range == 0 then
-      vim.lsp.buf.format({ filter = filter })
-    else
-      vim.lsp.buf.format({
-        range = {
-          ['start'] = { cmd_opts.line1, 0 },
-          ['end'] = { cmd_opts.line2, 0 }
-        },
-        filter = filter
-      })
-    end
+    return false
+  end
+  if cmd_opts.range == 0 then
+    vim.lsp.buf.format({ filter = filter })
+  else
+    vim.lsp.buf.format({
+      range = {
+        ['start'] = { cmd_opts.line1, 0 },
+        ['end'] = { cmd_opts.line2, 0 }
+      },
+      filter = filter
+    })
   end
 end
 
