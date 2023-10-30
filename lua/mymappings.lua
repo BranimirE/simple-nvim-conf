@@ -97,6 +97,13 @@ M = {
     }, { silent = true })
   end,
 
+  ufo = function()
+    return {
+      { 'zR',        function() require('ufo').openAllFolds() end },
+      { 'zM',        function() require('ufo').closeAllFolds() end }
+    }
+  end,
+
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode

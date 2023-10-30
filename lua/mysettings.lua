@@ -13,13 +13,14 @@ opt.smartcase = true   -- Make search sensitive if there is a capital letter
 -- opt.signcolumn = 'yes' -- Show the signcolumn always
 opt.path =
 '**'                                        -- Make the project root directory as the dir to search when we use :find or similar commands
+-- Default nvim-ufo settings
 opt.foldcolumn = '0'                        -- How many columns use to show the folding icons, '0' to disable it
-opt.foldexpr = 'nvim_treesitter#foldexpr()' -- Set nvim treesitter script to define the folding
-opt.foldmethod = 'expr'                     -- opt.foldexpr option value will give the fold method
-opt.foldlevel = 20                          -- Automatically open 20 levels of folding when opening a file
--- opt.foldenable = false -- Disable folding at startup
-opt.foldtext =
-[[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']] -- Set the folding format(How the folded line looks)
+opt.foldlevel = 99                          -- Automatically open 20 levels of folding when opening a file
+vim.o.foldlevelstart = 99
+opt.foldenable = true -- Enable folding at startup
+
+opt.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ' . '(' . (v:foldend - v:foldstart + 1) . ' lines)']] -- Set the folding format(How the folded line looks)
+
 opt.fillchars:append [[fold: ,foldopen:,foldsep: ,foldclose:]] -- Update the folding icons on the numbers columns
 opt.mouse = 'a' -- Enable mouse on (a)ll modes
 opt.showmatch = true -- Show pair of parenthesis/curly brackets/brackets
