@@ -348,10 +348,10 @@ return {
     dependencies = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'hrsh7th/cmp-vsnip',
+      -- 'hrsh7th/cmp-vsnip',
       'hrsh7th/cmp-cmdline',
       'onsails/lspkind.nvim',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+      -- 'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     opts = function()
       local cmp = require('cmp')
@@ -376,9 +376,9 @@ return {
         },
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
         sources = cmp.config.sources({ -- The order matters!!!
-          { name = 'nvim_lsp_signature_help' },
+          -- { name = 'nvim_lsp_signature_help' },
           { name = 'nvim_lsp' },
-          { name = 'vsnip' },
+          -- { name = 'vsnip' },
           { name = 'git' },
           { name = 'path' },
           { name = 'buffer' },
@@ -490,7 +490,7 @@ return {
         'jsonls',
         'docker_compose_language_service',
         'dockerls',
-        'emmet_ls',
+        -- 'emmet_ls',
         'tsserver'
       }
 
@@ -613,19 +613,19 @@ return {
             },
           },
         },
-        emmet_ls = {
-          on_attach = on_attach,
-          capabilities = capabilities,
-          filetypes = { 'css', 'eruby', 'html', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'pug', 'typescriptreact', 'vue' },
-          init_options = {
-            html = {
-              options = {
-                -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-                ['bem.enabled'] = true,
-              },
-            },
-          }
-        }
+        -- emmet_ls = {
+        --   on_attach = on_attach,
+        --   capabilities = capabilities,
+        --   filetypes = { 'css', 'eruby', 'html', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'pug', 'typescriptreact', 'vue' },
+        --   init_options = {
+        --     html = {
+        --       options = {
+        --         -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+        --         ['bem.enabled'] = true,
+        --       },
+        --     },
+        --   }
+        -- }
       }
 
       for _, server_name in ipairs(my_lsp_servers) do
@@ -799,5 +799,11 @@ return {
         return {'treesitter', 'indent'}
       end
     }
+  },
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "VeryLazy",
+    opts = {hint_enable = false},
+    config = function(_, opts) require'lsp_signature'.setup(opts) end
   }
 }
