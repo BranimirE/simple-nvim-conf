@@ -335,10 +335,10 @@ return {
     'hrsh7th/cmp-vsnip',
     dependencies = {
       'hrsh7th/vim-vsnip',                                -- Snippets engine
-      {
-        'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
-        build = 'yarn install --frozen-lockfile && yarn compile'
-      }
+      -- {
+      --   'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
+      --   build = 'yarn install --frozen-lockfile && yarn compile'
+      -- }
     }
   },
   { -- Autocompletion plugin
@@ -348,7 +348,7 @@ return {
     dependencies = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      -- 'hrsh7th/cmp-vsnip',
+      'hrsh7th/cmp-vsnip',
       'hrsh7th/cmp-cmdline',
       'onsails/lspkind.nvim',
       -- 'hrsh7th/cmp-nvim-lsp-signature-help',
@@ -357,7 +357,7 @@ return {
       local cmp = require('cmp')
       local defaults = require('cmp.config.default')()
       return {
-        snippet = {
+        snippet = { -- REQUIRED
           expand = function(args)
             vim.fn['vsnip#anonymous'](args.body)
           end,
