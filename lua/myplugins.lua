@@ -209,7 +209,8 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.notify = function(msg, ...)
         if type(msg) == 'string' then
-          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or msg:match '%[Lspsaga] response of request method textDocument/definition is empty'
+          -- Disable notifications that contains those strings
+          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or msg:match 'for_each_child'
           if is_suppressed_message then
             -- Do not show some messages
             return
@@ -519,7 +520,6 @@ return {
       )
 
       local lspconfig = require('lspconfig')
-      local lspconfig_util = require('lspconfig.util')
 
       local my_lsp_server_config = {
         lua_ls = {
@@ -592,15 +592,10 @@ return {
             myutils.disable_formatting(client)
             on_attach(client, bufnr)
 
-            local api = require('typescript-tools.api')
-            require('typescript-tools').setup({
-              handlers = {
-                ["textDocument/publishDiagnostics"] = api.filter_diagnostics(
-                  -- Ignore this kind of error
-                  { 80001 }
-                ),
-              },
-            })
+            -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+            -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
+            --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
+            client.handlers["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
           end,
         },
         jsonls = {
