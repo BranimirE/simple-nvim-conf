@@ -473,6 +473,24 @@ return {
         'j-hui/fidget.nvim',
         tag = 'legacy',
         config = true
+      },
+      { -- Show signature when we writte function parameters
+        "ray-x/lsp_signature.nvim",
+        opts = {hint_enable = false},
+        config = function(_, opts) require'lsp_signature'.setup(opts) end
+      },
+      { -- Show virtual text with # references and definitions like JetBrains
+        "VidocqH/lsp-lens.nvim",
+        opts = {
+          enable = true,
+          include_declaration = false, -- Reference include declaration
+          sections = { -- Enable / Disable specific request
+            definition = false,
+            references = true,
+            implementation = true,
+          },
+          ignore_filetype = {},
+        },
       }
     },
     config = function()
@@ -797,11 +815,5 @@ return {
         return {'treesitter', 'indent'}
       end
     }
-  },
-  {
-    "ray-x/lsp_signature.nvim",
-    event = "VeryLazy",
-    opts = {hint_enable = false},
-    config = function(_, opts) require'lsp_signature'.setup(opts) end
   }
 }
