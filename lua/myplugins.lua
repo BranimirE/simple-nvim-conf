@@ -653,6 +653,9 @@ return {
         sign_priority = 40,
         virtual_text = true, -- Puth the lightbulb on the virtual text
       },
+      symbol_in_winbar = {
+        enable = false
+      }
     }
   },
   {
