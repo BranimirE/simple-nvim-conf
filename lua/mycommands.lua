@@ -1,6 +1,15 @@
 local myutils = require('myutils')
 local myconfig = require('myconfig')
 
+vim.api.nvim_create_user_command('SaveWinView', function()
+  myutils.save_win_view()
+end, {})
+
+vim.api.nvim_create_user_command('RestoreWinView', function()
+  myutils.restore_win_view()
+end, {})
+
+
 vim.api.nvim_create_user_command('EnableFormatOnSave', function()
   myconfig.FORMAT_ON_SAVE = true
 end, {})
@@ -45,7 +54,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 -- Format on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('LspFormatting', {}),
-  callback = function ()
+  callback = function()
     if require('myconfig').FORMAT_ON_SAVE then
       myutils.format()
     end
@@ -75,6 +84,22 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave'
 })
 
 vim.api.nvim_create_user_command('RunNpmCommand', myutils.run_npm_command, {})
+
+local AutoSaveViewGroup = vim.api.nvim_create_augroup('AutoSetNumberGroup', {})
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = AutoSaveViewGroup,
+  pattern = '*',
+  callback = function()
+    myutils.restore_win_view()
+  end
+})
+vim.api.nvim_create_autocmd('BufLeave', {
+  group = AutoSaveViewGroup,
+  pattern = '*',
+  callback = function()
+    myutils.save_win_view()
+  end
+})
 
 vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')

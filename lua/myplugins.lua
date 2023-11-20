@@ -763,20 +763,20 @@ return {
     },
     cmd = { 'Trouble' }, -- Lazy-load on commands
   },
-  { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
-    'm4xshen/hardtime.nvim',
-    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
-    opts = {
-      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
-      disabled_keys = {
-        ['<Up>'] = {},
-        ['<Down>'] = {},
-        ['<Left>'] = {},
-        ['<Right>'] = {},
-      }
-    },
-    event = { 'BufReadPost', 'BufNewFile' },
-  },
+  -- { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+  --   'm4xshen/hardtime.nvim',
+  --   dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+  --   opts = {
+  --     disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
+  --     disabled_keys = {
+  --       ['<Up>'] = {},
+  --       ['<Down>'] = {},
+  --       ['<Left>'] = {},
+  --       ['<Right>'] = {},
+  --     }
+  --   },
+  --   event = { 'BufReadPost', 'BufNewFile' },
+  -- },
   { -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
@@ -799,11 +799,11 @@ return {
       end
     end,
   },
-  { -- Smooth scroll for neovim
-    'declancm/cinnamon.nvim',
-    event = 'VeryLazy',
-    opts = { centered = false }
-  },
+  -- { -- Smooth scroll for neovim
+  --   'declancm/cinnamon.nvim',
+  --   event = 'VeryLazy',
+  --   opts = { centered = false }
+  -- },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
     dependencies = {'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter'},
