@@ -799,11 +799,11 @@ return {
       end
     end,
   },
-  -- { -- Smooth scroll for neovim
-  --   'declancm/cinnamon.nvim',
-  --   event = 'VeryLazy',
-  --   opts = { centered = false }
-  -- },
+  { -- Smooth scroll for neovim
+    'declancm/cinnamon.nvim',
+    event = 'VeryLazy',
+    opts = { centered = false }
+  },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
     dependencies = {'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter'},
