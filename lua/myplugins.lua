@@ -801,8 +801,8 @@ return {
   },
   { -- Smooth scroll for neovim
     'declancm/cinnamon.nvim',
-    config = true,
-    event = 'VeryLazy'
+    event = 'VeryLazy',
+    opts = { centered = false }
   },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
