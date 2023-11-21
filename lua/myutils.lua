@@ -192,6 +192,7 @@ end
 
 function M.is_win_type_visible(win_type)
   local wins = vim.fn.getwininfo()
+  ---@diagnostic disable-next-line: param-type-mismatch
   for _, win in ipairs(wins) do
     if win[win_type] > 0 then
       return true
@@ -266,6 +267,7 @@ function M.list_npm_commands()
   local success, commands_str = pcall(vim.fn.system,
     "node -e \"var filePath='.' + require('path').sep + 'package.json'; process.stdout.write(Object.keys((require('fs').existsSync(filePath) && require(filePath).scripts) || {}).join(','))\"")
   if success then
+    ---@diagnostic disable-next-line: param-type-mismatch
     for command in string.gmatch(commands_str, '([^,]+)') do
       npm_commands[#npm_commands + 1] = command
     end

@@ -491,6 +491,12 @@ return {
           },
           ignore_filetype = {},
         },
+        { -- Improved lua settings for neovim config
+          "folke/neodev.nvim",
+          opts = {
+            library = { types = false }
+          },
+        }
       }
     },
     config = function()
@@ -540,27 +546,27 @@ return {
       local lspconfig = require('lspconfig')
 
       local my_lsp_server_config = {
-        lua_ls = {
-          on_attach = on_attach,
-          capabilities = capabilities,
-          settings = {
-            Lua = {
-              runtime = {
-                version = 'LuaJIT',
-              },
-              diagnostics = {
-                globals = { 'vim' }, -- Get the language server to recognize the `vim` global
-              },
-              workspace = {
-                library = vim.api.nvim_get_runtime_file('', true), -- Make the server aware of Neovim runtime files
-              },
-              -- Do not send telemetry data containing a randomized but unique identifier
-              telemetry = {
-                enable = false,
-              },
-            },
-          },
-        },
+        -- lua_ls = {
+        --   on_attach = on_attach,
+        --   capabilities = capabilities,
+        --   settings = {
+        --     Lua = {
+        --       runtime = {
+        --         version = 'LuaJIT',
+        --       },
+        --       diagnostics = {
+        --         globals = { 'vim' }, -- Get the language server to recognize the `vim` global
+        --       },
+        --       -- workspace = {
+        --       --   library = vim.api.nvim_get_runtime_file('', true), -- Make the server aware of Neovim runtime files
+        --       -- },
+        --       -- Do not send telemetry data containing a randomized but unique identifier
+        --       telemetry = {
+        --         enable = false,
+        --       },
+        --     },
+        --   },
+        -- },
         yamlls = {
           on_attach = on_attach,
           capabilities = capabilities,
@@ -763,20 +769,20 @@ return {
     },
     cmd = { 'Trouble' }, -- Lazy-load on commands
   },
-  -- { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
-  --   'm4xshen/hardtime.nvim',
-  --   dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
-  --   opts = {
-  --     disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
-  --     disabled_keys = {
-  --       ['<Up>'] = {},
-  --       ['<Down>'] = {},
-  --       ['<Left>'] = {},
-  --       ['<Right>'] = {},
-  --     }
-  --   },
-  --   event = { 'BufReadPost', 'BufNewFile' },
-  -- },
+  { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+    'm4xshen/hardtime.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+    opts = {
+      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
+      disabled_keys = {
+        ['<Up>'] = {},
+        ['<Down>'] = {},
+        ['<Left>'] = {},
+        ['<Right>'] = {},
+      }
+    },
+    event = { 'BufReadPost', 'BufNewFile' },
+  },
   { -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
