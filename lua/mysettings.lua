@@ -4,6 +4,7 @@ local api = vim.api
 vim.keymap.set({ 'n' }, '<space>', '<nop>', { noremap = true })
 vim.keymap.set({ 'v' }, '<space>', '<nop>', { noremap = true })
 g.mapleader = ' '      -- Set space as leader key
+g.skip_ts_context_commentstring_module = true
 
 opt.splitright = true  -- Open new split to the right
 opt.splitbelow = true  -- Open new split below
