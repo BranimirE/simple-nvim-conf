@@ -85,22 +85,6 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave'
 
 vim.api.nvim_create_user_command('RunNpmCommand', myutils.run_npm_command, {})
 
-local AutoSaveViewGroup = vim.api.nvim_create_augroup('AutoSetNumberGroup', {})
-vim.api.nvim_create_autocmd('BufEnter', {
-  group = AutoSaveViewGroup,
-  pattern = '*',
-  callback = function()
-    myutils.restore_win_view()
-  end
-})
-vim.api.nvim_create_autocmd('BufLeave', {
-  group = AutoSaveViewGroup,
-  pattern = '*',
-  callback = function()
-    myutils.save_win_view()
-  end
-})
-
 vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
 vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')
 vim.cmd('hi NvimTreeFolderName guifg=#00afff')

@@ -469,7 +469,7 @@ return {
         'b0o/schemastore.nvim',
         ft = {'json', 'yaml', 'yml'},
       },
-      {
+      { -- LSP progress messages
         'j-hui/fidget.nvim',
         tag = 'legacy',
         config = true
@@ -821,5 +821,10 @@ return {
         return {'treesitter', 'indent'}
       end
     }
+  },
+  {
+    'BranimirE/fix-auto-scroll.nvim',
+    config = true,
+    event = 'VeryLazy'
   }
 }
