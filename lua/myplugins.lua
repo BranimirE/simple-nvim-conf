@@ -21,7 +21,36 @@ return {
     'navarasu/onedark.nvim',
     event = 'VeryLazy',
     opts = {
-      style = 'darker'
+      style = 'deep',
+      transparent = true,
+      colors = {
+        black = "#0c0e15",
+        bg0 = "#19212F",  --background_colour
+        bg1 = "#20283D", -- nvim-tree highlight line background
+        bg2 = "#283347",
+        bg3 = "#2a324a",
+        bg_d = "#121B25", -- nvim-tree background
+        bg_blue = "#54b0fd",
+        bg_yellow = "#f2cc81",
+        fg = "#90A4C6", -- < character
+        purple = "#D74CF0", -- class word
+        green = "#74D046", -- strings
+        orange = "#E98C31", -- true/false word and numbers
+        blue = "#00A8FF", -- has_many word, function names, raise word
+        yellow = "#F7BC47", -- class name
+        cyan = "#00C1D2", -- ":comments" word
+        red = "#FF4761", -- function parameters
+        grey = "#425577", -- comments
+        light_grey = "#697D9F", -- Curly brackets {}
+        dark_cyan = "#1b6a73",
+        dark_red = "#992525", -- some icons color
+        dark_yellow = "#8f610d",
+        dark_purple = "#862aa1",
+        diff_add = "#27341c",
+        diff_delete = "#331c1e",
+        diff_change = "#102b40",
+        diff_text = "#1c4a6e",
+      }
     },
     init = function()
       require('onedark').load()
@@ -210,9 +239,9 @@ return {
   { -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
-    -- opts = {
-    --   background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
-    -- },
+    opts = {
+      background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
+    },
     config = function(_, opts)
       local notify = require('notify')
       notify.setup(opts)
