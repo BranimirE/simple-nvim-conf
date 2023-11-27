@@ -2,19 +2,29 @@ local mymappings = require('mymappings')
 local myutils = require('myutils')
 
 return {
-  { -- Theme
-    'folke/tokyonight.nvim',
+  -- { -- Theme Tokyonight
+  --   'folke/tokyonight.nvim',
+  --   event = 'VeryLazy',
+  --   opts = {
+  --     style = 'night',
+  --     transparent = true,
+  --     styles = {
+  --       sidebars = 'transparent',
+  --       floats = 'transparent',
+  --     },
+  --   },
+  --   init = function()
+  --     vim.cmd('colorscheme tokyonight')
+  --   end
+  -- },
+  { -- Theme Onedark
+    'navarasu/onedark.nvim',
     event = 'VeryLazy',
     opts = {
-      style = 'night',
-      transparent = true,
-      styles = {
-        sidebars = 'transparent',
-        floats = 'transparent',
-      },
+      style = 'darker'
     },
     init = function()
-      vim.cmd('colorscheme tokyonight')
+      require('onedark').load()
     end
   },
   -- { -- Theme
@@ -516,7 +526,8 @@ return {
         'docker_compose_language_service',
         'dockerls',
         -- 'emmet_ls',
-        'tsserver'
+        'tsserver',
+        'angularls'
       }
 
       if not myutils.is_npm_package_installed('eslint') then
