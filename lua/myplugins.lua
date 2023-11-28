@@ -62,7 +62,9 @@ return {
         TelescopeBorder = { fg = '#00afff' },
         -- Lspsaga groups and Floating terminal
         NormalFloat = { bg = 'none' },
-        FloatBorder = { bg = 'none' }
+        FloatBorder = { bg = 'none' },
+        -- Nvim-tree
+        NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
       },
     },
     init = function()
