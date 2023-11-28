@@ -32,7 +32,8 @@ return {
         bg_d = "#121B25", -- nvim-tree background
         bg_blue = "#54b0fd",
         bg_yellow = "#f2cc81",
-        fg = "#90A4C6", -- < character
+        -- fg = "#90A4C6", -- < character
+        fg = "#B8C5DB", -- < character
         purple = "#D74CF0", -- class word
         green = "#74D046", -- strings
         orange = "#E98C31", -- true/false word and numbers
@@ -50,7 +51,19 @@ return {
         diff_delete = "#331c1e",
         diff_change = "#102b40",
         diff_text = "#1c4a6e",
-      }
+      },
+      highlights = {
+        StatusLine = { bg = 'none' },
+        StatusLineTerm = { bg = 'none' },
+        StatusLineNC = { bg = 'none' },
+        StatusLineTermNC = { bg = 'none' },
+        -- Telescope
+        TelescopeMatching = { fg = '#00afff' },
+        TelescopeBorder = { fg = '#00afff' },
+        -- Lspsaga groups and Floating terminal
+        NormalFloat = { bg = 'none' },
+        FloatBorder = { bg = 'none' }
+      },
     },
     init = function()
       require('onedark').load()
@@ -220,7 +233,8 @@ return {
         offsets = {
           {
             filetype = 'NvimTree',
-            padding = 1 -- For some reason it is not calculating the value correctly, this fix it
+            padding = 1, -- For some reason it is not calculating the value correctly, this fix it
+            highlight = "Normal", -- Only required for ondedark.nvim theme
           },
         },
         hover = {
