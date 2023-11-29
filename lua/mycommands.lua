@@ -27,7 +27,7 @@ vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
 end, {})
 
 vim.api.nvim_create_user_command('CloseOthers', function(cmd_opts)
-  vim.cmd [[%bd|e#]]
+  vim.cmd [[%bd|e#|bnext|bd]]
 end, {})
 
 -- Create 'Format' command to format the document
