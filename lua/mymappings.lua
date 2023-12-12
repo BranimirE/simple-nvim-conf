@@ -110,6 +110,15 @@ M = {
     }
   end,
 
+  fzf_lua = function()
+    return {
+      { '<leader>ff', '<cmd>FzfLua files<cr>', desc = 'Find files' },
+      { '<leader>fg', '<cmd>FzfLua live_grep_glob<cr>', desc = 'Find Grep' },
+      { '<leader>fg', '<cmd>FzfLua grep_visual<cr>', desc = 'Grep Visual', mode = 'x' },
+      { '<leader>fp', '<cmd>FzfLua resume<cr>', desc = 'Grep Resume' },
+    }
+  end,
+
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode

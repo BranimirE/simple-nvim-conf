@@ -65,6 +65,8 @@ return {
         FloatBorder = { bg = 'none' },
         -- Nvim-tree
         NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
+        -- FzfLuaa
+        FzfLuaBorder = { fg = '#00afff' },
       },
     },
     init = function()
@@ -323,54 +325,109 @@ return {
       end,
     }
   },
-  { -- Telescope - Fuzzy finder
-    'nvim-telescope/telescope.nvim',
-    tag = '0.1.5',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      'nvim-treesitter/nvim-treesitter'
-    },
-    cmd = 'Telescope',
-    keys = mymappings.telescope(),
-    opts = function()
+  -- { -- Telescope - Fuzzy finder
+  --   'nvim-telescope/telescope.nvim',
+  --   tag = '0.1.5',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  --     'nvim-treesitter/nvim-treesitter'
+  --   },
+  --   cmd = 'Telescope',
+  --   keys = mymappings.telescope(),
+  --   opts = function()
+  --     return {
+  --       defaults = {
+  --         prompt_prefix = ' ',
+  --         selection_caret = ' ',
+  --         file_ignore_patterns = {
+  --           'node_modules',
+  --           'ext.js',
+  --           'ext-modern.js',
+  --           'ext-modern-all.js',
+  --           'ext-modern-all-sandbox.js',
+  --           'ext-all.js',
+  --           'ext-all-sandbox.js',
+  --           'ext-all-rtl.js',
+  --           'ext-all-rtl-sandbox.js'
+  --         },
+  --         mappings = {
+  --           n = { ['q'] = require('telescope.actions').close },
+  --         },
+  --       },
+  --       pickers = {
+  --         find_files = {
+  --           theme = 'dropdown',
+  --           previewer = false,
+  --           prompt_prefix = '  '
+  --         },
+  --         live_grep = {
+  --           prompt_prefix = ' 󰱼 '
+  --           -- prompt_prefix = ''
+  --         }
+  --       }
+  --     }
+  --   end,
+  --   config = function(_, opts)
+  --     local telescope = require('telescope')
+  --     telescope.setup(opts)
+  --     telescope.load_extension('fzf')
+  --     -- telescope.load_extension('ui-select') -- TODO: (a) same
+  --   end
+  -- },
+  {
+    'ibhagwan/fzf-lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    keys = mymappings.fzf_lua(),
+    cmd = 'FzfLua',
+    opts = function ()
+      local actions = require 'fzf-lua.actions'
       return {
-        defaults = {
-          prompt_prefix = ' ',
-          selection_caret = ' ',
-          file_ignore_patterns = {
-            'node_modules',
-            'ext.js',
-            'ext-modern.js',
-            'ext-modern-all.js',
-            'ext-modern-all-sandbox.js',
-            'ext-all.js',
-            'ext-all-sandbox.js',
-            'ext-all-rtl.js',
-            'ext-all-rtl-sandbox.js'
+        fzf_colors = {
+          bg = { 'bg', 'Normal' },
+          gutter = { 'bg', 'Normal' },
+          info = { 'fg', 'Conditional' },
+          scrollbar = { 'bg', 'Normal' },
+          separator = { 'fg', 'Comment' },
+        },
+        fzf_opts = {
+          ['--info'] = 'default',
+        },
+        keymap = {
+          builtin = {
+            ['<C-a>'] = 'toggle-fullscreen',
+            ['<C-i>'] = 'toggle-preview',
+            ['<C-f>'] = 'preview-page-down',
+            ['<C-b>'] = 'preview-page-up',
           },
-          mappings = {
-            n = { ['q'] = require('telescope.actions').close },
+          fzf = {
+            ['alt-s'] = 'toggle',
+            ['alt-a'] = 'toggle-all',
           },
         },
-        pickers = {
-          find_files = {
-            theme = 'dropdown',
-            previewer = false,
-            prompt_prefix = '  '
+        -- Configuration for specific commands.
+        files = {
+          winopts = {
+            height = 0.7,
+            width = 0.55,
+            preview = {
+              hidden = 'hidden',
+              layout = 'vertical',
+              vertical = 'up:40%',
+            },
           },
-          live_grep = {
-            prompt_prefix = ' 󰱼 '
-            -- prompt_prefix = ''
-          }
+          cwd_prompt = false,
+          prompt = '  ❯ ',
+          actions = {
+            ['ctrl-g'] = actions.toggle_ignore,
+          },
+        },
+        grep = {
+          fzf_opts = {
+            ['--layout'] = 'reverse-list',
+          },
         }
       }
-    end,
-    config = function(_, opts)
-      local telescope = require('telescope')
-      telescope.setup(opts)
-      telescope.load_extension('fzf')
-      -- telescope.load_extension('ui-select') -- TODO: (a) same
     end
   },
   { -- Auto detect file indent settings

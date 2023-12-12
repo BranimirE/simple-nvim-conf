@@ -12,8 +12,7 @@ opt.joinspaces = false -- prevent joining spaces with J
 opt.ignorecase = true  -- Make search insensitive
 opt.smartcase = true   -- Make search sensitive if there is a capital letter
 -- opt.signcolumn = 'yes' -- Show the signcolumn always
-opt.path =
-'**'                                        -- Make the project root directory as the dir to search when we use :find or similar commands
+opt.path = '**'        -- Make the project root directory as the dir to search when we use :find or similar commands
 -- Default nvim-ufo settings
 opt.foldcolumn = '0'                        -- How many columns use to show the folding icons, '0' to disable it
 opt.foldlevel = 99                          -- Automatically open 20 levels of folding when opening a file
