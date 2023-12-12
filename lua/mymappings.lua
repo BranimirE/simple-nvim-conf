@@ -104,6 +104,12 @@ M = {
     }
   end,
 
+  comment = function()
+    return {
+      { 'gc', util.uncomment_block, mode = 'o' }
+    }
+  end,
+
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode
