@@ -424,14 +424,16 @@ return {
         },
         keymap = {
           builtin = {
-            ['<C-a>'] = 'toggle-fullscreen',
+            ['<F1>']  = 'toggle-help',
+            ['<F2>']  = 'toggle-fullscreen',
             ['<C-i>'] = 'toggle-preview',
             ['<C-f>'] = 'preview-page-down',
             ['<C-b>'] = 'preview-page-up',
+            ['<tab>'] = nil,
           },
           fzf = {
+            ['ctrl-a'] = 'toggle-all',
             ['alt-s'] = 'toggle',
-            ['alt-a'] = 'toggle-all',
           },
         },
         -- Configuration for specific commands.
@@ -561,8 +563,8 @@ return {
         sources = cmp.config.sources({
           { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
         }, {
-          { name = 'buffer' },
-        })
+            { name = 'buffer' },
+          })
       })
 
       -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -579,8 +581,8 @@ return {
         sources = cmp.config.sources({
           { name = 'path' }
         }, {
-          { name = 'cmdline' }
-        })
+            { name = 'cmdline' }
+          })
       })
 
       -- If you want insert `(` after select function or method item
@@ -858,7 +860,7 @@ return {
           }
 
           if myutils.is_npm_package_installed('eslint') then
-              myutils.log('has eslint. Setting up null-ls eslint diagnostics and code_actions')
+            myutils.log('has eslint. Setting up null-ls eslint diagnostics and code_actions')
             -- Use node_modules EsLint for diagnostics and code actions
             -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
             table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
@@ -992,5 +994,12 @@ return {
         command = 'call highlighturl#disable_local()',
       })
     end,
+  },
+  { -- Improvements for quickfix
+    'kevinhwang91/nvim-bqf',
+    ft = 'qf',
+    opts = {
+      func_map = { split = '<C-s>' },
+    },
   },
 }
