@@ -155,8 +155,7 @@ return {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {
-      check_ts = true,        -- check treesitter for autopairing
-      enable_moveright = true -- TODO: Remove this line if it is not needed
+      check_ts = true        -- check treesitter for autopairing
     }
   },
   { -- Comment plugin
