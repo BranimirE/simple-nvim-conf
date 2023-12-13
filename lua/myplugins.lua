@@ -499,7 +499,7 @@ return {
     },
     opts = function()
       local cmp = require('cmp')
-      local defaults = require('cmp.config.default')()
+      local compare = require('cmp.config.compare')
       return {
         snippet = { -- REQUIRED
           expand = function(args)
@@ -525,7 +525,7 @@ return {
           -- { name = 'vsnip' },
           { name = 'git' },
           { name = 'path' },
-          { name = 'buffer' },
+          { name = 'buffer', keyword_length = 4 },
         }),
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
@@ -541,7 +541,16 @@ return {
         experimental = {
           ghost_text = true,
         },
-        sorting = defaults.sorting,
+        sorting = {
+          comparators = {
+            compare.offset,
+            compare.exact,
+            compare.score,
+            compare.recently_used,
+            compare.sort_text,
+            compare.length,
+          },
+        },
       }
     end,
     config = function(_, opts)
