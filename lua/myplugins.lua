@@ -283,17 +283,33 @@ return {
   },
   { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',
-    version = 'v2.20.8',
+    main = 'ibl',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
-      char = '▏',
-      context_char = '▏',
-      show_current_context = true,
-      use_treesitter = true,
-      show_trailing_blankline_indent = false,
-      show_first_indent_level = false, -- so we can detect if the line is only composed by trailing whitespaces
-      max_indent_increase = 1
-    }
+      indent = {
+        char = '▏',
+      },
+      scope = {
+        show_start = false,
+        show_end = false,
+      },
+      whitespace = {
+        remove_blankline_trail = false,
+      },
+    },
+    config = function (_, opts)
+      local hooks = require('ibl.hooks')
+      -- so we can detect if the line is only composed by trailing whitespaces(tabs or spaces)
+      hooks.register(
+        hooks.type.WHITESPACE,
+        hooks.builtin.hide_first_space_indent_level
+      )
+      hooks.register(
+        hooks.type.WHITESPACE,
+        hooks.builtin.hide_first_tab_indent_level
+      )
+      require('ibl').setup(opts)
+    end
   },
   { -- Git signs on the number column and git blame as virtual text
     'lewis6991/gitsigns.nvim',
@@ -954,5 +970,19 @@ return {
     'BranimirE/fix-auto-scroll.nvim',
     config = true,
     event = 'VeryLazy'
+  },
+  { -- Highlight URLs everywhere
+    'itchyny/vim-highlighturl',
+    event = 'VeryLazy',
+    config = function()
+      -- Disable the plugin in some places where the default highlighting is preferred.
+      vim.api.nvim_create_autocmd('FileType', {
+        desc = 'Disable URL highlights',
+        pattern = {
+          'fzf',
+        },
+        command = 'call highlighturl#disable_local()',
+      })
+    end,
   },
 }
