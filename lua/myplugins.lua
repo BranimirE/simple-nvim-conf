@@ -412,8 +412,7 @@ return {
             width = 0.55,
             preview = {
               hidden = 'hidden',
-              layout = 'vertical',
-              vertical = 'up:40%',
+              horizontal = 'right:60%',
             },
           },
           cwd_prompt = false,
