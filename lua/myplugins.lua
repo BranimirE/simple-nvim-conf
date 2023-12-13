@@ -297,6 +297,20 @@ return {
   },
   { -- Git signs on the number column and git blame as virtual text
     'lewis6991/gitsigns.nvim',
+    dependencies = {
+      {
+        'ruifm/gitlinker.nvim',
+        dependencies = 'nvim-lua/plenary.nvim',
+        opts = function()
+          return {
+            callbacks = {
+              ["ghe.coxautoinc.com"] = require"gitlinker.hosts".get_github_type_url,
+            },
+            mappings = nil
+          }
+        end
+      }
+    },
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       signs = {
@@ -936,9 +950,9 @@ return {
       end
     }
   },
-  {
+  { -- Fix vim's behaviour put current line in the middle of the screen when switch between buffers
     'BranimirE/fix-auto-scroll.nvim',
     config = true,
     event = 'VeryLazy'
-  }
+  },
 }

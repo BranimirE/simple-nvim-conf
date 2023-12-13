@@ -1,6 +1,11 @@
 local myutils = require('myutils')
 local myconfig = require('myconfig')
 
+
+vim.api.nvim_create_user_command('OpenInBrowser', myutils.open_in_browser, {})
+
+vim.api.nvim_create_user_command('GetLink', myutils.get_link, {})
+
 vim.api.nvim_create_user_command('SaveWinView', function()
   myutils.save_win_view()
 end, {})

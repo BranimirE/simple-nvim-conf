@@ -428,4 +428,12 @@ function M.uncomment_block()
   vim.cmd(string.format('normal! %dGV%dG', comment_start, comment_end))
 end
 
+function M.open_in_browser()
+    require('gitlinker').get_buf_range_url('n', { action_callback = require('gitlinker.actions').open_in_browser })
+end
+
+function M.get_link()
+  require('gitlinker').get_buf_range_url('n', {})
+end
+
 return M
