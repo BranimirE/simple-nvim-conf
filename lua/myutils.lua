@@ -436,4 +436,8 @@ function M.get_link()
   require('gitlinker').get_buf_range_url('n', {})
 end
 
+function M.search_and_replace()
+  require('spectre').open()
+end
+
 return M

@@ -1,6 +1,8 @@
 local myutils = require('myutils')
 local myconfig = require('myconfig')
 
+vim.api.nvim_create_user_command('SearchAndReplace', myutils.search_and_replace, {})
+vim.api.nvim_create_user_command('FindAndReplace', myutils.search_and_replace, {})
 
 vim.api.nvim_create_user_command('OpenInBrowser', myutils.open_in_browser, {})
 

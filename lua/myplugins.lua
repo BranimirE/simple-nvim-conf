@@ -1001,11 +1001,11 @@ return {
       })
     end,
   },
-  { -- Improvements for quickfix
-    'kevinhwang91/nvim-bqf',
-    ft = 'qf',
-    opts = {
-      func_map = { split = '<C-s>' },
-    },
+  {
+    'nvim-pack/nvim-spectre',
+    dependencies = 'nvim-lua/plenary.nvim',
+    cmd = {'SearchAndReplace', 'FindAndReplace'},
+    keys = mymappings.nvim_spectre(),
+    opts = { open_cmd = 'noswapfile vnew' },
   },
 }

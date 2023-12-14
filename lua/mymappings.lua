@@ -119,6 +119,12 @@ M = {
     }
   end,
 
+  nvim_spectre = function ()
+    return {
+      { '<leader>rp', util.search_and_replace, desc = 'Search and replace' }
+    }
+  end,
+
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode
