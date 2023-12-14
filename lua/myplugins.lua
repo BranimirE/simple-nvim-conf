@@ -625,7 +625,6 @@ return {
         end,
       },
       -- 'jose-elias-alvarez/typescript.nvim',
-      -- 'pmizio/typescript-tools.nvim',
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
@@ -841,15 +840,24 @@ return {
     'pmizio/typescript-tools.nvim',
     event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx', 'BufNewFile *.ts,*.tsx,*.js,*.jsx' },
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-lspconfig' },
-    opts = {
-      settings = {
-        tsserver_file_preferences = {
-          includeInlayParameterNameHints = 'literals',
-          includeInlayVariableTypeHints = true,
-          includeInlayFunctionLikeReturnTypeHints = true,
+    opts = function ()
+      return {
+        settings = {
+          tsserver_file_preferences = {
+            -- includeInlayParameterNameHints = 'literals',
+            includeInlayParameterNameHints = 'all',
+            includeInlayVariableTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+          },
         },
-      },
-    },
+        handlers = {
+          -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+          -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
+          --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
+          ["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
+        }
+      }
+    end,
   },
   { -- Extra tools for lsp
     'nvimdev/lspsaga.nvim',
