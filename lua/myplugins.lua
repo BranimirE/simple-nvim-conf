@@ -594,16 +594,25 @@ return {
     end
   },
   {
-    'williamboman/mason.nvim',
-    config = true
-  },
-  {
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       {
         'williamboman/mason-lspconfig.nvim', -- It need to be setup before nvim-lspconfig
-        dependencies = 'williamboman/mason.nvim',
+        dependencies = {
+          {
+            'williamboman/mason.nvim',
+            cmd = 'Mason',
+            build = ':MasonUpdate',
+            opts = {
+              ui = {
+                border = 'rounded',
+                width = 0.7,
+                height = 0.8,
+              },
+            },
+          }
+        },
         opts = { automatic_installation = true }, -- Automatically install the lsp server with mason if it is configured
         config = function(_, opts)
           require('mason-lspconfig').setup(opts)
@@ -615,8 +624,8 @@ return {
           return myutils.has('nvim-cmp')
         end,
       },
-      'jose-elias-alvarez/typescript.nvim',
-      'pmizio/typescript-tools.nvim',
+      -- 'jose-elias-alvarez/typescript.nvim',
+      -- 'pmizio/typescript-tools.nvim',
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
@@ -631,7 +640,9 @@ return {
       { -- Show signature when we writte function parameters
         "ray-x/lsp_signature.nvim",
         opts = {hint_enable = false},
-        config = function(_, opts) require'lsp_signature'.setup(opts) end
+        config = function(_, opts)
+          require('lsp_signature').setup(opts)
+        end
       },
       { -- Show virtual text with # references and definitions like JetBrains
         "VidocqH/lsp-lens.nvim",
@@ -670,7 +681,7 @@ return {
         'docker_compose_language_service',
         'dockerls',
         -- 'emmet_ls',
-        'tsserver',
+        -- 'tsserver',
         'angularls'
       }
 
@@ -765,24 +776,23 @@ return {
             },
           }
         },
-        tsserver = {
-          capabilities = capabilities,
-          on_attach = function(client, bufnr)
-            myutils.disable_formatting(client)
-            on_attach(client, bufnr)
-
-            -- Remove message "File is a CommonJS module; it may be converted to an ES module."
-            -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
-            --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
-            client.handlers["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
-          end,
-        },
+        -- tsserver = {
+        --   capabilities = capabilities,
+        --   on_attach = function(client, bufnr)
+        --     myutils.disable_formatting(client)
+        --     on_attach(client, bufnr)
+        --
+        --     -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+        --     -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
+        --     --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
+        --     client.handlers["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
+        --   end,
+        -- },
         jsonls = {
           on_attach = on_attach,
           capabilities = capabilities,
           settings = {
             json = {
-              schemas = require('schemastore').json.schemas(),
               validate = { enable = true },
             },
           },
@@ -826,6 +836,20 @@ return {
       vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
       vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
     end
+  },
+  {
+    'pmizio/typescript-tools.nvim',
+    event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx', 'BufNewFile *.ts,*.tsx,*.js,*.jsx' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-lspconfig' },
+    opts = {
+      settings = {
+        tsserver_file_preferences = {
+          includeInlayParameterNameHints = 'literals',
+          includeInlayVariableTypeHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+        },
+      },
+    },
   },
   { -- Extra tools for lsp
     'nvimdev/lspsaga.nvim',
