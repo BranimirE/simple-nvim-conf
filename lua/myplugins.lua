@@ -620,7 +620,8 @@ return {
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
-        ft = {'json', 'yaml', 'yml'},
+        -- ft = {'json', 'yaml', 'yml'},
+        version = false,
       },
       { -- LSP progress messages
         'j-hui/fidget.nvim',
@@ -785,6 +786,11 @@ return {
               validate = { enable = true },
             },
           },
+          -- Lazy-load schemas.
+          on_new_config = function(config)
+              config.settings.json.schemas = config.settings.json.schemas or {}
+              vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
+          end,
         },
         -- emmet_ls = {
         --   on_attach = on_attach,
