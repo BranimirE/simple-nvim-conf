@@ -177,7 +177,10 @@ return {
     dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
       'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
-      'HiPhish/nvim-ts-rainbow2',                    -- Colorize parenthesis pairs with distinct colors
+      {
+        'HiPhish/rainbow-delimiters.nvim', -- Colorize parenthesis pairs with distinct colors
+        url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
+      },
       'nvim-treesitter/nvim-treesitter-textobjects', -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
     },
     event = { 'BufReadPost', 'BufNewFile' },
