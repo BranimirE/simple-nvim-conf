@@ -627,11 +627,9 @@ return {
           return myutils.has('nvim-cmp')
         end,
       },
-      -- 'jose-elias-alvarez/typescript.nvim',
       'nvimdev/lspsaga.nvim',
       { -- Collection of json schemas for json lsp
         'b0o/schemastore.nvim',
-        -- ft = {'json', 'yaml', 'yml'},
         version = false,
       },
       { -- LSP progress messages
@@ -675,15 +673,12 @@ return {
         'marksman',
         'cssls',
         'cssmodules_ls',
-        'clangd',
         'yamlls',
         'html',
         'sqlls',
         'jsonls',
         'docker_compose_language_service',
         'dockerls',
-        -- 'emmet_ls',
-        -- 'tsserver',
         'angularls'
       }
 
@@ -692,52 +687,18 @@ return {
         table.insert(my_lsp_servers, 'eslint')
       end
 
-      -- Most of lspsaga key mappings can be triggered using null-ls sources
-      myutils.load_mapping(mymappings.lsp_saga())
-
       local on_attach = function(client, bufnr)
         -- Enable completion triggered by <c-x><c-o>
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-        myutils.load_mapping(mymappings.lsp(bufnr))
-        myutils.log('client.name='..client.name)
-        myutils.log('client.server_capabilities.documentFormattingProvider='..vim.inspect(client.server_capabilities.documentFormattingProvider))
-        myutils.log('client.server_capabilities.documentRangeFormattingProvider='..vim.inspect(client.server_capabilities.documentRangeFormattingProvider))
+        -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
       end
 
-      local capabilities = vim.tbl_deep_extend(
-        'force',
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        require('cmp_nvim_lsp').default_capabilities()
-      )
-
+      local capabilities = require('myconfig/lsp').client_capabilities
       local lspconfig = require('lspconfig')
 
       local my_lsp_server_config = {
-        -- lua_ls = {
-        --   on_attach = on_attach,
-        --   capabilities = capabilities,
-        --   settings = {
-        --     Lua = {
-        --       runtime = {
-        --         version = 'LuaJIT',
-        --       },
-        --       diagnostics = {
-        --         globals = { 'vim' }, -- Get the language server to recognize the `vim` global
-        --       },
-        --       -- workspace = {
-        --       --   library = vim.api.nvim_get_runtime_file('', true), -- Make the server aware of Neovim runtime files
-        --       -- },
-        --       -- Do not send telemetry data containing a randomized but unique identifier
-        --       telemetry = {
-        --         enable = false,
-        --       },
-        --     },
-        --   },
-        -- },
         yamlls = {
           on_attach = on_attach,
-          capabilities = capabilities,
+          capabilities = capabilities(),
           settings = {
             yaml = {
               format = {
@@ -778,21 +739,9 @@ return {
             },
           }
         },
-        -- tsserver = {
-        --   capabilities = capabilities,
-        --   on_attach = function(client, bufnr)
-        --     myutils.disable_formatting(client)
-        --     on_attach(client, bufnr)
-        --
-        --     -- Remove message "File is a CommonJS module; it may be converted to an ES module."
-        --     -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
-        --     --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
-        --     client.handlers["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
-        --   end,
-        -- },
         jsonls = {
           on_attach = on_attach,
-          capabilities = capabilities,
+          capabilities = capabilities(),
           settings = {
             json = {
               validate = { enable = true },
@@ -804,19 +753,6 @@ return {
               vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
           end,
         },
-        -- emmet_ls = {
-        --   on_attach = on_attach,
-        --   capabilities = capabilities,
-        --   filetypes = { 'css', 'eruby', 'html', 'javascriptreact', 'less', 'sass', 'scss', 'svelte', 'pug', 'typescriptreact', 'vue' },
-        --   init_options = {
-        --     html = {
-        --       options = {
-        --         -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-        --         ['bem.enabled'] = true,
-        --       },
-        --     },
-        --   }
-        -- }
       }
 
       for _, server_name in ipairs(my_lsp_servers) do
@@ -825,7 +761,7 @@ return {
         else
           lspconfig[server_name].setup({
             on_attach = on_attach,
-            capabilities = capabilities,
+            capabilities = capabilities(),
           })
         end
       end

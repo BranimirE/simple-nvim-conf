@@ -69,32 +69,51 @@ M = {
 
   lsp = function(bufnr)
     return with_opts({
-      { '<leader>q', vim.diagnostic.setloclist },
-      { 'gD',        vim.lsp.buf.declaration },
-      { 'gd',        vim.lsp.buf.definition },
-      { 'gi',        vim.lsp.buf.implementation },
-      { 'K',     vim.lsp.buf.signature_help },
-      { '<leader>D', vim.lsp.buf.type_definition },
-      { 'gr',        vim.lsp.buf.references },
-    }, { noremap = true, silent = true, buffer = bufnr })
-  end,
-
-  lsp_saga = function()
-    return with_opts({
-      -- { 'gh',         '<cmd>Lspsaga finder<CR>' }, -- It is used by nvim to go to selection mode
-      { '<leader>rn', '<cmd>Lspsaga rename<cr>' },
-      { '<leader>gd', '<cmd>Lspsaga peek_definition<cr>' },
-      { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<cr>' },
+      { 'gr', '<cmd>FzfLua lsp_references<cr>'},
+      { 'gt', '<cmd>FzfLua lsp_typedefs<cr>'},
+      -- { '<leader>k',  '<cmd>Lspsaga hover_doc<cr>' },
+      { '<leader>k',  vim.lsp.buf.hover},
+      { '<leader>o',  '<cmd>Lspsaga outline<cr>' },
+      -- { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<cr>' },
+      { '<leader>cd', vim.diagnostic.open_float},
       { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<cr>' },
       { ']e',         '<cmd>Lspsaga diagnostic_jump_next<cr>' },
       { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<cr>' },
       { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>' },
-      { '<leader>o',  '<cmd>Lspsaga outline<cr>' },
-      { '<leader>k',  '<cmd>Lspsaga hover_doc<cr>' },
-      { '<leader>ca', '<cmd>Lspsaga code_action<cr>' },
-      { '<leader>ca', '<cmd>Lspsaga code_action<cr>', mode = 'v' },
+
+      { 'gi',        vim.lsp.buf.implementation },
       { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<cr>', mode = { 'n', 't' } }
-    }, { silent = true })
+    }, { noremap = true, silent = true, buffer = bufnr })
+  end,
+
+  conditional_lsp_methods = function(bufnr)
+    local methods = vim.lsp.protocol.Methods
+    local mappings = {
+      [methods.textDocument_codeAction] = {
+        { '<leader>ca', '<cmd>Lspsaga code_action<cr>' },
+        { '<leader>ca', '<cmd>Lspsaga code_action<cr>', mode = 'v' },
+      },
+      [methods.textDocument_rename] = {
+        { '<leader>rn', '<cmd>Lspsaga rename<cr>' },
+      },
+      [methods.textDocument_definition] = {
+        { 'gd',         vim.lsp.buf.definition },
+        { '<leader>gd', '<cmd>Lspsaga peek_definition<cr>' },
+      },
+      [methods.textDocument_declaration] = {
+        { 'gD', vim.lsp.buf.declaration }
+      },
+      [methods.textDocument_signatureHelp] = {
+        { 'K',     vim.lsp.buf.signature_help },
+      },
+      [methods.textDocument_typeDefinition] = {
+        { '<leader>D', vim.lsp.buf.type_definition },
+      }
+    }
+    for method, mapping in pairs(mappings) do
+      mappings[method] = with_opts(mapping, { noremap = true, silent = true, buffer = bufnr })
+    end
+    return mappings
   end,
 
   ufo = function()
