@@ -687,17 +687,11 @@ return {
         table.insert(my_lsp_servers, 'eslint')
       end
 
-      local on_attach = function(client, bufnr)
-        -- Enable completion triggered by <c-x><c-o>
-        -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-      end
-
       local capabilities = require('myconfig/lsp').client_capabilities
       local lspconfig = require('lspconfig')
 
       local my_lsp_server_config = {
         yamlls = {
-          on_attach = on_attach,
           capabilities = capabilities(),
           settings = {
             yaml = {
@@ -740,7 +734,6 @@ return {
           }
         },
         jsonls = {
-          on_attach = on_attach,
           capabilities = capabilities(),
           settings = {
             json = {
@@ -760,19 +753,11 @@ return {
           lspconfig[server_name].setup(my_lsp_server_config[server_name])
         else
           lspconfig[server_name].setup({
-            on_attach = on_attach,
             capabilities = capabilities(),
           })
         end
       end
 
-      vim.fn.sign_define('DiagnosticSignError', { numhl = 'LspDiagnosticsLineNrError', text = '' })
-      vim.fn.sign_define('DiagnosticSignWarn', { numhl = 'LspDiagnosticsLineNrWarning', text = '' })
-      vim.fn.sign_define('DiagnosticSignInfo', { text = '' })
-      vim.fn.sign_define('DiagnosticSignHint', { text = '' })
-
-      vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
-      vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
     end
   },
   {
