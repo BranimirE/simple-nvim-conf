@@ -639,7 +639,11 @@ return {
       },
       { -- Show signature when we writte function parameters
         "ray-x/lsp_signature.nvim",
-        opts = {hint_enable = false},
+        opts = {
+          bind = false, -- If you want to hook lspsaga or other signature handler, pls set to false
+          hint_enable = false
+        },
+        -- config = false
         config = function(_, opts)
           require('lsp_signature').setup(opts)
         end
@@ -655,13 +659,13 @@ return {
             implementation = true,
           },
           ignore_filetype = {},
-        },
-        { -- Improved lua settings for neovim config
-          "folke/neodev.nvim",
-          opts = {
-            library = { types = false }
-          },
         }
+      },
+      { -- Improved lua settings for neovim config
+        "folke/neodev.nvim",
+        opts = {
+          library = { types = false }
+        },
       }
     },
     config = function()

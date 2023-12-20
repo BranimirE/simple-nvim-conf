@@ -37,8 +37,8 @@ local function on_attach(client, bufnr)
   local mymappings = require('mymappings')
 
   myutils.load_mapping(mymappings.lsp(bufnr))
-  local conditional_lsp_methods = mymappings.conditional_lsp_methods(bufnr)
 
+  local conditional_lsp_methods = mymappings.conditional_lsp_methods(bufnr)
   for method, mapping in pairs(conditional_lsp_methods) do
     if client.supports_method(method) then
       myutils.load_mapping(mapping)
@@ -98,11 +98,12 @@ end
 for severity, icon in pairs(diagnostic_icons) do
   local formated_severity = severity:sub(1, 1) .. severity:sub(2):lower()
   local hl = 'DiagnosticSign' .. formated_severity
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = 'LspDiagnosticsLineNr' .. formated_severity })
+  vim.fn.sign_define(hl, { text = '', texthl = hl, numhl = 'LspDiagnosticsLineNr' .. formated_severity })
 end
 
 vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
 vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
+vim.cmd('highlight LspDiagnosticsLineNrHint gui=bold guifg=#862AA1 guibg=#312e3a')
 
 -- Diagnostic configuration.
 vim.diagnostic.config {
@@ -186,7 +187,7 @@ local function enhanced_float_handler(handler, focusable)
         border = 'rounded',
         focusable = focusable,
         max_height = math.floor(vim.o.lines * 0.5),
-        max_width = math.floor(vim.o.columns * 0.4),
+        max_width = math.floor(vim.o.columns * 0.6),
       })
     )
 
