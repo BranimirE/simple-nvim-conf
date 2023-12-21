@@ -499,7 +499,6 @@ return {
       'hrsh7th/cmp-vsnip',
       'hrsh7th/cmp-cmdline',
       'onsails/lspkind.nvim',
-      -- 'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     opts = function()
       local cmp = require('cmp')
@@ -524,7 +523,6 @@ return {
         },
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
         sources = cmp.config.sources({ -- The order matters!!!
-          -- { name = 'nvim_lsp_signature_help' },
           { name = 'nvim_lsp' },
           -- { name = 'vsnip' },
           { name = 'git' },
