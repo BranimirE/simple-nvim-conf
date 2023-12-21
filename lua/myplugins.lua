@@ -614,7 +614,10 @@ return {
             },
           }
         },
-        opts = { automatic_installation = true }, -- Automatically install the lsp server with mason if it is configured
+        opts = {
+          automatic_installation = true, -- Automatically install the lsp server with mason if it is configured
+          ensure_installed = { 'tsserver' }
+        },
         config = function(_, opts)
           require('mason-lspconfig').setup(opts)
         end,
