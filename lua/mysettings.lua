@@ -43,6 +43,15 @@ opt.tabstop = 2
 opt.softtabstop = 2
 opt.relativenumber = true
 
+opt.updatetime = 300 -- It is also used for CursorHold
+opt.timeoutlen = 500
+opt.ttimeoutlen = 10
+
+opt.shortmess:append {
+    I = true, -- Disable the vim intro.
+    w = true,
+    s = true,
+}
 -- opt.scrolloff = 8 -- Always have at least 8 lines above and below the highlighted line when we scroll
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened
