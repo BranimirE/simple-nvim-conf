@@ -65,7 +65,7 @@ local function on_attach(client, bufnr)
   end
 
   local buf_file_name = vim.fn.bufname(bufnr)
-  if client.supports_method(methods.textDocument_inlayHint) and not buf_file_name:match("%.js$") then
+  if client.supports_method(methods.textDocument_inlayHint) and not buf_file_name:match("%.js$") and not buf_file_name:match("%.jsx") then
     local inlay_hints_group = vim.api.nvim_create_augroup('branimir/toggle_inlay_hints', { clear = false })
 
     -- Initial inlay hint display.
