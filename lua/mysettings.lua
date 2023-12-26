@@ -44,8 +44,8 @@ opt.softtabstop = 2
 opt.relativenumber = true
 
 opt.updatetime = 300 -- It is also used for CursorHold
-opt.timeoutlen = 500
-opt.ttimeoutlen = 10
+-- opt.timeoutlen = 500
+-- opt.ttimeoutlen = 10
 
 opt.shortmess:append {
     I = true, -- Disable the vim intro.

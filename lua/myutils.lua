@@ -375,14 +375,15 @@ function M.format(cmd_opts)
     return false
   end
   if cmd_opts.range == 0 then
-    vim.lsp.buf.format({ filter = filter })
+    vim.lsp.buf.format({ filter = filter, timeout_ms = 3000 })
   else
     vim.lsp.buf.format({
       range = {
         ['start'] = { cmd_opts.line1, 0 },
         ['end'] = { cmd_opts.line2, 0 }
       },
-      filter = filter
+      filter = filter,
+      timeout_ms = 3000
     })
   end
 end
