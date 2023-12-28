@@ -524,6 +524,7 @@ return {
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
         sources = cmp.config.sources({ -- The order matters!!!
           { name = 'nvim_lsp' },
+        },{
           -- { name = 'vsnip' },
           { name = 'git' },
           { name = 'path' },
@@ -536,6 +537,12 @@ return {
             local strings = vim.split(kind.kind, '%s', { trimempty = true })
             kind.kind = ' ' .. (strings[1] or '') .. ' '
             kind.menu = '  ' .. (strings[2] or '')
+
+            -- Remove duplicated items in the sources
+            -- Taken from: https://github.com/hrsh7th/nvim-cmp/issues/511#issuecomment-1063014008
+            vim_item.dup = ({
+              nvim_lsp = 0,
+            })[entry.source.name] or 0
 
             return kind
           end,
