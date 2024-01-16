@@ -53,6 +53,9 @@ require('lazy').setup('myplugins', {
       },
     },
   },
+  ui = {
+    border = "single"
+  },
 })
 
 vim.api.nvim_create_autocmd('User', {
