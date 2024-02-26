@@ -815,7 +815,8 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'flake8', 'black', 'prettier' }
+      -- ensure_installed = { 'flake8', 'black', 'prettier' }
+      ensure_installed = { 'black', 'prettier' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -831,7 +832,7 @@ return {
           local sources = {
             code_actions.gitsigns,
             formatting.black,
-            diagnostics.flake8,
+            -- diagnostics.ruff,
           }
 
           if myutils.is_npm_package_installed('eslint') then
