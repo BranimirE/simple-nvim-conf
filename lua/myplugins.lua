@@ -692,7 +692,9 @@ return {
         'jsonls',
         'docker_compose_language_service',
         'dockerls',
-        'angularls'
+        'angularls',
+        'terraformls',
+        'ansiblels'
       }
 
       if not myutils.is_npm_package_installed('eslint') then
@@ -832,6 +834,7 @@ return {
           local sources = {
             code_actions.gitsigns,
             formatting.black,
+            formatting.terraform_fmt,
             -- diagnostics.ruff,
           }
 
@@ -899,20 +902,20 @@ return {
     },
     cmd = { 'Trouble' }, -- Lazy-load on commands
   },
-  { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
-    'm4xshen/hardtime.nvim',
-    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
-    opts = {
-      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
-      disabled_keys = {
-        ['<Up>'] = {},
-        ['<Down>'] = {},
-        ['<Left>'] = {},
-        ['<Right>'] = {},
-      }
-    },
-    event = { 'BufReadPost', 'BufNewFile' },
-  },
+  -- { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+  --   'm4xshen/hardtime.nvim',
+  --   dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+  --   opts = {
+  --     disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
+  --     disabled_keys = {
+  --       ['<Up>'] = {},
+  --       ['<Down>'] = {},
+  --       ['<Left>'] = {},
+  --       ['<Right>'] = {},
+  --     }
+  --   },
+  --   event = { 'BufReadPost', 'BufNewFile' },
+  -- },
   { -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
