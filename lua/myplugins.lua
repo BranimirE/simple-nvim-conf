@@ -777,7 +777,7 @@ return {
   },
   {
     'pmizio/typescript-tools.nvim',
-    event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx', 'BufNewFile *.ts,*.tsx,*.js,*.jsx' },
+    event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx,*.mjs', 'BufNewFile *.ts,*.tsx,*.js,*.jsx,*.mjs' },
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-lspconfig' },
     opts = function ()
       return {
@@ -785,8 +785,8 @@ return {
           tsserver_file_preferences = {
             -- includeInlayParameterNameHints = 'literals',
             includeInlayParameterNameHints = 'all',
-            includeInlayVariableTypeHints = true,
-            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayVariableTypeHints = true, -- TODO: Make this only available for typescript files
+            includeInlayFunctionLikeReturnTypeHints = true, -- TODO: Make this only available for typescript files
           },
         },
         handlers = {
