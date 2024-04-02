@@ -637,10 +637,10 @@ return {
         end,
       },
       'nvimdev/lspsaga.nvim',
-      { -- Collection of json schemas for json lsp
-        'b0o/schemastore.nvim',
-        version = false,
-      },
+      -- { -- Collection of json schemas for json lsp
+      --   'b0o/schemastore.nvim',
+      --   version = false,
+      -- },
       { -- LSP progress messages
         'j-hui/fidget.nvim',
         tag = 'legacy',
@@ -710,6 +710,7 @@ return {
           capabilities = capabilities(),
           settings = {
             yaml = {
+              validate = true,
               format = {
                 enable = true,
               },
@@ -718,32 +719,32 @@ return {
               schemaStore = {
                 -- You must disable built-in schemaStore support if you want to use
                 -- this plugin and its advanced options like `ignore`.
-                enable = false,
+                enable = true,
+                -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                url = "", -- IMPORTANT!!! WITHOUT THIS NOTHING WORKS
               },
-              schemas = require('schemastore').yaml.schemas(),
+              schemas = {
+                ['https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json'] = '/template.yml',
+              },
+              -- schemas = require('schemastore').yaml.schemas(),
               customTags = {
-                '!fn',
-                '!And',
-                '!If',
-                '!If sequence',
-                '!Not',
-                '!Not sequence',
-                '!Equals',
-                '!Equals sequence',
-                '!Or',
-                '!FindInMap sequence',
-                '!Base64',
-                '!Cidr',
-                '!Ref',
-                '!Ref Scalar',
-                '!Sub',
-                '!Sub sequence',
-                '!GetAtt',
-                '!GetAZs',
-                '!ImportValue',
-                '!Select',
-                '!Split',
-                '!Join sequence'
+                "!Ref",
+                "!GetAtt",
+                "!Fn",
+                "!And",
+                "!If sequence",
+                "!Not",
+                "!Equals",
+                "!Or",
+                "!FindInMap sequence",
+                "!Base64",
+                "!Cidr",
+                "!Sub",
+                "!GetAZs",
+                "!ImportValue",
+                "!Select sequence",
+                "!Split sequence",
+                "!Join sequence",
               },
             },
           }
