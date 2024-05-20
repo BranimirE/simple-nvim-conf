@@ -227,7 +227,8 @@ return {
     main = 'nvim-treesitter.configs'
   },
   { -- Tabline
-    'akinsho/bufferline.nvim',
+    -- 'akinsho/bufferline.nvim',
+    'Theyashsawarkar/bufferline.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
     event = 'VeryLazy',
     opts = {
@@ -734,6 +735,7 @@ return {
                 "!And",
                 "!If sequence",
                 "!Not",
+                "!Not sequence",
                 "!Equals",
                 "!Or",
                 "!FindInMap sequence",
