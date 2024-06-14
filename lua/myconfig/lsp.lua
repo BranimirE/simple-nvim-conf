@@ -72,7 +72,9 @@ local function on_attach(client, bufnr)
     -- Idk why but without the delay inlay hints aren't displayed at the very start.
     vim.defer_fn(function()
       local mode = vim.api.nvim_get_mode().mode
-      vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
+      -- TODO:: Use this line in older neovim versions
+      -- vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
+      vim.lsp.inlay_hint.enable(mode == 'n' or mode == 'v')
     end, 500)
 
     vim.api.nvim_create_autocmd('InsertEnter', {
@@ -80,7 +82,9 @@ local function on_attach(client, bufnr)
       desc = 'Enable inlay hints',
       buffer = bufnr,
       callback = function()
-        vim.lsp.inlay_hint.enable(bufnr, false)
+        -- TODO:: Use this line in older neovim versions
+        -- vim.lsp.inlay_hint.enable(bufnr, false)
+        vim.lsp.inlay_hint.enable(false)
       end,
     })
     vim.api.nvim_create_autocmd('InsertLeave', {
@@ -88,7 +92,9 @@ local function on_attach(client, bufnr)
       desc = 'Disable inlay hints',
       buffer = bufnr,
       callback = function()
-        vim.lsp.inlay_hint.enable(bufnr, true)
+        -- TODO:: Use this line in older neovim versions
+        -- vim.lsp.inlay_hint.enable(bufnr, true)
+        vim.lsp.inlay_hint.enable(true)
       end,
     })
   end

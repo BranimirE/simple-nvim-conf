@@ -357,56 +357,6 @@ return {
       end,
     }
   },
-  -- { -- Telescope - Fuzzy finder
-  --   'nvim-telescope/telescope.nvim',
-  --   tag = '0.1.5',
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim',
-  --     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-  --     'nvim-treesitter/nvim-treesitter'
-  --   },
-  --   cmd = 'Telescope',
-  --   keys = mymappings.telescope(),
-  --   opts = function()
-  --     return {
-  --       defaults = {
-  --         prompt_prefix = ' ',
-  --         selection_caret = ' ',
-  --         file_ignore_patterns = {
-  --           'node_modules',
-  --           'ext.js',
-  --           'ext-modern.js',
-  --           'ext-modern-all.js',
-  --           'ext-modern-all-sandbox.js',
-  --           'ext-all.js',
-  --           'ext-all-sandbox.js',
-  --           'ext-all-rtl.js',
-  --           'ext-all-rtl-sandbox.js'
-  --         },
-  --         mappings = {
-  --           n = { ['q'] = require('telescope.actions').close },
-  --         },
-  --       },
-  --       pickers = {
-  --         find_files = {
-  --           theme = 'dropdown',
-  --           previewer = false,
-  --           prompt_prefix = '  '
-  --         },
-  --         live_grep = {
-  --           prompt_prefix = ' 󰱼 '
-  --           -- prompt_prefix = ''
-  --         }
-  --       }
-  --     }
-  --   end,
-  --   config = function(_, opts)
-  --     local telescope = require('telescope')
-  --     telescope.setup(opts)
-  --     telescope.load_extension('fzf')
-  --     -- telescope.load_extension('ui-select') -- TODO: (a) same
-  --   end
-  -- },
   {
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -543,7 +493,7 @@ return {
             -- Taken from: https://github.com/hrsh7th/nvim-cmp/issues/511#issuecomment-1063014008
             vim_item.dup = ({
               nvim_lsp = 0,
-            })[entry.source.name] or 0
+            })[source_name] or 0
 
             return kind
           end,
@@ -637,10 +587,6 @@ return {
         end,
       },
       'nvimdev/lspsaga.nvim',
-      -- { -- Collection of json schemas for json lsp
-      --   'b0o/schemastore.nvim',
-      --   version = false,
-      -- },
       { -- LSP progress messages
         'j-hui/fidget.nvim',
         tag = 'legacy',
