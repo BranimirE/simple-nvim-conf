@@ -573,8 +573,7 @@ return {
           }
         },
         opts = {
-          automatic_installation = true, -- Automatically install the lsp server with mason if it is configured
-          ensure_installed = { 'tsserver' }
+          automatic_installation = true -- Automatically install the lsp server with mason if it is configured
         },
         config = function(_, opts)
           require('mason-lspconfig').setup(opts)
@@ -640,7 +639,8 @@ return {
         'dockerls',
         'angularls',
         'terraformls',
-        'ansiblels'
+        'ansiblels',
+        'vtsls'
       }
 
       if not myutils.is_npm_package_installed('eslint') then
@@ -709,6 +709,18 @@ return {
               vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
           end,
         },
+        vtsls = {
+          capabilities = capabilities(),
+          settings = {
+            javascript = {
+              inlayHints = {
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = 'all' },
+                variableTypes = { enabled = true },
+              },
+            },
+          },
+        }
       }
 
       for _, server_name in ipairs(my_lsp_servers) do
@@ -723,29 +735,29 @@ return {
 
     end
   },
-  {
-    'pmizio/typescript-tools.nvim',
-    event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx,*.mjs', 'BufNewFile *.ts,*.tsx,*.js,*.jsx,*.mjs' },
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-lspconfig' },
-    opts = function ()
-      return {
-        settings = {
-          tsserver_file_preferences = {
-            -- includeInlayParameterNameHints = 'literals',
-            includeInlayParameterNameHints = 'all',
-            includeInlayVariableTypeHints = true, -- TODO: Make this only available for typescript files
-            includeInlayFunctionLikeReturnTypeHints = true, -- TODO: Make this only available for typescript files
-          },
-        },
-        handlers = {
-          -- Remove message "File is a CommonJS module; it may be converted to an ES module."
-          -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
-          --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
-          ["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
-        }
-      }
-    end,
-  },
+  -- {
+  --   'pmizio/typescript-tools.nvim',
+  --   event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx,*.mjs', 'BufNewFile *.ts,*.tsx,*.js,*.jsx,*.mjs' },
+  --   dependencies = { 'nvim-lua/plenary.nvim', 'nvim-lspconfig' },
+  --   opts = function ()
+  --     return {
+  --       settings = {
+  --         tsserver_file_preferences = {
+  --           -- includeInlayParameterNameHints = 'literals',
+  --           includeInlayParameterNameHints = 'all',
+  --           includeInlayVariableTypeHints = true, -- TODO: Make this only available for typescript files
+  --           includeInlayFunctionLikeReturnTypeHints = true, -- TODO: Make this only available for typescript files
+  --         },
+  --       },
+  --       handlers = {
+  --         -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+  --         -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
+  --         --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
+  --         ["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
+  --       }
+  --     }
+  --   end,
+  -- },
   { -- Extra tools for lsp
     'nvimdev/lspsaga.nvim',
     opts = {
@@ -772,6 +784,9 @@ return {
       'williamboman/mason.nvim',
       {
         'nvimtools/none-ls.nvim',
+        dependencies = {
+          'nvimtools/none-ls-extras.nvim'
+        },
         opts = function ()
           local null_ls = require('null-ls')
 
@@ -787,11 +802,13 @@ return {
           }
 
           if myutils.is_npm_package_installed('eslint') then
-            myutils.log('has eslint. Setting up null-ls eslint diagnostics and code_actions')
+            myutils.log('has eslint. Setting up null-ls eslint diagnostics and code_actions using node_modules binaries')
             -- Use node_modules EsLint for diagnostics and code actions
             -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
-            table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
-            table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
+            -- table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
+            table.insert(sources, require("none-ls.diagnostics.eslint").with({ command = './node_modules/.bin/eslint' }))
+            -- table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
+            table.insert(sources, require("none-ls.code_actions.eslint").with({ command = './node_modules/.bin/eslint' }))
           end
 
           if myutils.is_npm_package_installed('prettier') then
@@ -801,7 +818,7 @@ return {
               if myutils.is_npm_package_installed('eslint-plugin-prettier') then
                 myutils.log('has eslint-prettier integration')
                 -- Use EsLint as formatter(It will use prettier internally)
-                table.insert(sources, formatting.eslint.with({
+                table.insert(sources, require("none-ls.code_actions.eslint").with({
                   command = './node_modules/.bin/eslint',
                 }))
               else

@@ -352,7 +352,7 @@ end
 
 function M.log(message)
   if not vim.g.CUSTOM_LOGS then
-    local file = io.open('/home/branimir/nvimlogs.log', "a")
+    local file = io.open(vim.loop.os_homedir() .. '/nvimlogs.log', "a")
 
     if file then
       file:write(message .. "\n")
@@ -430,7 +430,7 @@ function M.uncomment_block()
 end
 
 function M.open_in_browser()
-    require('gitlinker').get_buf_range_url('n', { action_callback = require('gitlinker.actions').open_in_browser })
+  require('gitlinker').get_buf_range_url('n', { action_callback = require('gitlinker.actions').open_in_browser })
 end
 
 function M.get_link()
