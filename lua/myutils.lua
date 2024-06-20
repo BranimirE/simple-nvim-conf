@@ -287,22 +287,28 @@ function M.select_npm_command(cb)
   vim.ui.select(npm_commands, { prompt = 'Select command:' }, cb)
 end
 
-function M.run_npm_command()
-  M.select_npm_command(function(command_str)
-    if command_str ~= nil then
-      if vim.fn.exists('$TMUX') ~= 0 then
-        local prev_vimux_orientation = vim.g.VimuxOrientation
-        vim.g.VimuxOrientation = 'h'
-        vim.api.nvim_call_function("VimuxRunCommand", { "npm run " .. command_str })
-        vim.g.VimuxOrientation = prev_vimux_orientation
-      else
-        vim.cmd('vsp | terminal npm run ' .. command_str)
-        -- Move the terminal to the right side of the screen
-        M.feedkey([[<c-w>L]], 'n')
-        M.feedkey([[54<c-w>|]], 'n')
+function M.run_program()
+  if vim.bo.filetype == 'cpp' then
+    vim.cmd('wa')
+    vim.cmd('make')
+    M.feedkey([[<cr>]], 'n')
+  else
+    M.select_npm_command(function(command_str)
+      if command_str ~= nil then
+        if vim.fn.exists('$TMUX') ~= 0 then
+          local prev_vimux_orientation = vim.g.VimuxOrientation
+          vim.g.VimuxOrientation = 'h'
+          vim.api.nvim_call_function("VimuxRunCommand", { "npm run " .. command_str })
+          vim.g.VimuxOrientation = prev_vimux_orientation
+        else
+          vim.cmd('vsp | terminal npm run ' .. command_str)
+          -- Move the terminal to the right side of the screen
+          M.feedkey([[<c-w>L]], 'n')
+          M.feedkey([[54<c-w>|]], 'n')
+        end
       end
-    end
-  end)
+    end)
+  end
 end
 
 -- Taken from: https://github.com/JoosepAlviste/dotfiles/blob/master/config/nvim/lua/j/utils.lua
