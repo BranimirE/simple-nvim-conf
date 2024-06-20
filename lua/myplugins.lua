@@ -332,11 +332,11 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       signs = {
-        add = { hl = 'GitSignsAdd', text = '▌', numhl = 'GitSignsAddNr' },
-        change = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
-        delete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
-        topdelete = { hl = 'GitSignsDelete', text = '▌', numhl = 'GitSignsDeleteNr' },
-        changedelete = { hl = 'GitSignsChange', text = '▌', numhl = 'GitSignsChangeNr' },
+        add = {  text = '▌' },
+        change = { text = '▌' },
+        delete = { text = '▌' },
+        topdelete = { text = '▌' },
+        changedelete = { text = '▌' },
       },
       signcolumn = true,         -- Toggle with `:Gitsigns toggle_signs`
       current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
