@@ -473,6 +473,10 @@ return {
         },
         mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
         sources = cmp.config.sources({ -- The order matters!!!
+          {
+            name = "lazydev",
+            group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+          },
           { name = 'nvim_lsp' },
         },{
           -- { name = 'vsnip' },
@@ -615,12 +619,10 @@ return {
           ignore_filetype = {},
         }
       },
-      { -- Improved lua settings for neovim config
-        "folke/neodev.nvim",
-        opts = {
-          library = { types = false }
-        },
-      }
+      {
+        'folke/lazydev.nvim',
+        ft = 'lua', -- only load on lua files
+      },
     },
     config = function()
       local my_lsp_servers = {
@@ -906,7 +908,12 @@ return {
   { -- Smooth scroll for neovim
     'declancm/cinnamon.nvim',
     event = 'VeryLazy',
-    opts = { centered = false }
+    opts = {
+      keymaps = {
+        basic = true,
+        extra = true,
+      },
+    }
   },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
