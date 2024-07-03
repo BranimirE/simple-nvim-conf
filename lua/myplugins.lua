@@ -906,14 +906,9 @@ return {
     end,
   },
   { -- Smooth scroll for neovim
-    'declancm/cinnamon.nvim',
+    'echasnovski/mini.animate', version = '*',
     event = 'VeryLazy',
-    opts = {
-      keymaps = {
-        basic = true,
-        extra = true,
-      },
-    }
+    config = true
   },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
