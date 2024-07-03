@@ -112,7 +112,7 @@ return {
   { -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
-    dependencies = 'nvim-tree/nvim-web-devicons',
+    dependencies = 'echasnovski/mini.icons',
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
@@ -228,7 +228,7 @@ return {
   },
   { -- Tabline
     'akinsho/bufferline.nvim',
-    dependencies = 'nvim-tree/nvim-web-devicons',
+    dependencies = 'echasnovski/mini.icons',
     event = 'VeryLazy',
     opts = {
       options = {
@@ -359,7 +359,7 @@ return {
   },
   {
     'ibhagwan/fzf-lua',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'echasnovski/mini.icons' },
     keys = mymappings.fzf_lua(),
     cmd = 'FzfLua',
     opts = function ()
@@ -857,7 +857,7 @@ return {
   },
   { -- Pretty list component
     'folke/trouble.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'echasnovski/mini.icons' },
     opts = {
       action_keys = { -- key mappings for actions in the trouble list
         open_split = { '<c-x>', '|' }, -- open buffer in new split
@@ -952,5 +952,20 @@ return {
     cmd = {'SearchAndReplace', 'FindAndReplace'},
     keys = mymappings.nvim_spectre(),
     opts = { open_cmd = 'noswapfile vnew' },
+  },
+  {
+    "echasnovski/mini.icons",
+    opts = {},
+    specs = {
+      { "nvim-tree/nvim-web-devicons", enabled = false, optional = true },
+    },
+    init = function()
+      package.preload["nvim-web-devicons"] = function()
+        -- needed since it will be false when loading and mini will fail
+        package.loaded["nvim-web-devicons"] = {}
+        require("mini.icons").mock_nvim_web_devicons()
+        return package.loaded["nvim-web-devicons"]
+      end
+    end,
   },
 }
