@@ -2,119 +2,62 @@ local mymappings = require('mymappings')
 local myutils = require('myutils')
 
 return {
-  -- { -- Theme Tokyonight
-  --   'folke/tokyonight.nvim',
-  --   event = 'VeryLazy',
-  --   opts = {
-  --     style = 'night',
-  --     transparent = true,
-  --     styles = {
-  --       sidebars = 'transparent',
-  --       floats = 'transparent',
-  --     },
-  --   },
-  --   init = function()
-  --     vim.cmd('colorscheme tokyonight')
-  --   end
-  -- },
-  {
-    'NvChad/base46',
-    dependencies = {
-      -- 'NvChad/NvChad',
-      'NvChad/ui',
-      'nvim-lua/plenary.nvim'
+  { -- Theme Onedark
+    'navarasu/onedark.nvim',
+    event = 'VeryLazy',
+    opts = {
+      style = 'deep',
+      transparent = true,
+      colors = {
+        black = "#0c0e15",
+        bg0 = "#19212F",  --background_colour
+        bg1 = "#20283D", -- nvim-tree highlight line background
+        bg2 = "#283347",
+        bg3 = "#2a324a",
+        bg_d = "#121B25", -- nvim-tree background
+        bg_blue = "#54b0fd",
+        bg_yellow = "#f2cc81",
+        -- fg = "#90A4C6", -- < character
+        fg = "#B8C5DB", -- < character
+        purple = "#D74CF0", -- class word
+        green = "#74D046", -- strings
+        orange = "#E98C31", -- true/false word and numbers
+        blue = "#00A8FF", -- has_many word, function names, raise word
+        yellow = "#F7BC47", -- class name
+        cyan = "#00C1D2", -- ":comments" word
+        red = "#FF4761", -- function parameters
+        grey = "#425577", -- comments
+        light_grey = "#697D9F", -- Curly brackets {}
+        dark_cyan = "#1b6a73",
+        dark_red = "#992525", -- some icons color
+        dark_yellow = "#8f610d",
+        dark_purple = "#862aa1",
+        diff_add = "#27341c",
+        diff_delete = "#331c1e",
+        diff_change = "#102b40",
+        diff_text = "#1c4a6e",
+      },
+      highlights = {
+        StatusLine = { bg = 'none' },
+        StatusLineTerm = { bg = 'none' },
+        StatusLineNC = { bg = 'none' },
+        StatusLineTermNC = { bg = 'none' },
+        -- Telescope
+        TelescopeMatching = { fg = '#00afff' },
+        TelescopeBorder = { fg = '#00afff' },
+        -- Lspsaga groups and Floating terminal
+        NormalFloat = { bg = 'none' },
+        FloatBorder = { bg = 'none' },
+        -- Nvim-tree
+        NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
+        -- FzfLuaa
+        FzfLuaBorder = { fg = '#00afff' },
+      },
     },
-    lazy = false,
-    branch = "v2.5",
-    build = function()
-      require("base46").load_all_highlights()
+    init = function()
+      require('onedark').load()
     end
   },
-  -- { -- Theme Onedark
-  --   'navarasu/onedark.nvim',
-  --   event = 'VeryLazy',
-  --   opts = {
-  --     style = 'deep',
-  --     transparent = true,
-  --     colors = {
-  --       black = "#0c0e15",
-  --       bg0 = "#19212F",  --background_colour
-  --       bg1 = "#20283D", -- nvim-tree highlight line background
-  --       bg2 = "#283347",
-  --       bg3 = "#2a324a",
-  --       bg_d = "#121B25", -- nvim-tree background
-  --       bg_blue = "#54b0fd",
-  --       bg_yellow = "#f2cc81",
-  --       -- fg = "#90A4C6", -- < character
-  --       fg = "#B8C5DB", -- < character
-  --       purple = "#D74CF0", -- class word
-  --       green = "#74D046", -- strings
-  --       orange = "#E98C31", -- true/false word and numbers
-  --       blue = "#00A8FF", -- has_many word, function names, raise word
-  --       yellow = "#F7BC47", -- class name
-  --       cyan = "#00C1D2", -- ":comments" word
-  --       red = "#FF4761", -- function parameters
-  --       grey = "#425577", -- comments
-  --       light_grey = "#697D9F", -- Curly brackets {}
-  --       dark_cyan = "#1b6a73",
-  --       dark_red = "#992525", -- some icons color
-  --       dark_yellow = "#8f610d",
-  --       dark_purple = "#862aa1",
-  --       diff_add = "#27341c",
-  --       diff_delete = "#331c1e",
-  --       diff_change = "#102b40",
-  --       diff_text = "#1c4a6e",
-  --     },
-  --     highlights = {
-  --       StatusLine = { bg = 'none' },
-  --       StatusLineTerm = { bg = 'none' },
-  --       StatusLineNC = { bg = 'none' },
-  --       StatusLineTermNC = { bg = 'none' },
-  --       -- Telescope
-  --       TelescopeMatching = { fg = '#00afff' },
-  --       TelescopeBorder = { fg = '#00afff' },
-  --       -- Lspsaga groups and Floating terminal
-  --       NormalFloat = { bg = 'none' },
-  --       FloatBorder = { bg = 'none' },
-  --       -- Nvim-tree
-  --       NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
-  --       -- FzfLuaa
-  --       FzfLuaBorder = { fg = '#00afff' },
-  --     },
-  --   },
-  --   init = function()
-  --     require('onedark').load()
-  --   end
-  -- },
-  -- { -- Theme
-  --   'cpea2506/one_monokai.nvim',
-  --   event = 'VeryLazy',
-  --   opts = {
-  --     transparent = true,
-  --     colors = {
-  --       gray = "#676e7b",
-  --       pink = "#F92672",
-  --       green = "#A6E22E",
-  --       cyan = "#00afff",
-  --       aqua = "#61afef",
-  --       yellow = "#E6DB74",
-  --       purple = "#AE81FF",
-  --       peanut = "#f6d5a4",
-  --       orange = "#FD971F",
-  --       none = "NONE",
-  --
-  --       -- support colors
-  --       red = "#ff0000",
-  --       white = "#ffffff",
-  --       light_gray = "#9ca3b2",
-  --       dark_gray = "#4b5261",
-  --       vulcan = "#080a0e",
-  --       dark_green = "#2d2e27",
-  --       dark_blue = "#26292f",
-  --       black = "#1e2024",
-  --     }
-  --   }
-  -- },
   { -- Status line
     'nvim-lualine/lualine.nvim',
     lazy = false,
@@ -127,7 +70,6 @@ return {
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'echasnovski/mini.icons',
     opts = function ()
-      dofile(vim.g.base46_cache .. "nvimtree")
       return {
         on_attach = function(bufnr)
           local api = require('nvim-tree.api')
@@ -200,50 +142,46 @@ return {
       'nvim-treesitter/nvim-treesitter-textobjects', -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
     },
     event = { 'BufReadPost', 'BufNewFile' },
-    opts = function ()
-      dofile(vim.g.base46_cache .. "syntax")
-      dofile(vim.g.base46_cache .. "treesitter")
-      return {
-        ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript', 'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
-        sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
-        auto_install = true,  -- Automatically install missing parsers when entering buffer
-        highlight = {
-          enable = true,      -- `false` will disable the whole extension
-          ---@diagnostic disable-next-line: unused-local
-          disable = function(lang, bufnr)
-            if vim.fn.expand('%:t') == 'lsp.log' or vim.bo.filetype == 'help' then
-              return false
-            end
-            local n_lines = vim.api.nvim_buf_line_count(bufnr)
-            -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
-            return n_lines > 5000 or (n_lines > 0 and vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
-          end,
-          use_languagetree = true,                   -- use this to enable language injection
-          additional_vim_regex_highlighting = false, -- Enable syntax on at the same time?
-        },
-        indent = { enable = true },                  -- Indent with = using treesitter
-        autotag = { enable = true },
-        autopairs = { enable = true },
-        context_commentstring = {
+    opts = {
+      ensure_installed = { 'vim', 'lua', 'javascript', 'bash', 'css', 'json', 'json5', 'jsonc', 'python', 'typescript', 'html', 'yaml', 'markdown', 'markdown_inline', 'scss', 'jsdoc', 'tsx', 'regex', 'diff', 'vimdoc' },
+      sync_install = false, -- Install parsers synchronously (only applied to `ensure_installed`)
+      auto_install = true,  -- Automatically install missing parsers when entering buffer
+      highlight = {
+        enable = true,      -- `false` will disable the whole extension
+        ---@diagnostic disable-next-line: unused-local
+        disable = function(lang, bufnr)
+          if vim.fn.expand('%:t') == 'lsp.log' or vim.bo.filetype == 'help' then
+            return false
+          end
+          local n_lines = vim.api.nvim_buf_line_count(bufnr)
+          -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
+          return n_lines > 5000 or (n_lines > 0 and vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
+        end,
+        use_languagetree = true,                   -- use this to enable language injection
+        additional_vim_regex_highlighting = false, -- Enable syntax on at the same time?
+      },
+      indent = { enable = true },                  -- Indent with = using treesitter
+      autotag = { enable = true },
+      autopairs = { enable = true },
+      context_commentstring = {
+        enable = true,
+        enable_autocmd = false,
+      },
+      rainbow = { enable = true },
+      textobjects = {
+        select = {
           enable = true,
-          enable_autocmd = false,
-        },
-        rainbow = { enable = true },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ac'] = '@class.outer',
-              ['ic'] = { query = '@class.inner', desc = 'Select inner part of a class region' },
-              ['as'] = { query = '@scope', query_group = 'locals', desc = 'Select language scope' },
-            },
+          lookahead = true,
+          keymaps = {
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = { query = '@class.inner', desc = 'Select inner part of a class region' },
+            ['as'] = { query = '@scope', query_group = 'locals', desc = 'Select language scope' },
           },
         },
-      }
-    end,
+      },
+    },
     main = 'nvim-treesitter.configs'
   },
   { -- Tabline
@@ -350,34 +288,32 @@ return {
       }
     },
     event = { 'BufReadPre', 'BufNewFile' },
-    opts = function ()
-      return {
-        signs = {
-          add = {  text = '▌' },
-          change = { text = '▌' },
-          delete = { text = '▌' },
-          topdelete = { text = '▌' },
-          changedelete = { text = '▌' },
-        },
-        signcolumn = true,         -- Toggle with `:Gitsigns toggle_signs`
-        current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
-        current_line_blame_opts = {
-          virt_text = true,
-          virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-          delay = 100,
-          ignore_whitespace = false,
-        },
-        current_line_blame_formatter = ' <author>, <author_time:%R> ● <summary>',
-        current_line_blame_formatter_nc = ' <You>, <author_time:%R> ● Uncommitted changes',
-        preview_config = {
-          border = 'rounded',
-        },
-        on_attach = function(bufnr)
-          local gs = package.loaded.gitsigns
-          myutils.load_mapping(mymappings.gitsigns(gs, bufnr))
-        end,
-      }
-    end
+    opts = {
+      signs = {
+        add = {  text = '▌' },
+        change = { text = '▌' },
+        delete = { text = '▌' },
+        topdelete = { text = '▌' },
+        changedelete = { text = '▌' },
+      },
+      signcolumn = true,         -- Toggle with `:Gitsigns toggle_signs`
+      current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+        delay = 100,
+        ignore_whitespace = false,
+      },
+      current_line_blame_formatter = ' <author>, <author_time:%R> ● <summary>',
+      current_line_blame_formatter_nc = ' <You>, <author_time:%R> ● Uncommitted changes',
+      preview_config = {
+        border = 'rounded',
+      },
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+        myutils.load_mapping(mymappings.gitsigns(gs, bufnr))
+      end,
+    }
   },
   {
     'ibhagwan/fzf-lua',
@@ -473,8 +409,6 @@ return {
       'onsails/lspkind.nvim',
     },
     opts = function()
-      dofile(vim.g.base46_cache .. "cmp")
-
       local cmp = require('cmp')
       local compare = require('cmp.config.compare')
       return {
@@ -651,9 +585,6 @@ return {
       },
     },
     config = function()
-      dofile(vim.g.base46_cache .. "lsp")
-      require "nvchad.lsp"
-
       local my_lsp_servers = {
         'lua_ls',
         'bashls',

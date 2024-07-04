@@ -1,5 +1,4 @@
 require('mysettings')
-vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
 
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -64,9 +63,6 @@ require('lazy').setup('myplugins', {
     },
   },
 })
-
--- load theme
-dofile(vim.g.base46_cache .. "defaults")
 
 vim.api.nvim_create_autocmd('User', {
  pattern = 'VeryLazy',
