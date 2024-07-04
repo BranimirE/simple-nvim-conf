@@ -1,4 +1,5 @@
 require('mysettings')
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
 
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -15,7 +16,7 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup('myplugins', {
   defaults = { lazy = true },
-  -- install = { colorscheme = { 'tokyonight' } },
+  install = { colorscheme = { 'nvchad' } },
   checker = { enabled = false },
   change_detection = {
     notify = false,
@@ -54,9 +55,18 @@ require('lazy').setup('myplugins', {
     },
   },
   ui = {
-    border = "single"
+    border = "single",
+    icons = {
+      ft = "",
+      lazy = "󰂠 ",
+      loaded = "",
+      not_loaded = "",
+    },
   },
 })
+
+-- load theme
+dofile(vim.g.base46_cache .. "defaults")
 
 vim.api.nvim_create_autocmd('User', {
  pattern = 'VeryLazy',
