@@ -191,20 +191,17 @@ ins_left {
   -- Lsp servers' name
   function()
     local msg = 'No Active Lsp'
-    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-    local clients = vim.lsp.get_active_clients()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local clients = require('lspconfig.util').get_lsp_clients({ bufnr = bufnr})
     if next(clients) == nil then
       return msg
     end
     local lsp_servers = ''
     for _, client in ipairs(clients) do
-      local filetypes = client.config.filetypes
-      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-        if lsp_servers ~= '' then
-          lsp_servers = lsp_servers .. ', '
-        end
-        lsp_servers = lsp_servers .. client.name
+      if lsp_servers ~= '' then
+        lsp_servers = lsp_servers .. ', '
       end
+      lsp_servers = lsp_servers .. client.name
     end
     if lsp_servers ~= '' then
       return lsp_servers
