@@ -178,18 +178,6 @@ function M.prev_hunk(gitsigns)
   end
 end
 
-function M.is_range_formatting_supported()
-  ---@diagnostic disable-next-line: deprecated
-  local clients = vim.lsp.get_active_clients()
-  for _, client in ipairs(clients) do
-    if client.server_capabilities.documentRangeFormattingProvider then
-      print(client.name .. ' supports range formatting')
-      return true
-    end
-  end
-  return false
-end
-
 function M.is_win_type_visible(win_type)
   local wins = vim.fn.getwininfo()
   ---@diagnostic disable-next-line: param-type-mismatch
