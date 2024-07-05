@@ -699,6 +699,7 @@ return {
           },
           handlers = {
             -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+            -- TODO: Migrate this function to myutils such that it can be used for other lsp servers
             ["textDocument/publishDiagnostics"] = function (err, res, ctx, config)
               myutils.log(vim.inspect(res.diagnostics))
               local filtered = {}
