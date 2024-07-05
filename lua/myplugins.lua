@@ -382,10 +382,13 @@ return {
     event = { 'BufReadPost', 'BufNewFile' },
     config = true,
   },
-  { -- Colorize color strings like #00afff or magenta
-    'NvChad/nvim-colorizer.lua',
-    event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
-    config = true,
+  {
+    'brenoprata10/nvim-highlight-colors',
+    event = "BufReadPre",
+    opts = {
+      render = "virtual",
+      virtual_symbol = "󰻂",
+    }
   },
   { -- Bridge between vsnip and nvim-cmp
     'hrsh7th/cmp-vsnip',
