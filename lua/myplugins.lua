@@ -686,12 +686,32 @@ return {
           settings = {
             javascript = {
               inlayHints = {
-                functionLikeReturnTypes = { enabled = true },
                 parameterNames = { enabled = 'all' },
-                variableTypes = { enabled = true },
               },
             },
+            typescript = {
+              inlayHints = {
+                parameterNames = { enabled = 'all' },
+                variableTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+              },
+            }
           },
+          handlers = {
+            -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+            ["textDocument/publishDiagnostics"] = function (err, res, ctx, config)
+              myutils.log(vim.inspect(res.diagnostics))
+              local filtered = {}
+              for _, diagnostic in ipairs(res.diagnostics) do
+                if diagnostic.source == "ts" and diagnostic.code ~= 80001 then
+                  table.insert(filtered, diagnostic)
+                end
+              end
+
+              res.diagnostics = filtered
+              vim.lsp.diagnostic.on_publish_diagnostics(err, res, ctx, config)
+            end
+          }
         }
       }
 
@@ -707,29 +727,6 @@ return {
 
     end
   },
-  -- {
-  --   'pmizio/typescript-tools.nvim',
-  --   event = { 'BufReadPre *.ts,*.tsx,*.js,*.jsx,*.mjs', 'BufNewFile *.ts,*.tsx,*.js,*.jsx,*.mjs' },
-  --   dependencies = { 'nvim-lua/plenary.nvim', 'nvim-lspconfig' },
-  --   opts = function ()
-  --     return {
-  --       settings = {
-  --         tsserver_file_preferences = {
-  --           -- includeInlayParameterNameHints = 'literals',
-  --           includeInlayParameterNameHints = 'all',
-  --           includeInlayVariableTypeHints = true, -- TODO: Make this only available for typescript files
-  --           includeInlayFunctionLikeReturnTypeHints = true, -- TODO: Make this only available for typescript files
-  --         },
-  --       },
-  --       handlers = {
-  --         -- Remove message "File is a CommonJS module; it may be converted to an ES module."
-  --         -- Info: https://github.com/LunarVim/LunarVim/discussions/4239#discussioncomment-6223638
-  --         --       https://github.com/neovim/neovim/issues/20745#issuecomment-1285183325
-  --         ["textDocument/publishDiagnostics"] = require('typescript-tools.api').filter_diagnostics({ 80001 })
-  --       }
-  --     }
-  --   end,
-  -- },
   { -- Extra tools for lsp
     'nvimdev/lspsaga.nvim',
     opts = {
