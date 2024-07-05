@@ -92,16 +92,19 @@ local function on_attach(client, bufnr)
   end
 end
 
+local signs = {
+  text = {},
+  numhl = {},
+  texthl = {}
+}
 -- Define the diagnostic signs.
 for severity, icon in pairs(diagnostic_icons) do
   local formated_severity = severity:sub(1, 1) .. severity:sub(2):lower()
-  local hl = 'DiagnosticSign' .. formated_severity
-  vim.fn.sign_define(hl, { text = '', texthl = hl, numhl = 'LspDiagnosticsLineNr' .. formated_severity })
+  local severity_id = vim.diagnostic.severity[severity]
+  signs.text[severity_id] = ''
+  signs.numhl[severity_id] = 'LspDiagnosticsLineNr'..formated_severity
+  signs.texthl[severity_id] = 'DiagnosticSign' .. formated_severity
 end
-
-vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
-vim.cmd('highlight LspDiagnosticsLineNrWarning gui=bold guifg=#f78c6c guibg=#312e3a')
-vim.cmd('highlight LspDiagnosticsLineNrHint gui=bold guifg=#862AA1 guibg=#312e3a')
 
 -- Diagnostic configuration.
 vim.diagnostic.config {
@@ -124,9 +127,12 @@ vim.diagnostic.config {
       return prefix, 'Diagnostic' .. level:gsub('^%l', string.upper)
     end,
   },
-  -- Disable signs in the gutter.
-  -- signs = false,
+  signs = signs,
 }
+
+vim.cmd('highlight LspDiagnosticsLineNrError gui=bold guifg=#ff5370 guibg=#312a34')
+vim.cmd('highlight LspDiagnosticsLineNrWarn gui=bold guifg=#f78c6c guibg=#312e3a')
+vim.cmd('highlight LspDiagnosticsLineNrHint gui=bold guifg=#862AA1 guibg=#312e3a')
 
 -- Override the virtual text diagnostic handler so that the most severe diagnostic is shown first.
 local show_handler = vim.diagnostic.handlers.virtual_text.show
