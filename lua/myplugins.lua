@@ -320,13 +320,6 @@ return {
     keys = mymappings.fzf_lua(),
     cmd = 'FzfLua',
     opts = function ()
-      -- Disable nvim-web-devicons integration as we are using mini.icons
-      -- TODO: Remove these lines once mini.icons can mockup nvim-web-devicons completely
-      ---@diagnostic disable-next-line: duplicate-set-field
-      require('fzf-lua.devicons').load_devicons_plugin = function () end
-      ---@diagnostic disable-next-line: duplicate-set-field
-      require('fzf-lua.devicons').plugin_loaded = function () return false end
-
       local actions = require 'fzf-lua.actions'
       return {
         fzf_colors = {
