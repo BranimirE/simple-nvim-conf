@@ -891,6 +891,9 @@ return {
 
       local animate = require("mini.animate")
       return {
+        cursor = {
+          enable = false
+        },
         resize = {
           timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
         },
