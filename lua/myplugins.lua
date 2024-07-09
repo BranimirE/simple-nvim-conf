@@ -654,6 +654,7 @@ return {
                 "!Not",
                 "!Not sequence",
                 "!Equals",
+                "!Equals sequence",
                 "!Or",
                 "!FindInMap sequence",
                 "!Base64",
