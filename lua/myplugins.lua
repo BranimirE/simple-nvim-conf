@@ -702,7 +702,7 @@ return {
             -- Remove message "File is a CommonJS module; it may be converted to an ES module."
             -- TODO: Migrate this function to myutils such that it can be used for other lsp servers
             ["textDocument/publishDiagnostics"] = function (err, res, ctx, config)
-              myutils.log(vim.inspect(res.diagnostics))
+              -- myutils.log(vim.inspect(res.diagnostics))
               local filtered = {}
               for _, diagnostic in ipairs(res.diagnostics) do
                 if diagnostic.source == "ts" and diagnostic.code ~= 80001 then
@@ -789,9 +789,10 @@ return {
               if myutils.is_npm_package_installed('eslint-plugin-prettier') then
                 myutils.log('has eslint-prettier integration')
                 -- Use EsLint as formatter(It will use prettier internally)
-                table.insert(sources, require("none-ls.code_actions.eslint").with({
+                table.insert(sources, require("none-ls.formatting.eslint").with({
                   command = './node_modules/.bin/eslint',
                 }))
+                require('myconfig').PRETTIER_IS_AVAILABLE = true
               else
                 myutils.log('it does not have eslint-prettier integration. Using only prettier')
                 table.insert(sources, formatting.prettier.with({

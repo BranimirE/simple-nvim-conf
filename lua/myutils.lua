@@ -363,6 +363,13 @@ function M.format(cmd_opts)
   local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'
   local filter = function(client)
     if client.supports_method(method) then
+      if myconfig.PRETTIER_IS_AVAILABLE then
+        local is_null_ls = client.name == 'null-ls'
+        if is_null_ls then
+          vim.notify('Formatting with: \"'..client.name)
+        end
+        return is_null_ls
+      end
       vim.notify('Formatting with: ' .. client.name)
       return true
     end
