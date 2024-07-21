@@ -749,7 +749,8 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       -- ensure_installed = { 'flake8', 'black', 'prettier' }
-      ensure_installed = { 'black', 'prettier' }
+      -- ensure_installed = { 'black', 'prettier' }
+      ensure_installed = { 'black' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -762,7 +763,7 @@ return {
           local null_ls = require('null-ls')
 
           local formatting = null_ls.builtins.formatting
-          local diagnostics = null_ls.builtins.diagnostics
+          -- local diagnostics = null_ls.builtins.diagnostics
           local code_actions = null_ls.builtins.code_actions
 
           local sources = {
@@ -770,44 +771,13 @@ return {
             formatting.black,
             formatting.terraform_fmt,
             -- diagnostics.ruff,
+            require("none-ls.diagnostics.eslint").with({ prefer_local = './node_modules/.bin' }),
+            require("none-ls.code_actions.eslint").with({ prefer_local = './node_modules/.bin' }),
+            formatting.prettier.with({ prefer_local = './node_modules/.bin' })
           }
 
-          if myutils.is_npm_package_installed('eslint') then
-            myutils.log('has eslint. Setting up null-ls eslint diagnostics and code_actions using node_modules binaries')
-            -- Use node_modules EsLint for diagnostics and code actions
-            -- Note: Do not use eslint_lsp as node_modules/.bin/eslint version is prefered
-            -- table.insert(sources, diagnostics.eslint.with({ command = './node_modules/.bin/eslint' }))
-            table.insert(sources, require("none-ls.diagnostics.eslint").with({ command = './node_modules/.bin/eslint' }))
-            -- table.insert(sources, code_actions.eslint.with({ command = './node_modules/.bin/eslint' }))
-            table.insert(sources, require("none-ls.code_actions.eslint").with({ command = './node_modules/.bin/eslint' }))
-          end
-
           if myutils.is_npm_package_installed('prettier') then
-            myutils.log('has prettier')
-            if myutils.is_npm_package_installed('eslint') then
-              myutils.log('has eslint')
-              if myutils.is_npm_package_installed('eslint-plugin-prettier') then
-                myutils.log('has eslint-prettier integration')
-                -- Use EsLint as formatter(It will use prettier internally)
-                table.insert(sources, require("none-ls.formatting.eslint").with({
-                  command = './node_modules/.bin/eslint',
-                }))
-                require('myconfig').PRETTIER_IS_AVAILABLE = true
-              else
-                myutils.log('it does not have eslint-prettier integration. Using only prettier')
-                table.insert(sources, formatting.prettier.with({
-                  command = './node_modules/.bin/prettier',
-                }))
-              end
-            else
-              myutils.log('it does not have eslint. Using only prettier 2')
-              table.insert(sources, formatting.prettier.with({
-                command = './node_modules/.bin/prettier',
-              }))
-            end
-          else
-            myutils.log('Project does not have prettier. Using global(mason-null-ls) prettier')
-            table.insert(sources, formatting.prettier)
+            require('myconfig').PRETTIER_IS_AVAILABLE = true
           end
 
           return {
