@@ -359,38 +359,15 @@ end
 
 function M.format(cmd_opts)
   M.log('Formating!!')
-  M.log(vim.inspect(cmd_opts))
-  local bufnr = vim.api.nvim_get_current_buf()
-  -- vim.api.nvim_feedkeys('gv', 'n', false)
-  require("conform").format({ bufnr = bufnr })
-  -- cmd_opts = cmd_opts or { range = 0 }
-  -- local method = cmd_opts.range == 0 and 'textDocument/formatting' or 'textDocument/rangeFormatting'
-  -- local filter = function(client)
-  --   if client.supports_method(method) then
-  --     if myconfig.PRETTIER_IS_AVAILABLE then
-  --       local is_null_ls = client.name == 'null-ls'
-  --       if is_null_ls then
-  --         vim.notify('Formatting with: \"'..client.name)
-  --       end
-  --       return is_null_ls
-  --     end
-  --     vim.notify('Formatting with: ' .. client.name)
-  --     return true
-  --   end
-  --   return false
-  -- end
-  -- if cmd_opts.range == 0 then
-  --   vim.lsp.buf.format({ filter = filter, timeout_ms = 3000 })
-  -- else
-  --   vim.lsp.buf.format({
-  --     range = {
-  --       ['start'] = { cmd_opts.line1, 0 },
-  --       ['end'] = { cmd_opts.line2, 0 }
-  --     },
-  --     filter = filter,
-  --     timeout_ms = 3000
-  --   })
-  -- end
+  local range = nil
+  if cmd_opts.count ~= -1 then
+    local end_line = vim.api.nvim_buf_get_lines(0, cmd_opts.line2 - 1, cmd_opts.line2, true)[1]
+    range = {
+      start = { cmd_opts.line1, 0 },
+      ['end'] = { cmd_opts.line2, end_line:len() },
+    }
+  end
+  require('conform').format({ async = true, lsp_format = 'fallback', range = range })
 end
 
 -- Taken from: https://github.com/numToStr/Comment.nvim/issues/22#issuecomment-1272569139
