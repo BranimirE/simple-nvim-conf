@@ -568,19 +568,6 @@ return {
           require('lsp_signature').setup(opts)
         end
       },
-      { -- Show virtual text with # references and definitions like JetBrains
-        "VidocqH/lsp-lens.nvim",
-        opts = {
-          enable = true,
-          include_declaration = false, -- Reference include declaration
-          sections = { -- Enable / Disable specific request
-            definition = false,
-            references = true,
-            implementation = true,
-          },
-          ignore_filetype = {},
-        }
-      },
       {
         'folke/lazydev.nvim',
         ft = 'lua', -- only load on lua files
@@ -750,7 +737,7 @@ return {
     opts = {
       -- ensure_installed = { 'flake8', 'black', 'prettier' }
       -- ensure_installed = { 'black', 'prettier' }
-      ensure_installed = { 'black' }
+      ensure_installed = { 'black', 'stylua', 'shfmt', 'prettier' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -762,18 +749,18 @@ return {
         opts = function ()
           local null_ls = require('null-ls')
 
-          local formatting = null_ls.builtins.formatting
+          -- local formatting = null_ls.builtins.formatting
           -- local diagnostics = null_ls.builtins.diagnostics
           local code_actions = null_ls.builtins.code_actions
 
           local sources = {
             code_actions.gitsigns,
-            formatting.black,
-            formatting.terraform_fmt,
+            -- formatting.black,
+            -- formatting.terraform_fmt,
             -- diagnostics.ruff,
             require("none-ls.diagnostics.eslint").with({ prefer_local = './node_modules/.bin' }),
             require("none-ls.code_actions.eslint").with({ prefer_local = './node_modules/.bin' }),
-            formatting.prettier.with({ prefer_local = './node_modules/.bin' })
+            -- formatting.prettier.with({ prefer_local = './node_modules/.bin' })
           }
 
           if myutils.is_npm_package_installed('prettier') then
@@ -934,6 +921,24 @@ return {
         require("mini.icons").mock_nvim_web_devicons()
         return package.loaded["nvim-web-devicons"]
       end
+    end,
+  },
+  {
+    'stevearc/conform.nvim',
+    event = { 'LspAttach', 'BufWritePre' },
+    opts = {
+      notify_on_error = true,
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        python = { 'black' },
+        sh = { 'shfmt' },
+        javascript = { "prettier" }
+      },
+      format_on_save = false,
+    },
+    init = function()
+      -- Use conform for gq.
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
     end,
   },
 }
