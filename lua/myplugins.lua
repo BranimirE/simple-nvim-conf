@@ -927,6 +927,10 @@ return {
   {
     'stevearc/conform.nvim',
     event = { 'LspAttach', 'BufWritePre' },
+    init = function()
+      -- Use conform for gq.
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    end,
     opts = {
       notify_on_error = true,
       formatters_by_ft = {
@@ -936,10 +940,20 @@ return {
         javascript = { "prettier" }
       },
       format_on_save = false,
+      log_level = vim.log.levels.DEBUG,
+      default_format_opts = {
+        lsp_format = "fallback",
+      },
     },
-    init = function()
-      -- Use conform for gq.
-      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-    end,
+    config = function (_, opts)
+      require("conform").setup(opts)
+      ---@diagnostic disable-next-line: duplicate-set-field
+      require("conform.log").log = function (level, message, ...)
+        if level == vim.log.levels.INFO or message:match('^Running LSP') ~= nil then
+          local text = myutils.format_conform_log(message, ...)
+          vim.notify(text)
+        end
+      end
+    end
   },
 }

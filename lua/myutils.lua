@@ -357,7 +357,7 @@ function M.log(message)
   end
 end
 
-local function format_conform_log(msg, ...)
+function M.format_conform_log(msg, ...)
   local args = vim.F.pack_len(...)
   for i = 1, args.n do
     local v = args[i]
@@ -389,16 +389,7 @@ function M.format(cmd_opts)
       ['end'] = { cmd_opts.line2, end_line:len() },
     }
   end
-
-  local original_log = require("conform.log").log
-  require("conform.log").level = vim.log.levels.DEBUG
-  ---@diagnostic disable-next-line: duplicate-set-field
-  require("conform.log").log = function (level, message, ...)
-    local text = format_conform_log(message, ...)
-    vim.notify(text, level)
-  end
-  require('conform').format({ async = true, lsp_format = 'fallback', range = range })
-  require("conform.log").log = original_log
+  require('conform').format({ async = true, range = range })
 end
 
 -- Taken from: https://github.com/numToStr/Comment.nvim/issues/22#issuecomment-1272569139
