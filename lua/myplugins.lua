@@ -221,6 +221,7 @@ return {
     event = 'VeryLazy',
     opts = {
       background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
+      level = vim.log.levels.DEBUG,
     },
     config = function(_, opts)
       local notify = require('notify')

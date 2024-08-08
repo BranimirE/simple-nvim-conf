@@ -357,6 +357,28 @@ function M.log(message)
   end
 end
 
+local function format_conform_log(msg, ...)
+  local args = vim.F.pack_len(...)
+  for i = 1, args.n do
+    local v = args[i]
+    if type(v) == "table" then
+      args[i] = vim.inspect(v)
+    elseif v == nil then
+      args[i] = "nil"
+    end
+  end
+  local ok, text = pcall(string.format, msg, vim.F.unpack_len(args))
+  if ok then
+    return text
+  else
+    return string.format(
+      "[ERROR] error formatting log line: '%s' args %s",
+      vim.inspect(msg),
+      vim.inspect(args)
+    )
+  end
+end
+
 function M.format(cmd_opts)
   M.log('Formating!!')
   local range = nil
@@ -367,7 +389,16 @@ function M.format(cmd_opts)
       ['end'] = { cmd_opts.line2, end_line:len() },
     }
   end
+
+  local original_log = require("conform.log").log
+  require("conform.log").level = vim.log.levels.DEBUG
+  ---@diagnostic disable-next-line: duplicate-set-field
+  require("conform.log").log = function (level, message, ...)
+    local text = format_conform_log(message, ...)
+    vim.notify(text, level)
+  end
   require('conform').format({ async = true, lsp_format = 'fallback', range = range })
+  require("conform.log").log = original_log
 end
 
 -- Taken from: https://github.com/numToStr/Comment.nvim/issues/22#issuecomment-1272569139
