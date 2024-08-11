@@ -702,7 +702,22 @@ return {
               vim.lsp.diagnostic.on_publish_diagnostics(err, res, ctx, config)
             end
           }
-        }
+        },
+        -- TODO: Make it work on single files
+        -- eslint = {
+        --   capabilities = capabilities(),
+        --   settings = {
+        --     workingDirectory = { mode = 'location' },
+        --   },
+        --   -- root_dir = lspconfig.util.find_git_ancestor,
+        --   root_dir = function (startpath)
+        --     return lspconfig.util.search_ancestors(startpath, function(path)
+        --       if lspconfig.util.path.is_dir(path) then
+        --         return path
+        --       end
+        --     end)
+        --   end,
+        -- }
       }
 
       for _, server_name in ipairs(my_lsp_servers) do
@@ -736,9 +751,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      -- ensure_installed = { 'flake8', 'black', 'prettier' }
-      -- ensure_installed = { 'black', 'prettier' }
-      ensure_installed = { 'black', 'stylua', 'shfmt', 'prettier' }
+      ensure_installed = { 'black', 'stylua', 'shfmt', 'prettier', 'eslint' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -750,19 +763,16 @@ return {
         opts = function ()
           local null_ls = require('null-ls')
 
-          -- local formatting = null_ls.builtins.formatting
-          -- local diagnostics = null_ls.builtins.diagnostics
           local code_actions = null_ls.builtins.code_actions
 
           local sources = {
             code_actions.gitsigns,
-            -- formatting.black,
-            -- formatting.terraform_fmt,
-            -- diagnostics.ruff,
-            require("none-ls.diagnostics.eslint").with({ prefer_local = './node_modules/.bin' }),
-            require("none-ls.code_actions.eslint").with({ prefer_local = './node_modules/.bin' }),
-            -- formatting.prettier.with({ prefer_local = './node_modules/.bin' })
           }
+
+          if myutils.is_npm_package_installed('eslint') then
+            table.insert(sources, require("none-ls.diagnostics.eslint").with({ prefer_local = './node_modules/.bin' }))
+            table.insert(sources, require("none-ls.code_actions.eslint").with({ prefer_local = './node_modules/.bin' }))
+          end -- else Use lsp eslint (installed by mason)
 
           if myutils.is_npm_package_installed('prettier') then
             require('myconfig').PRETTIER_IS_AVAILABLE = true
