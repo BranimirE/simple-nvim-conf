@@ -705,6 +705,15 @@ return {
             end
           }
         },
+        pyright = {
+          capabilities = capabilities(),
+          on_new_config = function(config)
+            local pyenv_virtualenv_python_path = myutils.get_pyenv_virtual_env_path()
+            if pyenv_virtualenv_python_path ~= nil then
+              config.settings.python.pythonPath = pyenv_virtualenv_python_path
+            end
+          end,
+        },
         -- TODO: Make it work on single files
         -- eslint = {
         --   capabilities = capabilities(),

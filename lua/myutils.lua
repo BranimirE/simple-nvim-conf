@@ -445,4 +445,16 @@ function M.search_and_replace()
   require('spectre').open()
 end
 
+function M.is_empty(s)
+  return s == nil or s == ''
+end
+
+function M.get_pyenv_virtual_env_path()
+  local virtual_env = vim.fn.system('pyenv virtualenvs | grep -e "^*"')
+  if not M.is_empty(virtual_env) then
+    return vim.fn.trim(vim.fn.system('pyenv which python'))
+  end
+  return nil
+end
+
 return M
