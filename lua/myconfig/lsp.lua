@@ -108,6 +108,7 @@ local signs = {
   texthl = {}
 }
 -- Define the diagnostic signs.
+---@diagnostic disable-next-line: unused-local
 for severity, icon in pairs(diagnostic_icons) do
   local formated_severity = severity:sub(1, 1) .. severity:sub(2):lower()
   local severity_id = vim.diagnostic.severity[severity]

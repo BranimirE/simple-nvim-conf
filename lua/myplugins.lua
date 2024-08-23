@@ -10,7 +10,7 @@ return {
       transparent = true,
       colors = {
         black = "#0c0e15",
-        bg0 = "#19212F",  --background_colour
+        bg0 = "#19212F", --background_colour
         bg1 = "#20283D", -- nvim-tree highlight line background
         bg2 = "#283347",
         bg3 = "#2a324a",
@@ -18,18 +18,18 @@ return {
         bg_blue = "#54b0fd",
         bg_yellow = "#f2cc81",
         -- fg = "#90A4C6", -- < character
-        fg = "#B8C5DB", -- < character
-        purple = "#D74CF0", -- class word
-        green = "#74D046", -- strings
-        orange = "#E98C31", -- true/false word and numbers
-        blue = "#00A8FF", -- has_many word, function names, raise word
-        yellow = "#F7BC47", -- class name
-        cyan = "#00C1D2", -- ":comments" word
-        red = "#FF4761", -- function parameters
-        grey = "#425577", -- comments
+        fg = "#B8C5DB",         -- < character
+        purple = "#D74CF0",     -- class word
+        green = "#74D046",      -- strings
+        orange = "#E98C31",     -- true/false word and numbers
+        blue = "#00A8FF",       -- has_many word, function names, raise word
+        yellow = "#F7BC47",     -- class name
+        cyan = "#00C1D2",       -- ":comments" word
+        red = "#FF4761",        -- function parameters
+        grey = "#425577",       -- comments
         light_grey = "#697D9F", -- Curly brackets {}
         dark_cyan = "#1b6a73",
-        dark_red = "#992525", -- some icons color
+        dark_red = "#992525",   -- some icons color
         dark_yellow = "#8f610d",
         dark_purple = "#862aa1",
         diff_add = "#27341c",
@@ -65,11 +65,11 @@ return {
       require('myconfig/evil_lualine')
     end
   },
-  { -- File tree viewer
+  {                                              -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'echasnovski/mini.icons',
-    opts = function ()
+    opts = function()
       return {
         on_attach = function(bufnr)
           local api = require('nvim-tree.api')
@@ -113,7 +113,7 @@ return {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {
-      check_ts = true        -- check treesitter for autopairing
+            check_ts = true   -- check treesitter for autopairing
     }
   },
   { -- Comment plugin
@@ -136,7 +136,7 @@ return {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
       'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
       {
-        'HiPhish/rainbow-delimiters.nvim', -- Colorize parenthesis pairs with distinct colors
+        'HiPhish/rainbow-delimiters.nvim',           -- Colorize parenthesis pairs with distinct colors
         url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
       },
       'nvim-treesitter/nvim-treesitter-textobjects', -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
@@ -199,7 +199,7 @@ return {
         offsets = {
           {
             filetype = 'NvimTree',
-            padding = 1, -- For some reason it is not calculating the value correctly, this fix it
+            padding = 1,          -- For some reason it is not calculating the value correctly, this fix it
             highlight = "Normal", -- Only required for ondedark.nvim theme
           },
         },
@@ -210,7 +210,7 @@ return {
         }
       },
     },
-    config = function (_, opts)
+    config = function(_, opts)
       local bl = require('bufferline')
       bl.setup(opts)
       myutils.load_mapping(mymappings.bufferline(bl))
@@ -230,7 +230,9 @@ return {
       vim.notify = function(msg, ...)
         if type(msg) == 'string' then
           -- Disable notifications that contains those strings
-          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or msg:match 'for_each_child'
+          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or
+              msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or
+              msg:match 'for_each_child'
           if is_suppressed_message then
             -- Do not show some messages
             return
@@ -239,7 +241,6 @@ return {
 
         notify(msg, ...)
       end
-
     end,
   },
   { -- Vertical lines on indentation
@@ -258,7 +259,7 @@ return {
         remove_blankline_trail = false,
       },
     },
-    config = function (_, opts)
+    config = function(_, opts)
       local hooks = require('ibl.hooks')
       -- so we can detect if the line is only composed by trailing whitespaces(tabs or spaces)
       hooks.register(
@@ -281,7 +282,7 @@ return {
         opts = function()
           return {
             callbacks = {
-              ["ghe.coxautoinc.com"] = require"gitlinker.hosts".get_github_type_url,
+              ["ghe.coxautoinc.com"] = require "gitlinker.hosts".get_github_type_url,
             },
             mappings = nil
           }
@@ -291,7 +292,7 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       signs = {
-        add = {  text = '▌' },
+        add = { text = '▌' },
         change = { text = '▌' },
         delete = { text = '▌' },
         topdelete = { text = '▌' },
@@ -320,7 +321,7 @@ return {
     'ibhagwan/fzf-lua',
     keys = mymappings.fzf_lua(),
     cmd = 'FzfLua',
-    opts = function ()
+    opts = function()
       local actions = require 'fzf-lua.actions'
       return {
         fzf_colors = {
@@ -368,7 +369,8 @@ return {
             ['--layout'] = 'reverse-list',
           },
           -- Include .github files but continue excluding .git/ files
-          rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -g '!.git/*' -e",
+          rg_opts =
+          "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -g '!.git/*' -e",
         }
       }
     end
@@ -395,7 +397,7 @@ return {
   { -- Bridge between vsnip and nvim-cmp
     'hrsh7th/cmp-vsnip',
     dependencies = {
-      'hrsh7th/vim-vsnip',                                -- Snippets engine
+      'hrsh7th/vim-vsnip', -- Snippets engine
       -- {
       --   'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
       --   build = 'yarn install --frozen-lockfile && yarn compile'
@@ -441,7 +443,7 @@ return {
             group_index = 0, -- set group index to 0 to skip loading LuaLS completions
           },
           { name = 'nvim_lsp' },
-        },{
+        }, {
           -- { name = 'vsnip' },
           { name = 'git' },
           { name = 'path' },
@@ -489,8 +491,8 @@ return {
         sources = cmp.config.sources({
           { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
         }, {
-            { name = 'buffer' },
-          })
+          { name = 'buffer' },
+        })
       })
 
       -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -507,8 +509,8 @@ return {
         sources = cmp.config.sources({
           { name = 'path' }
         }, {
-            { name = 'cmdline' }
-          })
+          { name = 'cmdline' }
+        })
       })
 
       -- If you want insert `(` after select function or method item
@@ -530,7 +532,7 @@ return {
             'williamboman/mason.nvim',
             cmd = 'Mason',
             build = ':MasonUpdate',
-            opts = function ()
+            opts = function()
               return {
                 ui = {
                   border = 'rounded',
@@ -632,7 +634,8 @@ return {
                 url = "", -- IMPORTANT!!! WITHOUT THIS NOTHING WORKS
               },
               schemas = {
-                ['https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json'] = '/template.yml',
+                ['https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json'] =
+                '/template.yml',
               },
               -- schemas = require('schemastore').yaml.schemas(),
               customTags = {
@@ -668,8 +671,8 @@ return {
           },
           -- Lazy-load schemas.
           on_new_config = function(config)
-              config.settings.json.schemas = config.settings.json.schemas or {}
-              vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
+            config.settings.json.schemas = config.settings.json.schemas or {}
+            vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
           end,
         },
         vtsls = {
@@ -691,7 +694,7 @@ return {
           handlers = {
             -- Remove message "File is a CommonJS module; it may be converted to an ES module."
             -- TODO: Migrate this function to myutils such that it can be used for other lsp servers
-            ["textDocument/publishDiagnostics"] = function (err, res, ctx, config)
+            ["textDocument/publishDiagnostics"] = function(err, res, ctx, config)
               -- myutils.log(vim.inspect(res.diagnostics))
               local filtered = {}
               for _, diagnostic in ipairs(res.diagnostics) do
@@ -740,7 +743,6 @@ return {
           })
         end
       end
-
     end
   },
   { -- Extra tools for lsp
@@ -771,7 +773,7 @@ return {
         dependencies = {
           'nvimtools/none-ls-extras.nvim'
         },
-        opts = function ()
+        opts = function()
           local null_ls = require('null-ls')
 
           local code_actions = null_ls.builtins.code_actions
@@ -808,15 +810,15 @@ return {
     'folke/trouble.nvim',
     dependencies = { 'echasnovski/mini.icons' },
     opts = {
-      action_keys = { -- key mappings for actions in the trouble list
-        open_split = { '<c-x>', '|' }, -- open buffer in new split
-        open_vsplit = { '<c-v>', '-' }, -- open buffer in new vsplit
-        toggle_fold = {'zA', 'za', 'h', 'l'} -- toggle fold of current file
+      action_keys = {                          -- key mappings for actions in the trouble list
+        open_split = { '<c-x>', '|' },         -- open buffer in new split
+        open_vsplit = { '<c-v>', '-' },        -- open buffer in new vsplit
+        toggle_fold = { 'zA', 'za', 'h', 'l' } -- toggle fold of current file
       },
-      auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-      auto_fold = true, -- automatically fold a file trouble list at creation
+      auto_preview = false,                    -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+      auto_fold = true,                        -- automatically fold a file trouble list at creation
     },
-    cmd = { 'Trouble' }, -- Lazy-load on commands
+    cmd = { 'Trouble' },                       -- Lazy-load on commands
   },
   -- { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
   --   'm4xshen/hardtime.nvim',
@@ -832,15 +834,15 @@ return {
   --   },
   --   event = { 'BufReadPost', 'BufNewFile' },
   -- },
-  { -- Change surrounds more easily
+  {                -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
     event = 'InsertEnter',
     config = true
   },
-  { -- Improve input and select nvim UI components
+  {                                      -- Improve input and select nvim UI components
     'stevearc/dressing.nvim',
-    dependencies = {'benmills/vimux'}, -- Execute tmux commands from neovim. Used by my custom command 'RunNpmCommand'
+    dependencies = { 'benmills/vimux' }, -- Execute tmux commands from neovim. Used by my custom command 'RunNpmCommand'
     init = function()
       ---@diagnostic disable-next-line: duplicate-set-field
       -- vim.ui.input = function(...)
@@ -855,7 +857,8 @@ return {
     end,
   },
   { -- Smooth scroll for neovim
-    'echasnovski/mini.animate', version = '*',
+    'echasnovski/mini.animate',
+    version = '*',
     event = 'VeryLazy',
     opts = function()
       -- don't use animate when scrolling with the mouse
@@ -894,13 +897,13 @@ return {
   },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
-    dependencies = {'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter'},
+    dependencies = { 'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter' },
     event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
     keys = mymappings.ufo(),
     opts = {
       ---@diagnostic disable-next-line: unused-local
       provider_selector = function(bufnr, filetype, buftype)
-        return {'treesitter', 'indent'}
+        return { 'treesitter', 'indent' }
       end
     }
   },
@@ -926,7 +929,7 @@ return {
   {
     'nvim-pack/nvim-spectre',
     dependencies = 'nvim-lua/plenary.nvim',
-    cmd = {'SearchAndReplace', 'FindAndReplace'},
+    cmd = { 'SearchAndReplace', 'FindAndReplace' },
     keys = mymappings.nvim_spectre(),
     opts = { open_cmd = 'noswapfile vnew' },
   },
@@ -955,7 +958,7 @@ return {
     opts = {
       notify_on_error = true,
       formatters_by_ft = {
-        lua = { 'stylua' },
+        -- lua = { 'stylua' },
         python = { 'black' },
         sh = { 'shfmt' },
         javascript = { "prettier" }
@@ -966,10 +969,10 @@ return {
         lsp_format = "fallback",
       },
     },
-    config = function (_, opts)
+    config = function(_, opts)
       require("conform").setup(opts)
       ---@diagnostic disable-next-line: duplicate-set-field
-      require("conform.log").log = function (level, message, ...)
+      require("conform.log").log = function(level, message, ...)
         if level == vim.log.levels.INFO or message:match('^Running LSP') ~= nil then
           local text = myutils.format_conform_log(message, ...)
           vim.notify(text)
