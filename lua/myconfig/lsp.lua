@@ -59,14 +59,18 @@ local function on_attach(client, bufnr)
   local buf_file_name = vim.fn.bufname(bufnr)
   if client.supports_method(methods.textDocument_inlayHint) and not buf_file_name:match("%.js$") and not buf_file_name:match("%.jsx") then
     local inlay_hints_group = vim.api.nvim_create_augroup('branimir/toggle_inlay_hints', { clear = false })
-
+    local nvim_major_version = vim.version().major
+    local nvim_minor_version = vim.version().minor
     -- Initial inlay hint display.
     -- Idk why but without the delay inlay hints aren't displayed at the very start.
     vim.defer_fn(function()
       local mode = vim.api.nvim_get_mode().mode
-      -- TODO:: Use this line in older neovim versions
-      -- vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
-      vim.lsp.inlay_hint.enable(mode == 'n' or mode == 'v', { bufnr = bufnr })
+      if nvim_major_version == 0 and nvim_minor_version <= 10 then
+        ---@diagnostic disable-next-line: param-type-mismatch
+        vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
+      else
+        vim.lsp.inlay_hint.enable(mode == 'n' or mode == 'v', { bufnr = bufnr })
+      end
     end, 500)
 
     vim.api.nvim_create_autocmd('InsertEnter', {
@@ -74,9 +78,12 @@ local function on_attach(client, bufnr)
       desc = 'Enable inlay hints',
       buffer = bufnr,
       callback = function()
-        -- TODO:: Use this line in older neovim versions
-        -- vim.lsp.inlay_hint.enable(bufnr, false)
-        vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+        if nvim_major_version == 0 and nvim_minor_version <= 10 then
+          ---@diagnostic disable-next-line: param-type-mismatch
+          vim.lsp.inlay_hint.enable(bufnr, false)
+        else
+          vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+        end
       end,
     })
     vim.api.nvim_create_autocmd('InsertLeave', {
@@ -84,9 +91,12 @@ local function on_attach(client, bufnr)
       desc = 'Disable inlay hints',
       buffer = bufnr,
       callback = function()
-        -- TODO:: Use this line in older neovim versions
-        -- vim.lsp.inlay_hint.enable(bufnr, true)
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        if nvim_major_version == 0 and nvim_minor_version <= 10 then
+          ---@diagnostic disable-next-line: param-type-mismatch
+          vim.lsp.inlay_hint.enable(bufnr, true)
+        else
+          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end
       end,
     })
   end
