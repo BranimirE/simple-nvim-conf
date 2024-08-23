@@ -63,7 +63,8 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('LspFormatting', {}),
   callback = function()
     if require('myconfig').FORMAT_ON_SAVE then
-      myutils.format()
+      -- We want the formatting finish before BufWrite, so async: false
+      myutils.format(nil, false)
     end
   end
 })

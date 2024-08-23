@@ -113,7 +113,7 @@ return {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {
-            check_ts = true   -- check treesitter for autopairing
+      check_ts = true       -- check treesitter for autopairing
     }
   },
   { -- Comment plugin

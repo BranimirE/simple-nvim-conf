@@ -379,8 +379,11 @@ function M.format_conform_log(msg, ...)
   end
 end
 
-function M.format(cmd_opts)
+function M.format(cmd_opts, is_async)
   M.log('Formating!!')
+  if is_async == nil then
+    is_async = true -- Default value for async will be true
+  end
   local range = nil
   if cmd_opts ~= nil and cmd_opts.count ~= -1 then
     local end_line = vim.api.nvim_buf_get_lines(0, cmd_opts.line2 - 1, cmd_opts.line2, true)[1]
@@ -389,7 +392,7 @@ function M.format(cmd_opts)
       ['end'] = { cmd_opts.line2, end_line:len() },
     }
   end
-  require('conform').format({ async = true, range = range })
+  require('conform').format({ async = is_async, range = range })
 end
 
 -- Taken from: https://github.com/numToStr/Comment.nvim/issues/22#issuecomment-1272569139
