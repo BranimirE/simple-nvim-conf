@@ -65,7 +65,7 @@ local function on_attach(client, bufnr)
     -- Idk why but without the delay inlay hints aren't displayed at the very start.
     vim.defer_fn(function()
       local mode = vim.api.nvim_get_mode().mode
-      if nvim_major_version == 0 and nvim_minor_version <= 10 then
+      if nvim_major_version == 0 and nvim_minor_version < 10 then
         ---@diagnostic disable-next-line: param-type-mismatch
         vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
       else
@@ -78,7 +78,7 @@ local function on_attach(client, bufnr)
       desc = 'Enable inlay hints',
       buffer = bufnr,
       callback = function()
-        if nvim_major_version == 0 and nvim_minor_version <= 10 then
+        if nvim_major_version == 0 and nvim_minor_version < 10 then
           ---@diagnostic disable-next-line: param-type-mismatch
           vim.lsp.inlay_hint.enable(bufnr, false)
         else
@@ -91,7 +91,7 @@ local function on_attach(client, bufnr)
       desc = 'Disable inlay hints',
       buffer = bufnr,
       callback = function()
-        if nvim_major_version == 0 and nvim_minor_version <= 10 then
+        if nvim_major_version == 0 and nvim_minor_version < 10 then
           ---@diagnostic disable-next-line: param-type-mismatch
           vim.lsp.inlay_hint.enable(bufnr, true)
         else
