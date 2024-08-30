@@ -445,7 +445,9 @@ function M.get_link()
 end
 
 function M.search_and_replace()
-  require('spectre').open()
+  -- TODO: Make open existing GrugFar when we call search and replace when it is already opened
+  -- use this as reference https://github.com/MagicDuck/grug-far.nvim/tree/main#:~:text=other%20fields%20intact-,Nvim,-tree%20lazy%20plugin
+  require('grug-far').open()
 end
 
 function M.is_empty(s)

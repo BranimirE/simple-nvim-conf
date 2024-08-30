@@ -927,13 +927,6 @@ return {
     end,
   },
   {
-    'nvim-pack/nvim-spectre',
-    dependencies = 'nvim-lua/plenary.nvim',
-    cmd = { 'SearchAndReplace', 'FindAndReplace' },
-    keys = mymappings.nvim_spectre(),
-    opts = { open_cmd = 'noswapfile vnew' },
-  },
-  {
     "echasnovski/mini.icons",
     opts = {},
     specs = {
@@ -979,5 +972,17 @@ return {
         end
       end
     end
+  },
+  {
+    'MagicDuck/grug-far.nvim',
+    cmd = { 'GrugFar', 'SearchAndReplace', 'FindAndReplace' },
+    keys = mymappings.grug_far(),
+    opts = {
+      -- transient = true, -- does not list this buffer and delete it when not in use
+      keymaps = {
+        help = { n = '?' }
+      },
+      resultsSeparatorLineChar = '='
+    }
   },
 }

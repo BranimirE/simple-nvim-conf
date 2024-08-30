@@ -138,9 +138,9 @@ M = {
     }
   end,
 
-  nvim_spectre = function ()
+  grug_far = function ()
     return {
-      { '<leader>rp', util.search_and_replace, desc = 'Search and replace' }
+      { '<leader>fr', util.search_and_replace, desc = 'Search and replace', mode = { 'n', 'v' } }
     }
   end,
 
