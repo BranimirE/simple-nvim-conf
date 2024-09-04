@@ -52,6 +52,8 @@ return {
         NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
         -- FzfLuaa
         FzfLuaBorder = { fg = '#00afff' },
+        -- RenderMarkdown
+        RenderMarkdownCode = { bg = 'black'}
       },
     },
     init = function()
@@ -997,5 +999,12 @@ return {
         soft_header = "-"
       },
     },
+  },
+  { -- Improve view markdown files
+    'MeanderingProgrammer/render-markdown.nvim',
+    opts = {},
+    ft = 'markdown', -- only load on markdown files
+    config = true,
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   }
 }
