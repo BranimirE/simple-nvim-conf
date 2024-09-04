@@ -155,12 +155,24 @@ return {
           if vim.fn.expand('%:t') == 'lsp.log' or vim.bo.filetype == 'help' then
             return false
           end
-          local n_lines = vim.api.nvim_buf_line_count(bufnr)
-          -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
-          return n_lines > 5000 or (n_lines > 0 and vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
+          -- local n_lines = vim.api.nvim_buf_line_count(bufnr)
+          -- -- https://github.com/dapc11/dnvim/blob/2724e18d558a0abf268b9443b7cbdc4cc2c73131/lua/core/autocommands.lua#L38
+          -- return n_lines > 5000 or (n_lines > 0 and vim.fn.getfsize(vim.fn.expand('%')) / n_lines > 10000)
+          -- Trying another options to disable treesitter
+          local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+          return ok and stats and stats.size > (250 * 1024)
         end,
         use_languagetree = true,                   -- use this to enable language injection
         additional_vim_regex_highlighting = false, -- Enable syntax on at the same time?
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = '<cr>',
+          node_incremental = '<cr>',
+          scope_incremental = false,
+          node_decremental = '<bs>',
+        },
       },
       indent = { enable = true },                  -- Indent with = using treesitter
       autotag = { enable = true },
