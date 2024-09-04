@@ -113,7 +113,7 @@ return {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {
-      check_ts = true       -- check treesitter for autopairing
+      check_ts = true -- check treesitter for autopairing
     }
   },
   { -- Comment plugin
@@ -985,4 +985,17 @@ return {
       resultsSeparatorLineChar = '='
     }
   },
+  { -- Improve quickfix
+    'stevearc/quicker.nvim',
+    event = "FileType qf",
+    ---@module "quicker"
+    ---@type quicker.SetupOptions
+    keys = mymappings.quicker(),
+    opts = {
+      borders = {
+        vert = '│',
+        soft_header = "-"
+      },
+    },
+  }
 }

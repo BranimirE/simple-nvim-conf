@@ -164,7 +164,26 @@ M = {
       { '<c-s>', '<esc>:w<cr>',                         mode = { 'n', 'i' } }, -- Mapping Ctrl+s to save the file
       { '<f9>',       '<esc>:RunNpmCommand<cr>',            mode = { 'n', 'i' } }
     }
-  end
+  end,
+
+  quicker = function()
+    return {
+      {
+        'zo',
+        function()
+          require('quicker').expand { before = 2, after = 2, add_to_existing = true }
+        end,
+        desc = 'Expand context'
+      },
+      {
+        'zc',
+        function()
+          require('quicker').collapse()
+        end,
+        desc = 'Collapse context'
+      },
+    }
+  end,
 }
 
 return M
