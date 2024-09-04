@@ -535,7 +535,7 @@ return {
       )
     end
   },
-  {
+  { -- nvim-lspconfig
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
@@ -758,6 +758,16 @@ return {
         end
       end
     end
+  },
+  {
+    "yioneko/nvim-vtsls",
+    ft = {
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+    },
+    dependencies = 'neovim/nvim-lspconfig',
   },
   { -- Extra tools for lsp
     'nvimdev/lspsaga.nvim',
