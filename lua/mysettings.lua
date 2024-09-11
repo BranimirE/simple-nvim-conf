@@ -69,6 +69,11 @@ api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   command = [[setf sql]]
 })
 
+api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*Dockerfile' },
+  command = [[setf dockerfile]]
+})
+
 api.nvim_create_autocmd({ 'TermOpen' }, {
   pattern = '*',
   command = [[setlocal nonumber norelativenumber]]
