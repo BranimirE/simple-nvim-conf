@@ -67,7 +67,7 @@ return {
       require('myconfig/evil_lualine')
     end
   },
-  {                                              -- File tree viewer
+  { -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'echasnovski/mini.icons',
@@ -232,30 +232,30 @@ return {
   },
   { -- Notifications windows
     'rcarriga/nvim-notify',
-    event = 'VeryLazy',
+  --   event = 'VeryLazy',
     opts = {
       background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
       level = vim.log.levels.DEBUG,
     },
-    config = function(_, opts)
-      local notify = require('notify')
-      notify.setup(opts)
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.notify = function(msg, ...)
-        if type(msg) == 'string' then
-          -- Disable notifications that contains those strings
-          local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or
-              msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or
-              msg:match 'for_each_child'
-          if is_suppressed_message then
-            -- Do not show some messages
-            return
-          end
-        end
-
-        notify(msg, ...)
-      end
-    end,
+  --   config = function(_, opts)
+  --     local notify = require('notify')
+  --     notify.setup(opts)
+  --     ---@diagnostic disable-next-line: duplicate-set-field
+  --     vim.notify = function(msg, ...)
+  --       if type(msg) == 'string' then
+  --         -- Disable notifications that contains those strings
+  --         local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or
+  --             msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or
+  --             msg:match 'for_each_child'
+  --         if is_suppressed_message then
+  --           -- Do not show some messages
+  --           return
+  --         end
+  --       end
+  --
+  --       notify(msg, ...)
+  --     end
+  --   end,
   },
   { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',
@@ -400,7 +400,7 @@ return {
     event = { 'BufReadPost', 'BufNewFile' },
     config = true,
   },
-  {
+  { -- Cirlcle icon helper before colors
     'brenoprata10/nvim-highlight-colors',
     event = "BufReadPre",
     opts = {
@@ -571,11 +571,11 @@ return {
         end,
       },
       'nvimdev/lspsaga.nvim',
-      { -- LSP progress messages
-        'j-hui/fidget.nvim',
-        tag = 'legacy',
-        config = true
-      },
+      -- { -- LSP progress messages
+      --   'j-hui/fidget.nvim',
+      --   tag = 'legacy',
+      --   config = true
+      -- },
       { -- Show signature when we writte function parameters
         "ray-x/lsp_signature.nvim",
         opts = {
@@ -759,7 +759,7 @@ return {
       end
     end
   },
-  {
+  { -- vtsls wrapper for typescript lsp
     "yioneko/nvim-vtsls",
     ft = {
       "javascript",
@@ -844,20 +844,20 @@ return {
     },
     cmd = { 'Trouble' },                       -- Lazy-load on commands
   },
-  -- { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
-  --   'm4xshen/hardtime.nvim',
-  --   dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
-  --   opts = {
-  --     disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
-  --     disabled_keys = {
-  --       ['<Up>'] = {},
-  --       ['<Down>'] = {},
-  --       ['<Left>'] = {},
-  --       ['<Right>'] = {},
-  --     }
-  --   },
-  --   event = { 'BufReadPost', 'BufNewFile' },
-  -- },
+  { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+    'm4xshen/hardtime.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+    opts = {
+      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
+      disabled_keys = {
+        ['<Up>'] = {},
+        ['<Down>'] = {},
+        ['<Left>'] = {},
+        ['<Right>'] = {},
+      }
+    },
+    event = { 'BufReadPost', 'BufNewFile' },
+  },
   {                -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
@@ -950,7 +950,7 @@ return {
       })
     end,
   },
-  {
+  { -- Icons
     "echasnovski/mini.icons",
     opts = {},
     specs = {
@@ -965,7 +965,7 @@ return {
       end
     end,
   },
-  {
+  { -- Formatters
     'stevearc/conform.nvim',
     event = { 'LspAttach', 'BufWritePre' },
     init = function()
@@ -997,7 +997,7 @@ return {
       end
     end
   },
-  {
+  { -- Search and Replace
     'MagicDuck/grug-far.nvim',
     cmd = { 'GrugFar', 'SearchAndReplace', 'FindAndReplace' },
     keys = mymappings.grug_far(),
@@ -1028,5 +1028,35 @@ return {
     ft = 'markdown', -- only load on markdown files
     config = true,
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      lsp = {
+        -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+        },
+      },
+      -- you can enable a preset for easier configuration
+      presets = {
+        bottom_search = true, -- use a classic bottom cmdline for search
+        command_palette = true, -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        inc_rename = false, -- enables an input dialog for inc-rename.nvim
+        lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+    }
   }
 }
