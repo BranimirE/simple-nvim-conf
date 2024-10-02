@@ -848,6 +848,7 @@ return {
     'm4xshen/hardtime.nvim',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     opts = {
+      disable_mouse = false, -- We do not want to disable the mouse scroll button
       disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
       disabled_keys = {
         ['<Up>'] = {},
