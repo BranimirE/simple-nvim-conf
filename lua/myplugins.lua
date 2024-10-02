@@ -576,17 +576,17 @@ return {
       --   tag = 'legacy',
       --   config = true
       -- },
-      { -- Show signature when we writte function parameters
-        "ray-x/lsp_signature.nvim",
-        opts = {
-          bind = false, -- If you want to hook lspsaga or other signature handler, pls set to false
-          hint_enable = false
-        },
-        -- config = false
-        config = function(_, opts)
-          require('lsp_signature').setup(opts)
-        end
-      },
+      -- { -- Show signature when we writte function parameters
+      --   "ray-x/lsp_signature.nvim",
+      --   opts = {
+      --     bind = false, -- If you want to hook lspsaga or other signature handler, pls set to false
+      --     hint_enable = false
+      --   },
+      --   -- config = false
+      --   config = function(_, opts)
+      --     require('lsp_signature').setup(opts)
+      --   end
+      -- },
       {
         'folke/lazydev.nvim',
         ft = 'lua', -- only load on lua files
@@ -863,6 +863,11 @@ return {
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
     event = 'InsertEnter',
     config = true
+  },
+  {
+    'benmills/vimux',
+    cmd = { 'RunNpmCommand', 'VimuxRunCommand' },
+    ft = {'cpp', 'javascript'}
   },
   {                                      -- Improve input and select nvim UI components
     'stevearc/dressing.nvim',

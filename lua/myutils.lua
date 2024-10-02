@@ -269,31 +269,42 @@ function M.select_npm_command(cb)
 
   if next(npm_commands) == nil then
     print("No npm command found")
+    cb(nil)
     return
   end
 
   vim.ui.select(npm_commands, { prompt = 'Select command:' }, cb)
 end
 
+function M.run_command(command_str)
+  if vim.fn.exists('$TMUX') ~= 0 then
+    local prev_vimux_orientation = vim.g.VimuxOrientation
+    vim.g.VimuxOrientation = 'h'
+    vim.api.nvim_call_function("VimuxRunCommand", { command_str })
+    vim.g.VimuxOrientation = prev_vimux_orientation
+  else
+    vim.cmd('vsp | terminal ' .. command_str)
+    -- Move the terminal to the right side of the screen
+    M.feedkey([[<c-w>L]], 'n')
+    M.feedkey([[54<c-w>|]], 'n')
+  end
+end
+
 function M.run_program()
-  if vim.bo.filetype == 'cpp' then
+  local filetype = vim.bo.filetype
+
+  if filetype == 'cpp' then
     vim.cmd('wa')
     vim.cmd('make')
     M.feedkey([[<cr>]], 'n')
-  else
-    M.select_npm_command(function(command_str)
-      if command_str ~= nil then
-        if vim.fn.exists('$TMUX') ~= 0 then
-          local prev_vimux_orientation = vim.g.VimuxOrientation
-          vim.g.VimuxOrientation = 'h'
-          vim.api.nvim_call_function("VimuxRunCommand", { "npm run " .. command_str })
-          vim.g.VimuxOrientation = prev_vimux_orientation
-        else
-          vim.cmd('vsp | terminal npm run ' .. command_str)
-          -- Move the terminal to the right side of the screen
-          M.feedkey([[<c-w>L]], 'n')
-          M.feedkey([[54<c-w>|]], 'n')
-        end
+  end
+
+  if filetype == 'javascript' then
+    M.select_npm_command(function(npm_command_str)
+      if npm_command_str ~= nil then
+        M.run_command("npm run " .. npm_command_str)
+      else
+        M.run_command("clear && node " .. vim.fn.expand('%'))
       end
     end)
   end
