@@ -70,6 +70,11 @@ api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 })
 
 api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*.service' },
+  command = [[setf confini]]
+})
+
+api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   pattern = { '*Dockerfile' },
   command = [[setf dockerfile]]
 })
