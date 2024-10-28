@@ -130,13 +130,17 @@ return {
       })
     end,
   },
+  {
+    'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
+    event = 'InsertEnter',
+    opts = {}
+  },
   { -- Advanced highlighting
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     cmd = { 'TSUpdateSync' },
     dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
-      'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
       {
         'HiPhish/rainbow-delimiters.nvim',           -- Colorize parenthesis pairs with distinct colors
         url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
