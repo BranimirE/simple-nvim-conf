@@ -130,11 +130,6 @@ return {
       })
     end,
   },
-  {
-    'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
-    event = 'InsertEnter',
-    opts = {}
-  },
   { -- Advanced highlighting
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -144,6 +139,11 @@ return {
       {
         'HiPhish/rainbow-delimiters.nvim',           -- Colorize parenthesis pairs with distinct colors
         url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
+      },
+      {
+        'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
+        event = 'InsertEnter',
+        opts = {}
       },
       'nvim-treesitter/nvim-treesitter-textobjects', -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
     },
@@ -179,7 +179,7 @@ return {
         },
       },
       indent = { enable = true },                  -- Indent with = using treesitter
-      autotag = { enable = true },
+      -- autotag = { enable = true }, -- Do not use. Deprecated!
       autopairs = { enable = true },
       context_commentstring = {
         enable = true,
