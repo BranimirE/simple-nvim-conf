@@ -77,6 +77,7 @@ return {
           local api = require('nvim-tree.api')
           api.config.mappings.default_on_attach(bufnr)
           myutils.load_mapping(mymappings.nvim_tree(api, bufnr))
+          myutils.sync_nvim_tree_lsp_rename(api)
         end,
         renderer = {
           root_folder_label = false,
