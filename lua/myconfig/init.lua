@@ -1,6 +1,5 @@
 local M = {
-  FORMAT_ON_SAVE = false,
-  PRETTIER_IS_AVAILABLE = false
+  FORMAT_ON_SAVE = false
 }
 
 return M

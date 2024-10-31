@@ -796,7 +796,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'black', 'stylua', 'shfmt', 'prettier', 'eslint' }
+      ensure_installed = { 'stylua', 'shfmt', 'prettier', 'eslint' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -819,13 +819,9 @@ return {
             table.insert(sources, require("none-ls.code_actions.eslint").with({ prefer_local = './node_modules/.bin' }))
           end -- else Use lsp eslint (installed by mason)
 
-          if myutils.is_npm_package_installed('prettier') then
-            require('myconfig').PRETTIER_IS_AVAILABLE = true
-          end
-
           return {
             sources = sources,
-            root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json'),
+            root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json', 'index.js', 'main.js', 'index.py', 'main.py'),
           }
         end
       },
@@ -990,7 +986,6 @@ return {
       notify_on_error = true,
       formatters_by_ft = {
         -- lua = { 'stylua' },
-        python = { 'black' },
         sh = { 'shfmt' },
         javascript = { "prettier" }
       },
