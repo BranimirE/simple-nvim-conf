@@ -140,16 +140,16 @@ M = {
 
   grug_far = function ()
     return {
-      { '<leader>fr', util.search_and_replace, desc = 'Search and replace', mode = { 'n', 'v' } }
+      { '<leader>fr', util.search_and_replace, desc = 'Find and replace', mode = { 'n', 'v' } }
     }
   end,
 
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode
-      { '<leader>bd', '<esc>:bp|sp|bn|bd<cr>' },                                    -- Close the current buffer
+      { '<leader>bd', util.delete_buffer_keep_layout, desc = 'Delete current buffer and preserve layout)' },                                    -- Close the current buffer
       { '<c-n>',      '<esc>:NvimTreeToggle<cr>',       silent = true },
-      { ',',          '<cmd>nohlsearch<cr>' },                             -- As C-l is used by tmux-navigator, use ',' instead
+      { ',',          '<cmd>nohlsearch<cr>', desc = "Clear highlight search" },                             -- As C-l is used by tmux-navigator, use ',' instead
       { '<',          '<gv',                            mode = 'v' },      -- Avoid exit visual mode on left shifting
       { '>',          '>gv',                            mode = 'v' },      -- Avoid exit visual mode on right shifting
       { '<up>',       util.move_with_arrows('<up>'),   silent = true },   -- Use up arrow to navigate up in quickfix list.

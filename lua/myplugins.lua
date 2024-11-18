@@ -1010,6 +1010,7 @@ return {
     'MagicDuck/grug-far.nvim',
     cmd = { 'GrugFar', 'SearchAndReplace', 'FindAndReplace' },
     keys = mymappings.grug_far(),
+    lazy = false,
     opts = {
       -- transient = true, -- does not list this buffer and delete it when not in use
       keymaps = {
@@ -1073,5 +1074,19 @@ return {
       --   If not available, we use `mini` as the fallback
       "rcarriga/nvim-notify",
     }
+  },
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
   }
 }

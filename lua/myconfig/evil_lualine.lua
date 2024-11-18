@@ -51,7 +51,7 @@ local config = {
       normal = { c = { fg = colors.fg, bg = colors.bg } },
       inactive = { c = { fg = colors.fg, bg = colors.bg_inactive } },
     },
-    disabled_filetypes = { 'NvimTree', 'Trouble' },
+    disabled_filetypes = { 'NvimTree', 'Trouble', 'grug-far' },
   },
   sections = {
     -- these are to remove the defaults

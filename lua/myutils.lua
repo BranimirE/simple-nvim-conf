@@ -1,4 +1,3 @@
-local myconfig = require('myconfig')
 local M = {}
 
 function M.t(str)
@@ -548,6 +547,14 @@ function M.sync_nvim_tree_lsp_rename(nvim_tree_api)
       end
     end
   end)
+end
+
+function M.delete_buffer_keep_layout()
+  if not vim.bo.modified then
+    vim.cmd('bp|sp|bn|bd')
+  else
+    vim.notify('Buffer has been modified!!\nSave before deleting the buffer', vim.log.levels.WARN)
+  end
 end
 
 return M
