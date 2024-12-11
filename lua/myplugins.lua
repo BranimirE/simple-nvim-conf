@@ -987,7 +987,8 @@ return {
       formatters_by_ft = {
         -- lua = { 'stylua' },
         sh = { 'shfmt' },
-        javascript = { "prettier" }
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
       },
       format_on_save = false,
       log_level = vim.log.levels.DEBUG,
