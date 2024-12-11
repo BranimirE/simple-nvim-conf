@@ -802,6 +802,8 @@ return {
       'williamboman/mason.nvim',
       {
         'nvimtools/none-ls.nvim',
+        -- TODO: Remove the next line once the error is gone
+        commit = '1f2bf17eddfdd45aed254b6922c6c68b933dba9e',
         dependencies = {
           'nvimtools/none-ls-extras.nvim'
         },
@@ -1042,6 +1044,8 @@ return {
   },
   {
     "folke/noice.nvim",
+    -- TODO: Remove the next line once the error is gone
+    commit = '9ccd02965382922c33762933c5601318f93e19fb',
     event = "VeryLazy",
     opts = {
       cmdline = {
