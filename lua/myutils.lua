@@ -317,6 +317,8 @@ end
 
 -- Taken from: https://github.com/JoosepAlviste/dotfiles/blob/master/config/nvim/lua/j/utils.lua
 function M.read_json_file(filename)
+  local Path = require('plenary.path')
+  local path = Path:new(filename)
   if not M.file_exists(filename) then
     return nil
   end
