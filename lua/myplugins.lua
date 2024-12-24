@@ -237,30 +237,32 @@ return {
   },
   { -- Notifications windows
     'rcarriga/nvim-notify',
-  --   event = 'VeryLazy',
+    event = 'VeryLazy',
     opts = {
       background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
       level = vim.log.levels.DEBUG,
+      stages = "slide",
     },
-  --   config = function(_, opts)
-  --     local notify = require('notify')
-  --     notify.setup(opts)
-  --     ---@diagnostic disable-next-line: duplicate-set-field
-  --     vim.notify = function(msg, ...)
-  --       if type(msg) == 'string' then
-  --         -- Disable notifications that contains those strings
-  --         local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or
-  --             msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or
-  --             msg:match 'for_each_child'
-  --         if is_suppressed_message then
-  --           -- Do not show some messages
-  --           return
-  --         end
-  --       end
-  --
-  --       notify(msg, ...)
-  --     end
-  --   end,
+    config = function(_, opts)
+      local notify = require('notify')
+      notify.setup(opts)
+      ---@diagnostic disable-next-line: duplicate-set-field
+      -- vim.notify = function(msg, ...)
+      --   if type(msg) == 'string' then
+      --     -- Disable notifications that contains those strings
+      --     local is_suppressed_message = msg:match '%[lspconfig] Autostart for' or msg:match 'No information available' or
+      --         msg:match '%[Lspsaga] response of request method textDocument/definition is empty' or
+      --         msg:match 'for_each_child'
+      --     if is_suppressed_message then
+      --       -- Do not show some messages
+      --       return
+      --     end
+      --   end
+      --
+      --   notify(msg, ...)
+      -- end
+      vim.notify = notify
+    end,
   },
   { -- Vertical lines on indentation
     'lukas-reineke/indent-blankline.nvim',

@@ -309,12 +309,15 @@ function M.run_program()
   end
 end
 
+function M.file_exists(filename)
+  local Path = require('plenary.path')
+  local path = Path:new(filename)
+  return path:exists()
+end
+
 -- Taken from: https://github.com/JoosepAlviste/dotfiles/blob/master/config/nvim/lua/j/utils.lua
 function M.read_json_file(filename)
-  local Path = require 'plenary.path'
-
-  local path = Path:new(filename)
-  if not path:exists() then
+  if not M.file_exists(filename) then
     return nil
   end
 
@@ -391,6 +394,7 @@ end
 
 function M.format(cmd_opts, is_async)
   M.log('Formating!!')
+  M.notify('Format', 'Formatting !!!')
   if is_async == nil then
     is_async = true -- Default value for async will be true
   end
@@ -555,6 +559,73 @@ function M.delete_buffer_keep_layout()
   else
     vim.notify('Buffer has been modified!!\nSave before deleting the buffer', vim.log.levels.WARN)
   end
+end
+
+function M.calc_paplay_volume(percentage)
+  return percentage / 100.0 * 65536.0
+end
+
+function M.play_sound(path)
+  local function cb(code)
+    if code ~= 0 then
+      print("Couldn't play sound, exit code: " .. code)
+    end
+  end
+
+  if not M.file_exists(path) then
+    print('File not found!')
+    return
+  end
+
+  local handle, pid = vim.uv.spawn('paplay', { args = { '--volume=' .. M.calc_paplay_volume(30), path } }, cb)
+  if handle == nil then
+    print("Error spawning paplay")
+  end
+end
+
+-- Idea taken from https://github.com/rcarriga/nvim-notify/issues/43#issuecomment-1030604806
+function M.notify(title, message)
+  if title == nil then
+    title = "Title goes here"
+    message = "Content of the message here"
+  end
+  local level = vim.log.levels.INFO
+  local display = ""
+  local notification = vim.notify(display, level, {
+    title = title,
+    timeout = false,
+    hide_from_history = true
+  })
+
+  local function show_animation()
+    if message ~= display then
+      local idx = string.len(display) + 1
+      local cur = string.sub(message, idx, idx)
+      display = display .. cur
+
+      if cur ~= ' ' then
+        M.play_sound(vim.loop.os_homedir() .. '/sounds/tick.ogg')
+      end
+
+      local next
+      if message == display then
+        next = vim.notify(display, nil, {
+          hide_from_history = false,
+          replace = notification,
+          timeout = 2000
+        })
+      else
+        next = vim.notify(display, nil, { replace = notification })
+      end
+
+      notification = next
+      vim.defer_fn(function()
+        show_animation()
+      end, 30)
+    end
+  end
+
+  vim.defer_fn(show_animation, 400)
 end
 
 return M
