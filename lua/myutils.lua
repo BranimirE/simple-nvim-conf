@@ -141,13 +141,13 @@ function M.nvim_tree_smart_split(nvim_tree_api)
   end
 end
 
-function M.parse_nvim_cmp_mapping(mapping_table)
-  local parsed = {}
-  for _, mapping in pairs(mapping_table) do
-    parsed[mapping[1]] = mapping[2]
-  end
-  return parsed
-end
+-- function M.parse_nvim_cmp_mapping(mapping_table)
+--   local parsed = {}
+--   for _, mapping in pairs(mapping_table) do
+--     parsed[mapping[1]] = mapping[2]
+--   end
+--   return parsed
+-- end
 
 function M.has(plugin)
   return require("lazy.core.config").spec.plugins[plugin] ~= nil

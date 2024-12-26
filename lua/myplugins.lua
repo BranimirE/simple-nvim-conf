@@ -53,7 +53,7 @@ return {
         -- FzfLuaa
         FzfLuaBorder = { fg = '#00afff' },
         -- RenderMarkdown
-        RenderMarkdownCode = { bg = 'black'}
+        RenderMarkdownCode = { bg = 'black' }
       },
     },
     init = function()
@@ -67,7 +67,7 @@ return {
       require('myconfig/evil_lualine')
     end
   },
-  { -- File tree viewer
+  {                                              -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
     dependencies = 'echasnovski/mini.icons',
@@ -142,7 +142,7 @@ return {
         url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
       },
       {
-        'windwp/nvim-ts-autotag',                      -- Autoclose and rename html tags
+        'windwp/nvim-ts-autotag', -- Autoclose and rename html tags
         event = 'InsertEnter',
         opts = {}
       },
@@ -179,7 +179,7 @@ return {
           node_decremental = '<bs>',
         },
       },
-      indent = { enable = true },                  -- Indent with = using treesitter
+      indent = { enable = true }, -- Indent with = using treesitter
       -- autotag = { enable = true }, -- Do not use. Deprecated!
       autopairs = { enable = true },
       context_commentstring = {
@@ -418,133 +418,133 @@ return {
       virtual_symbol = "󰻂",
     }
   },
-  { -- Bridge between vsnip and nvim-cmp
-    'hrsh7th/cmp-vsnip',
-    dependencies = {
-      'hrsh7th/vim-vsnip', -- Snippets engine
-      -- {
-      --   'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
-      --   build = 'yarn install --frozen-lockfile && yarn compile'
-      -- }
-    }
-  },
-  { -- Autocompletion plugin
-    'hrsh7th/nvim-cmp',
-    version = false,
-    event = { 'InsertEnter', 'CmdlineEnter' },
-    dependencies = {
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-vsnip',
-      'hrsh7th/cmp-cmdline',
-      'onsails/lspkind.nvim',
-    },
-    opts = function()
-      local cmp = require('cmp')
-      local compare = require('cmp.config.compare')
-      return {
-        snippet = { -- REQUIRED
-          expand = function(args)
-            vim.fn['vsnip#anonymous'](args.body)
-          end,
-        },
-        completion = {
-          -- completeopt = 'menu,menuone,noinsert', -- same as vim's completeopt(see :help completeopt)
-          completeopt = 'menu,menuone,noselect,noinsert', -- TODO: Check that this one is required
-        },
-        window = {
-          completion = vim.tbl_deep_extend('force', cmp.config.window.bordered(), {
-            -- Move the menu to the left to match the completion string
-            col_offset = -3,
-            side_padding = 0,
-          }),
-          documentation = cmp.config.window.bordered(),
-        },
-        mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
-        sources = cmp.config.sources({ -- The order matters!!!
-          {
-            name = "lazydev",
-            group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-          },
-          { name = 'nvim_lsp' },
-        }, {
-          -- { name = 'vsnip' },
-          { name = 'git' },
-          { name = 'path' },
-          { name = 'buffer', keyword_length = 4 },
-        }),
-        formatting = {
-          fields = { 'kind', 'abbr', 'menu' },
-          format = function(entry, vim_item)
-            local kind = require('lspkind').cmp_format({ mode = 'symbol_text', maxwidth = 50 })(entry, vim_item)
-            local strings = vim.split(kind.kind, '%s', { trimempty = true })
-            local source_name = entry.source.name
-            kind.kind = ' ' .. (strings[1] or '') .. ' '
-            kind.menu = '  ' .. (strings[2] or '')
-
-            -- Remove duplicated items in the sources
-            -- Taken from: https://github.com/hrsh7th/nvim-cmp/issues/511#issuecomment-1063014008
-            vim_item.dup = ({
-              nvim_lsp = 0,
-            })[source_name] or 0
-
-            return kind
-          end,
-        },
-        experimental = {
-          ghost_text = true,
-        },
-        sorting = {
-          comparators = {
-            compare.offset,
-            compare.exact,
-            compare.score,
-            compare.recently_used,
-            compare.sort_text,
-            compare.length,
-          },
-        },
-      }
-    end,
-    config = function(_, opts)
-      local cmp = require('cmp')
-      cmp.setup(opts)
-
-      -- Set configuration for specific filetype.
-      cmp.setup.filetype('gitcommit', {
-        sources = cmp.config.sources({
-          { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-        }, {
-          { name = 'buffer' },
-        })
-      })
-
-      -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-      -- cmp.setup.cmdline('/', {
-      --   mapping = cmp.mapping.preset.cmdline(),
-      --   sources = {
-      --     { name = 'buffer' }
-      --   }
-      -- })
-
-      -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' }
-        }, {
-          { name = 'cmdline' }
-        })
-      })
-
-      -- If you want insert `(` after select function or method item
-      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-      cmp.event:on(
-        'confirm_done',
-        cmp_autopairs.on_confirm_done()
-      )
-    end
-  },
+  -- { -- Bridge between vsnip and nvim-cmp
+  --   'hrsh7th/cmp-vsnip',
+  --   dependencies = {
+  --     'hrsh7th/vim-vsnip', -- Snippets engine
+  --     -- {
+  --     --   'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
+  --     --   build = 'yarn install --frozen-lockfile && yarn compile'
+  --     -- }
+  --   }
+  -- },
+  -- { -- Autocompletion plugin
+  --   'hrsh7th/nvim-cmp',
+  --   version = false,
+  --   event = { 'InsertEnter', 'CmdlineEnter' },
+  --   dependencies = {
+  --     'hrsh7th/cmp-buffer',
+  --     'hrsh7th/cmp-path',
+  --     'hrsh7th/cmp-vsnip',
+  --     'hrsh7th/cmp-cmdline',
+  --     'onsails/lspkind.nvim',
+  --   },
+  --   opts = function()
+  --     local cmp = require('cmp')
+  --     local compare = require('cmp.config.compare')
+  --     return {
+  --       snippet = { -- REQUIRED
+  --         expand = function(args)
+  --           vim.fn['vsnip#anonymous'](args.body)
+  --         end,
+  --       },
+  --       completion = {
+  --         -- completeopt = 'menu,menuone,noinsert', -- same as vim's completeopt(see :help completeopt)
+  --         completeopt = 'menu,menuone,noselect,noinsert', -- TODO: Check that this one is required
+  --       },
+  --       window = {
+  --         completion = vim.tbl_deep_extend('force', cmp.config.window.bordered(), {
+  --           -- Move the menu to the left to match the completion string
+  --           col_offset = -3,
+  --           side_padding = 0,
+  --         }),
+  --         documentation = cmp.config.window.bordered(),
+  --       },
+  --       mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
+  --       sources = cmp.config.sources({ -- The order matters!!!
+  --         {
+  --           name = "lazydev",
+  --           group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+  --         },
+  --         { name = 'nvim_lsp' },
+  --       }, {
+  --         -- { name = 'vsnip' },
+  --         { name = 'git' },
+  --         { name = 'path' },
+  --         { name = 'buffer', keyword_length = 4 },
+  --       }),
+  --       formatting = {
+  --         fields = { 'kind', 'abbr', 'menu' },
+  --         format = function(entry, vim_item)
+  --           local kind = require('lspkind').cmp_format({ mode = 'symbol_text', maxwidth = 50 })(entry, vim_item)
+  --           local strings = vim.split(kind.kind, '%s', { trimempty = true })
+  --           local source_name = entry.source.name
+  --           kind.kind = ' ' .. (strings[1] or '') .. ' '
+  --           kind.menu = '  ' .. (strings[2] or '')
+  --
+  --           -- Remove duplicated items in the sources
+  --           -- Taken from: https://github.com/hrsh7th/nvim-cmp/issues/511#issuecomment-1063014008
+  --           vim_item.dup = ({
+  --             nvim_lsp = 0,
+  --           })[source_name] or 0
+  --
+  --           return kind
+  --         end,
+  --       },
+  --       experimental = {
+  --         ghost_text = true,
+  --       },
+  --       sorting = {
+  --         comparators = {
+  --           compare.offset,
+  --           compare.exact,
+  --           compare.score,
+  --           compare.recently_used,
+  --           compare.sort_text,
+  --           compare.length,
+  --         },
+  --       },
+  --     }
+  --   end,
+  --   config = function(_, opts)
+  --     local cmp = require('cmp')
+  --     cmp.setup(opts)
+  --
+  --     -- Set configuration for specific filetype.
+  --     cmp.setup.filetype('gitcommit', {
+  --       sources = cmp.config.sources({
+  --         { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  --       }, {
+  --         { name = 'buffer' },
+  --       })
+  --     })
+  --
+  --     -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+  --     -- cmp.setup.cmdline('/', {
+  --     --   mapping = cmp.mapping.preset.cmdline(),
+  --     --   sources = {
+  --     --     { name = 'buffer' }
+  --     --   }
+  --     -- })
+  --
+  --     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  --     cmp.setup.cmdline(':', {
+  --       mapping = cmp.mapping.preset.cmdline(),
+  --       sources = cmp.config.sources({
+  --         { name = 'path' }
+  --       }, {
+  --         { name = 'cmdline' }
+  --       })
+  --     })
+  --
+  --     -- If you want insert `(` after select function or method item
+  --     local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  --     cmp.event:on(
+  --       'confirm_done',
+  --       cmp_autopairs.on_confirm_done()
+  --     )
+  --   end
+  -- },
   { -- nvim-lspconfig
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
@@ -574,12 +574,12 @@ return {
           require('mason-lspconfig').setup(opts)
         end,
       },
-      {
-        'hrsh7th/cmp-nvim-lsp',
-        cond = function()
-          return myutils.has('nvim-cmp')
-        end,
-      },
+      -- {
+      --   'hrsh7th/cmp-nvim-lsp',
+      --   cond = function()
+      --     return myutils.has('nvim-cmp')
+      --   end,
+      -- },
       'nvimdev/lspsaga.nvim',
       -- { -- LSP progress messages
       --   'j-hui/fidget.nvim',
@@ -825,7 +825,8 @@ return {
 
           return {
             sources = sources,
-            root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json', 'index.js', 'main.js', 'index.py', 'main.py'),
+            root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json',
+              'index.js', 'main.js', 'index.py', 'main.py'),
           }
         end
       },
@@ -852,7 +853,7 @@ return {
     },
     cmd = { 'Trouble' },                       -- Lazy-load on commands
   },
-  { -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+  {                                            -- Force vim motion operators instead of pressing lots of j's and k's movements keys
     'm4xshen/hardtime.nvim',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     opts = {
@@ -876,7 +877,7 @@ return {
   {
     'benmills/vimux',
     cmd = { 'RunNpmCommand', 'VimuxRunCommand' },
-    ft = {'cpp', 'javascript'}
+    ft = { 'cpp', 'javascript' }
   },
   {                                      -- Improve input and select nvim UI components
     'stevearc/dressing.nvim',
@@ -1040,48 +1041,48 @@ return {
   { -- Improve view markdown files
     'MeanderingProgrammer/render-markdown.nvim',
     opts = {},
-    ft = 'markdown', -- only load on markdown files
+    ft = 'markdown',                                                                -- only load on markdown files
     config = true,
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   },
-  {
-    "folke/noice.nvim",
-    -- TODO: Remove the next line once the error is gone
-    commit = '9ccd02965382922c33762933c5601318f93e19fb',
-    event = "VeryLazy",
-    opts = {
-      cmdline = {
-        enabled = false,
-      },
-      messages = {
-        enabled = false,
-      },
-      lsp = {
-        -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-        override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = true,
-          ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-        },
-      },
-      -- you can enable a preset for easier configuration
-      presets = {
-        bottom_search = true, -- use a classic bottom cmdline for search
-        command_palette = true, -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = true, -- add a border to hover docs and signature help
-      },
-    },
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      "rcarriga/nvim-notify",
-    }
-  },
+  -- {
+  --   "folke/noice.nvim",
+  --   -- TODO: Remove the next line once the error is gone
+  --   commit = '9ccd02965382922c33762933c5601318f93e19fb',
+  --   event = "VeryLazy",
+  --   opts = {
+  --     cmdline = {
+  --       enabled = false,
+  --     },
+  --     messages = {
+  --       enabled = false,
+  --     },
+  --     lsp = {
+  --       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+  --       override = {
+  --         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+  --         ["vim.lsp.util.stylize_markdown"] = true,
+  --         -- ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+  --       },
+  --     },
+  --     -- you can enable a preset for easier configuration
+  --     presets = {
+  --       bottom_search = true,         -- use a classic bottom cmdline for search
+  --       command_palette = true,       -- position the cmdline and popupmenu together
+  --       long_message_to_split = true, -- long messages will be sent to a split
+  --       inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+  --       lsp_doc_border = true,        -- add a border to hover docs and signature help
+  --     },
+  --   },
+  --   dependencies = {
+  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+  --     "MunifTanjim/nui.nvim",
+  --     -- OPTIONAL:
+  --     --   `nvim-notify` is only needed, if you want to use the notification view.
+  --     --   If not available, we use `mini` as the fallback
+  --     "rcarriga/nvim-notify",
+  --   }
+  -- },
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -1095,5 +1096,142 @@ return {
         desc = "Buffer Local Keymaps (which-key)",
       },
     },
+  },
+  {
+    'saghen/blink.cmp',
+    -- optional: provides snippets for the snippet source
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      -- add blink.compat to dependencies
+      {
+        "saghen/blink.compat",
+        optional = true, -- make optional so it's only enabled if any extras need it
+        opts = {},
+        version = "*",
+      },
+    },
+    event = "InsertEnter",
+
+    -- use a release tag to download pre-built binaries
+    version = 'v0.8.2',
+    -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+    -- build = 'cargo build --release',
+    -- If you use nix, you can build from source using latest nightly rust with:
+    -- build = 'nix run .#build-plugin',
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      -- snippets = {
+      --   expand = function(snippet, _)
+      --     return LazyVim.cmp.expand(snippet)
+      --   end,
+      -- },
+      appearance = {
+        -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+        -- Useful for when your theme doesn't support blink.cmp
+        -- Will be removed in a future release
+        use_nvim_cmp_as_default = false,
+        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = 'mono'
+      },
+      completion = {
+        accept = {
+          -- experimental auto-brackets support
+          auto_brackets = {
+            enabled = true,
+          },
+        },
+        menu = {
+          draw = {
+            treesitter = { "lsp" },
+          },
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 200,
+        },
+        ghost_text = {
+          enabled = vim.g.ai_cmp,
+        },
+      },
+      sources = {
+        -- adding any nvim-cmp sources here will enable them
+        -- with blink.compat
+        compat = {},
+        default = { "lsp", "path", "snippets", "buffer" },
+        cmdline = {},
+      },
+      -- Experimental signature help support
+      signature = { enabled = true },
+      keymap = {
+        ['<Tab>'] = {
+          function(cmp)
+            if cmp.snippet_active() then
+              return cmp.accept()
+            else
+              return cmp.select_and_accept()
+            end
+          end,
+          'snippet_forward',
+          'fallback'
+        },
+        ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
+      },
+    },
+    opts_extend = {
+      "sources.completion.enabled_providers",
+      "sources.compat",
+      "sources.default",
+    },
+    ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
+    config = function(_, opts)
+      -- setup compat sources
+      local enabled = opts.sources.default
+      for _, source in ipairs(opts.sources.compat or {}) do
+        opts.sources.providers[source] = vim.tbl_deep_extend(
+          "force",
+          { name = source, module = "blink.compat.source" },
+          opts.sources.providers[source] or {}
+        )
+        if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
+          table.insert(enabled, source)
+        end
+      end
+
+      -- Unset custom prop to pass blink.cmp validation
+      opts.sources.compat = nil
+
+      -- check if we need to override symbol kinds
+      for _, provider in pairs(opts.sources.providers or {}) do
+        ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
+        if provider.kind then
+          local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
+          local kind_idx = #CompletionItemKind + 1
+
+          CompletionItemKind[kind_idx] = provider.kind
+          ---@diagnostic disable-next-line: no-unknown
+          CompletionItemKind[provider.kind] = kind_idx
+
+          ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[]): blink.cmp.CompletionItem[]
+          local transform_items = provider.transform_items
+          ---@param ctx blink.cmp.Context
+          ---@param items blink.cmp.CompletionItem[]
+          provider.transform_items = function(ctx, items)
+            items = transform_items and transform_items(ctx, items) or items
+            for _, item in ipairs(items) do
+              item.kind = kind_idx or item.kind
+            end
+            return items
+          end
+
+          -- Unset custom prop to pass blink.cmp validation
+          provider.kind = nil
+        end
+      end
+
+      require("blink.cmp").setup(opts)
+    end,
   }
 }
