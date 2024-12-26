@@ -1045,44 +1045,44 @@ return {
     config = true,
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   },
-  -- {
-  --   "folke/noice.nvim",
-  --   -- TODO: Remove the next line once the error is gone
-  --   commit = '9ccd02965382922c33762933c5601318f93e19fb',
-  --   event = "VeryLazy",
-  --   opts = {
-  --     cmdline = {
-  --       enabled = false,
-  --     },
-  --     messages = {
-  --       enabled = false,
-  --     },
-  --     lsp = {
-  --       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-  --       override = {
-  --         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-  --         ["vim.lsp.util.stylize_markdown"] = true,
-  --         -- ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-  --       },
-  --     },
-  --     -- you can enable a preset for easier configuration
-  --     presets = {
-  --       bottom_search = true,         -- use a classic bottom cmdline for search
-  --       command_palette = true,       -- position the cmdline and popupmenu together
-  --       long_message_to_split = true, -- long messages will be sent to a split
-  --       inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-  --       lsp_doc_border = true,        -- add a border to hover docs and signature help
-  --     },
-  --   },
-  --   dependencies = {
-  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-  --     "MunifTanjim/nui.nvim",
-  --     -- OPTIONAL:
-  --     --   `nvim-notify` is only needed, if you want to use the notification view.
-  --     --   If not available, we use `mini` as the fallback
-  --     "rcarriga/nvim-notify",
-  --   }
-  -- },
+  {
+    "folke/noice.nvim",
+    -- TODO: Remove the next line once the error is gone
+    -- commit = '9ccd02965382922c33762933c5601318f93e19fb',
+    event = "VeryLazy",
+    opts = {
+      cmdline = {
+        enabled = false,
+      },
+      messages = {
+        enabled = false,
+      },
+      lsp = {
+        -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          -- ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+        },
+      },
+      -- you can enable a preset for easier configuration
+      presets = {
+        bottom_search = true,         -- use a classic bottom cmdline for search
+        command_palette = true,       -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+        lsp_doc_border = true,        -- add a border to hover docs and signature help
+      },
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+    }
+  },
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -1151,6 +1151,11 @@ return {
         documentation = {
           auto_show = true,
           auto_show_delay_ms = 200,
+          treesitter_highlighting = true,
+          window = {
+            border = 'rounded',
+            max_width = 100
+          }
         },
         ghost_text = {
           enabled = vim.g.ai_cmp,
@@ -1161,10 +1166,21 @@ return {
         -- with blink.compat
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
-        cmdline = {},
+        cmdline = function()
+          local type = vim.fn.getcmdtype()
+          -- Search forward and backward
+          if type == '/' or type == '?' then
+            -- return { 'buffer' }
+            return {} -- We do not want suggestions on / and ? search
+          end
+          -- Commands
+          if type == ':' then return { 'cmdline' } end
+          return {}
+        end,
+        min_keyword_length = 3, -- Minimmun chars to trigger completion menu
       },
       -- Experimental signature help support
-      signature = { enabled = true },
+      signature = { enabled = false }, -- false: we are gonna use noice.nvim signature
       keymap = {
         ['<Tab>'] = {
           function(cmp)
