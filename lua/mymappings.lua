@@ -82,7 +82,17 @@ M = {
       { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>' },
 
       { 'gi',        vim.lsp.buf.implementation },
-      { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<cr>', mode = { 'n', 't' } }
+      { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<cr>', mode = { 'n', 't' } },
+      {
+        '<A-h>',
+        function()
+          local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+          vim.lsp.inlay_hint.enable(not is_enabled)
+        end,
+        mode = { 'n', 't' },
+        desc = 'Toggle inlay hints'
+      }
+
     }, { noremap = true, silent = true, buffer = bufnr })
   end,
 

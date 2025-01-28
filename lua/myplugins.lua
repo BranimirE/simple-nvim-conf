@@ -1177,7 +1177,7 @@ return {
           if type == ':' then return { 'cmdline' } end
           return {}
         end,
-        min_keyword_length = 3, -- Minimmun chars to trigger completion menu
+        -- min_keyword_length = 2, -- Minimmun chars to trigger completion menu
       },
       -- Experimental signature help support
       signature = { enabled = false }, -- false: we are gonna use noice.nvim signature
