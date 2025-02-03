@@ -702,16 +702,41 @@ return {
         vtsls = {
           capabilities = capabilities(),
           settings = {
+            complete_function_calls = true,
+            vtsls = {
+              enableMoveToFileCodeAction = true,
+              autoUseWorkspaceTsdk = true,
+              experimental = {
+                maxInlayHintLength = 30,
+                completion = {
+                  enableServerSideFuzzyMatch = true,
+                },
+              },
+            },
             javascript = {
+              updateImportsOnFileMove = { enabled = "always" },
+              suggest = {
+                completeFunctionCalls = true,
+              },
               inlayHints = {
                 parameterNames = { enabled = 'all' },
               },
             },
             typescript = {
+              updateImportsOnFileMove = { enabled = "always" },
+              suggest = {
+                completeFunctionCalls = true,
+              },
               inlayHints = {
-                parameterNames = { enabled = 'all' },
-                variableTypes = { enabled = true },
+                -- parameterNames = { enabled = 'all' },
+                -- variableTypes = { enabled = true },
+                -- functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
                 functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
               },
             }
           },

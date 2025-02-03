@@ -18,10 +18,19 @@ local M = {}
 M.client_capabilities = function()
   return vim.tbl_deep_extend(
     'force',
+    {},
     vim.lsp.protocol.make_client_capabilities(),
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers.
     -- require('cmp_nvim_lsp').default_capabilities()
-    require('blink.cmp').get_lsp_capabilities()
+    require('blink.cmp').get_lsp_capabilities(),
+    {
+      workspace = {
+        fileOperations = {
+          didRename = true,
+          willRename = true,
+        },
+      },
+    }
   )
 end
 
