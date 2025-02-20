@@ -375,7 +375,7 @@ function M.log(message)
       file:write(message .. "\n")
       file:close()
     else
-      print("Error: Unable to open the file for appending.")
+      print("Error: Unable to open the log file for appending.")
     end
   end
 end

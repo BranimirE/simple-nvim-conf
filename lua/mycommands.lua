@@ -25,6 +25,22 @@ vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
   end
 end, {})
 
+vim.api.nvim_create_user_command('EnableEslintFixAllOnSave', function ()
+  myconfig.ESLINT_FIX_ALL_ON_SAVE = true
+end, {})
+
+vim.api.nvim_create_user_command('DisableEslintFixAllOnSave', function ()
+  myconfig.ESLINT_FIX_ALL_ON_SAVE = false
+end, {})
+
+vim.api.nvim_create_user_command('ToggleEslintFixAllOnSave', function()
+  if myconfig.ESLINT_FIX_ALL_ON_SAVE then
+    myconfig.ESLINT_FIX_ALL_ON_SAVE = false
+  else
+    myconfig.ESLINT_FIX_ALL_ON_SAVE = true
+  end
+end, {})
+
 vim.api.nvim_create_user_command('CloseOthers', 'BufferLineCloseOthers', {})
 
 -- Create 'Format' command to format the document
@@ -52,10 +68,14 @@ vim.api.nvim_create_autocmd('BufEnter', {
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('LspFormatting', {}),
   callback = function()
-    if require('myconfig').FORMAT_ON_SAVE then
+    if myconfig.FORMAT_ON_SAVE then
       -- We want the formatting finish before BufWrite, so async: false
       myutils.format(nil, false)
     end
+    if myconfig.ESLINT_FIX_ALL_ON_SAVE then
+      vim.cmd('EslintFixAll')
+    end
+
   end
 })
 
