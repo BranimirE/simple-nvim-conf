@@ -408,6 +408,9 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     cmd = { --[[ 'TodoTrouble',  ]] 'TodoTelescope', 'TodoQuickFix' },
     event = { 'BufReadPost', 'BufNewFile' },
+    opts = {
+      signs = false,
+    },
     config = true,
   },
   { -- Cirlcle icon helper before colors
@@ -618,7 +621,8 @@ return {
         'vimls',
         'marksman',
         'cssls',
-        'cssmodules_ls',
+        -- Go to definition and hover for css classes references in js(x)/ts(x) files
+        -- 'cssmodules_ls',
         'yamlls',
         'html',
         'sqlls',
@@ -628,13 +632,9 @@ return {
         'angularls',
         'terraformls',
         'ansiblels',
-        'vtsls'
+        'vtsls',
+        'eslint'
       }
-
-      if not myutils.is_npm_package_installed('eslint') then
-        myutils.log('eslint is not installed in package.json. Using eslint lsp')
-        table.insert(my_lsp_servers, 'eslint')
-      end
 
       local capabilities = require('myconfig/lsp').client_capabilities
       local lspconfig = require('lspconfig')
@@ -766,21 +766,27 @@ return {
             end
           end,
         },
-        -- TODO: Make it work on single files
-        -- eslint = {
-        --   capabilities = capabilities(),
-        --   settings = {
-        --     workingDirectory = { mode = 'location' },
-        --   },
-        --   -- root_dir = lspconfig.util.find_git_ancestor,
-        --   root_dir = function (startpath)
-        --     return lspconfig.util.search_ancestors(startpath, function(path)
-        --       if lspconfig.util.path.is_dir(path) then
-        --         return path
-        --       end
-        --     end)
-        --   end,
-        -- }
+        -- cssmodules_ls = {
+        --   capabilities = vim.tbl_deep_extend("force", capabilities(), { definitionProvider = false }),
+        -- },
+        eslint = {
+          capabilities = capabilities(),
+          root_dir = function(cur_file_path)
+            local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
+            if not package_json_dir or not myutils.is_npm_package_installed('eslint', package_json_dir) then
+              myutils.log('no eslint found in the package.json file')
+              myutils.log(
+              'checking any eslint config file existence to attach eslint LSP and show related notifications')
+              -- If eslint config file is not find, LSP server is not attached
+              return require('lspconfig.configs.eslint').default_config.root_dir(cur_file_path)
+            end
+
+            myutils.log('eslint found in the package.json file')
+            myutils.log(
+            'Detecting package.json folder as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
+            return lspconfig.util.root_pattern('package.json')(cur_file_path)
+          end
+        }
       }
 
       for _, server_name in ipairs(my_lsp_servers) do
@@ -823,7 +829,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'stylua', 'shfmt', 'prettier', 'eslint' }
+      ensure_installed = { 'stylua', 'shfmt', 'prettier' }
     },
     dependencies = {
       'williamboman/mason.nvim',
@@ -842,11 +848,6 @@ return {
           local sources = {
             code_actions.gitsigns,
           }
-
-          if myutils.is_npm_package_installed('eslint') then
-            table.insert(sources, require("none-ls.diagnostics.eslint").with({ prefer_local = './node_modules/.bin' }))
-            table.insert(sources, require("none-ls.code_actions.eslint").with({ prefer_local = './node_modules/.bin' }))
-          end -- else Use lsp eslint (installed by mason)
 
           return {
             sources = sources,
@@ -1159,7 +1160,8 @@ return {
         use_nvim_cmp_as_default = false,
         -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono'
+        -- nerd_font_variant = 'mono'
+        nerd_font_variant = 'normal'
       },
       completion = {
         accept = {
@@ -1274,5 +1276,56 @@ return {
 
       require("blink.cmp").setup(opts)
     end,
+  },
+  {
+    "echasnovski/mini.indentscope",
+    version = '*', -- wait till new 0.7.0 release to put it back on semver
+    event = "VeryLazy",
+    opts = {
+      symbol = '▏',
+      options = { try_as_border = true },
+    },
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = {
+          "Trouble",
+          "alpha",
+          "dashboard",
+          "fzf",
+          "help",
+          "lazy",
+          "mason",
+          "neo-tree",
+          "notify",
+          "snacks_dashboard",
+          "snacks_notif",
+          "snacks_terminal",
+          "snacks_win",
+          "toggleterm",
+          "trouble",
+        },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "SnacksDashboardOpened",
+        callback = function(data)
+          vim.b[data.buf].miniindentscope_disable = true
+        end,
+      })
+    end,
+  },
+  {
+    "folke/snacks.nvim",
+    ft = 'markdown',                                                                -- only load on markdown files
+    ---@type snacks.Config
+    opts = {
+      image = {
+        -- leave it empty to use the default settings
+      }
+    }
   }
+
 }

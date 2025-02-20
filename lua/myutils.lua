@@ -316,10 +316,15 @@ function M.file_exists(filename)
 end
 
 -- Taken from: https://github.com/JoosepAlviste/dotfiles/blob/master/config/nvim/lua/j/utils.lua
-function M.read_json_file(filename)
+function M.read_json_file(filename, parent_dir)
   local Path = require('plenary.path')
-  local path = Path:new(filename)
-  if not M.file_exists(filename) then
+  local path = nil
+  if parent_dir then
+    path = Path:new(parent_dir, filename)
+  else
+    path = Path:new(filename)
+  end
+  if not path:exists() then
     return nil
   end
 
@@ -329,15 +334,15 @@ function M.read_json_file(filename)
   return json
 end
 
-function M.read_package_json()
-  return M.read_json_file('package.json')
+function M.read_package_json(package_json_dir)
+  return M.read_json_file('package.json', package_json_dir)
 end
 
 -- Check if the given NPM package is installed in the current project.
 -- @param package string
 -- @return boolean
-function M.is_npm_package_installed(package)
-  local package_json = M.read_package_json()
+function M.is_npm_package_installed(package, package_json_dir)
+  local package_json = M.read_package_json(package_json_dir)
   if not package_json then
     return false
   end
@@ -362,6 +367,9 @@ end
 function M.log(message)
   if not vim.g.CUSTOM_LOGS then
     local file = io.open(vim.loop.os_homedir() .. '/nvimlogs.log', "a")
+    if not message then
+      message = 'nil'
+    end
 
     if file then
       file:write(message .. "\n")
