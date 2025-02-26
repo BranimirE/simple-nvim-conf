@@ -1319,13 +1319,14 @@ return {
   },
   {
     "folke/snacks.nvim",
-    ft = 'markdown',                                                                -- only load on markdown files
+    ft = 'markdown', -- only load on markdown files
     ---@type snacks.Config
     opts = {
       image = {
         -- leave it empty to use the default settings
       }
     }
-  }
+  },
+
 
 }

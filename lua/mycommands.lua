@@ -101,6 +101,18 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave'
   end,
 })
 
+-- Add temporary visual effect to yanked text
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = vim.api.nvim_create_augroup('Highlight_yank', {}),
+  pattern = '*',
+  callback = function ()
+    vim.highlight.on_yank({
+      higroup = 'Visual',
+      timeout = 200
+    })
+  end
+})
+
 vim.api.nvim_create_user_command('RunNpmCommand', myutils.run_program, {})
 
 vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
