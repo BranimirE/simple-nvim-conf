@@ -1,61 +1,39 @@
 local mymappings = require('mymappings')
 local myutils = require('myutils')
+local colortools = require('colortools')
 
 return {
   { -- Theme Onedark
     'navarasu/onedark.nvim',
     event = 'VeryLazy',
-    opts = {
-      style = 'deep',
-      transparent = true,
-      colors = {
-        black = "#0c0e15",
-        bg0 = "#19212F", --background_colour
-        bg1 = "#20283D", -- nvim-tree highlight line background
-        bg2 = "#283347",
-        bg3 = "#2a324a",
-        bg_d = "#121B25", -- nvim-tree background
-        bg_blue = "#54b0fd",
-        bg_yellow = "#f2cc81",
-        -- fg = "#90A4C6", -- < character
-        fg = "#B8C5DB",         -- < character
-        purple = "#D74CF0",     -- class word
-        green = "#74D046",      -- strings
-        orange = "#E98C31",     -- true/false word and numbers
-        blue = "#00A8FF",       -- has_many word, function names, raise word
-        yellow = "#F7BC47",     -- class name
-        cyan = "#00C1D2",       -- ":comments" word
-        red = "#FF4761",        -- function parameters
-        grey = "#425577",       -- comments
-        light_grey = "#697D9F", -- Curly brackets {}
-        dark_cyan = "#1b6a73",
-        dark_red = "#992525",   -- some icons color
-        dark_yellow = "#8f610d",
-        dark_purple = "#862aa1",
-        diff_add = "#27341c",
-        diff_delete = "#331c1e",
-        diff_change = "#102b40",
-        diff_text = "#1c4a6e",
-      },
-      highlights = {
-        StatusLine = { bg = 'none' },
-        StatusLineTerm = { bg = 'none' },
-        StatusLineNC = { bg = 'none' },
-        StatusLineTermNC = { bg = 'none' },
-        -- Telescope
-        TelescopeMatching = { fg = '#00afff' },
-        TelescopeBorder = { fg = '#00afff' },
-        -- Lspsaga groups and Floating terminal
-        NormalFloat = { bg = 'none' },
-        FloatBorder = { bg = 'none' },
-        -- Nvim-tree
-        NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
-        -- FzfLuaa
-        FzfLuaBorder = { fg = '#00afff' },
-        -- RenderMarkdown
-        RenderMarkdownCode = { bg = 'black' }
-      },
-    },
+    opts = function ()
+      local style = 'deep'
+      local colors = require('onedark.palette')[style]
+      local satured = colortools.transform(colors, colortools.sature_add_current_percentage(50))
+      return {
+        style = style,
+        colors = satured,
+        transparent = true,
+        highlights = {
+          StatusLine = { bg = 'none' },
+          StatusLineTerm = { bg = 'none' },
+          StatusLineNC = { bg = 'none' },
+          StatusLineTermNC = { bg = 'none' },
+          -- Telescope
+          TelescopeMatching = { fg = '#00afff' },
+          TelescopeBorder = { fg = '#00afff' },
+          -- Lspsaga groups and Floating terminal
+          NormalFloat = { bg = 'none' },
+          FloatBorder = { bg = 'none' },
+          -- Nvim-tree
+          NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
+          -- FzfLuaa
+          FzfLuaBorder = { fg = '#00afff' },
+          -- RenderMarkdown
+          RenderMarkdownCode = { bg = 'black' }
+        },
+      }
+    end,
     init = function()
       require('onedark').load()
     end
@@ -137,10 +115,10 @@ return {
     cmd = { 'TSUpdateSync' },
     dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring', -- Comment embedded scripts
-      {
-        'HiPhish/rainbow-delimiters.nvim',           -- Colorize parenthesis pairs with distinct colors
-        url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
-      },
+      -- {
+      --   'HiPhish/rainbow-delimiters.nvim',           -- Colorize parenthesis pairs with distinct colors
+      --   url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim'
+      -- },
       {
         'windwp/nvim-ts-autotag', -- Autoclose and rename html tags
         event = 'InsertEnter',

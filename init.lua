@@ -15,7 +15,7 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup('myplugins', {
   defaults = { lazy = true },
-  install = { colorscheme = { 'nvchad' } },
+  -- install = { colorscheme = { 'nvchad' } },
   checker = { enabled = false },
   change_detection = {
     notify = false,
