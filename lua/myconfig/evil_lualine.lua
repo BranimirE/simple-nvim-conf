@@ -158,7 +158,7 @@ ins_left {
 
 ins_left {
   'branch',
-  icon = '',
+  icon = '',
   color = { gui = 'bold' },
   on_click = function ()
     vim.cmd('Lspsaga term_toggle lazygit')

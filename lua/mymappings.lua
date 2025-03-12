@@ -25,6 +25,22 @@ M = {
     }, { noremap = true, silent = true, nowait = true, buffer = bufnr })
   end,
 
+  tabufline = function()
+    local nvtb = require("nvchad.tabufline")
+    local mapping = {}
+
+    for index = 1, 8 do
+      table.insert(mapping, {
+        '<A-' .. index .. '>',
+        function ()
+          pcall(nvtb.goto_buf, vim.t.bufs[index])
+        end,
+        mode = { 'i', 'n', 'v' }, silent = true
+      })
+    end
+    return mapping
+  end,
+
   bufferline = function(bl)
     local mapping = {
       { '<A-9>', function ()

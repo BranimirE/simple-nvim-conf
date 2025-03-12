@@ -1,50 +1,33 @@
 local mymappings = require('mymappings')
 local myutils = require('myutils')
-local colortools = require('colortools')
 
 return {
-  { -- Theme Onedark
-    'navarasu/onedark.nvim',
-    event = 'VeryLazy',
-    opts = function ()
-      local style = 'deep'
-      local colors = require('onedark.palette')[style]
-      local satured = colortools.transform(colors, colortools.sature_add_current_percentage(50))
-      return {
-        style = style,
-        colors = satured,
-        transparent = true,
-        highlights = {
-          StatusLine = { bg = 'none' },
-          StatusLineTerm = { bg = 'none' },
-          StatusLineNC = { bg = 'none' },
-          StatusLineTermNC = { bg = 'none' },
-          -- Telescope
-          TelescopeMatching = { fg = '#00afff' },
-          TelescopeBorder = { fg = '#00afff' },
-          -- Lspsaga groups and Floating terminal
-          NormalFloat = { bg = 'none' },
-          FloatBorder = { bg = 'none' },
-          -- Nvim-tree
-          NvimTreeWindowPicker = { bg = '#00afff', fg = '#000000', gui = 'bold' },
-          -- FzfLuaa
-          FzfLuaBorder = { fg = '#00afff' },
-          -- RenderMarkdown
-          RenderMarkdownCode = { bg = 'black' }
-        },
-      }
-    end,
-    init = function()
-      require('onedark').load()
-    end
-  },
-  { -- Status line
-    'nvim-lualine/lualine.nvim',
-    lazy = false,
+  {
+    "nvchad/ui",
+    event = "VeryLazy",
     config = function()
-      require('myconfig/evil_lualine')
+      myutils.load_mapping(mymappings.tabufline())
+      require "nvchad"
     end
   },
+  {
+    "nvchad/base46",
+    event = "VeryLazy",
+    build = function()
+      require("base46").load_all_highlights()
+    end,
+  },
+  {
+    "nvchad/volt",
+    event = "VeryLazy",
+  },
+  -- { -- Status line
+  --   'nvim-lualine/lualine.nvim',
+  --   lazy = false,
+  --   config = function()
+  --     require('myconfig/evil_lualine')
+  --   end
+  -- },
   {                                              -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
@@ -181,38 +164,6 @@ return {
     },
     main = 'nvim-treesitter.configs'
   },
-  { -- Tabline
-    'akinsho/bufferline.nvim',
-    dependencies = 'echasnovski/mini.icons',
-    event = 'VeryLazy',
-    opts = {
-      options = {
-        color_icons = true,
-        separator_style = { '', '' },
-        indicator = {
-          style = 'none'
-        },
-        always_show_bufferline = false,
-        offsets = {
-          {
-            filetype = 'NvimTree',
-            padding = 1,          -- For some reason it is not calculating the value correctly, this fix it
-            highlight = "Normal", -- Only required for ondedark.nvim theme
-          },
-        },
-        hover = {
-          enabled = true,
-          delay = 200,
-          reveal = { 'close' }
-        }
-      },
-    },
-    config = function(_, opts)
-      local bl = require('bufferline')
-      bl.setup(opts)
-      myutils.load_mapping(mymappings.bufferline(bl))
-    end
-  },
   { -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
@@ -325,6 +276,7 @@ return {
     cmd = 'FzfLua',
     opts = function()
       local actions = require 'fzf-lua.actions'
+      vim.cmd('hi FzfLuaBorder guifg=#141423')
       return {
         fzf_colors = {
           bg = { 'bg', 'Normal' },
@@ -391,141 +343,6 @@ return {
     },
     config = true,
   },
-  { -- Cirlcle icon helper before colors
-    'brenoprata10/nvim-highlight-colors',
-    event = "BufReadPre",
-    opts = {
-      render = "virtual",
-      virtual_symbol = "󰻂",
-    }
-  },
-  -- { -- Bridge between vsnip and nvim-cmp
-  --   'hrsh7th/cmp-vsnip',
-  --   dependencies = {
-  --     'hrsh7th/vim-vsnip', -- Snippets engine
-  --     -- {
-  --     --   'dsznajder/vscode-es7-javascript-react-snippets', -- TODO: Load plugin by filetype(only js and ts type files)
-  --     --   build = 'yarn install --frozen-lockfile && yarn compile'
-  --     -- }
-  --   }
-  -- },
-  -- { -- Autocompletion plugin
-  --   'hrsh7th/nvim-cmp',
-  --   version = false,
-  --   event = { 'InsertEnter', 'CmdlineEnter' },
-  --   dependencies = {
-  --     'hrsh7th/cmp-buffer',
-  --     'hrsh7th/cmp-path',
-  --     'hrsh7th/cmp-vsnip',
-  --     'hrsh7th/cmp-cmdline',
-  --     'onsails/lspkind.nvim',
-  --   },
-  --   opts = function()
-  --     local cmp = require('cmp')
-  --     local compare = require('cmp.config.compare')
-  --     return {
-  --       snippet = { -- REQUIRED
-  --         expand = function(args)
-  --           vim.fn['vsnip#anonymous'](args.body)
-  --         end,
-  --       },
-  --       completion = {
-  --         -- completeopt = 'menu,menuone,noinsert', -- same as vim's completeopt(see :help completeopt)
-  --         completeopt = 'menu,menuone,noselect,noinsert', -- TODO: Check that this one is required
-  --       },
-  --       window = {
-  --         completion = vim.tbl_deep_extend('force', cmp.config.window.bordered(), {
-  --           -- Move the menu to the left to match the completion string
-  --           col_offset = -3,
-  --           side_padding = 0,
-  --         }),
-  --         documentation = cmp.config.window.bordered(),
-  --       },
-  --       mapping = cmp.mapping.preset.insert(myutils.parse_nvim_cmp_mapping(mymappings.nvim_cmp(cmp))),
-  --       sources = cmp.config.sources({ -- The order matters!!!
-  --         {
-  --           name = "lazydev",
-  --           group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-  --         },
-  --         { name = 'nvim_lsp' },
-  --       }, {
-  --         -- { name = 'vsnip' },
-  --         { name = 'git' },
-  --         { name = 'path' },
-  --         { name = 'buffer', keyword_length = 4 },
-  --       }),
-  --       formatting = {
-  --         fields = { 'kind', 'abbr', 'menu' },
-  --         format = function(entry, vim_item)
-  --           local kind = require('lspkind').cmp_format({ mode = 'symbol_text', maxwidth = 50 })(entry, vim_item)
-  --           local strings = vim.split(kind.kind, '%s', { trimempty = true })
-  --           local source_name = entry.source.name
-  --           kind.kind = ' ' .. (strings[1] or '') .. ' '
-  --           kind.menu = '  ' .. (strings[2] or '')
-  --
-  --           -- Remove duplicated items in the sources
-  --           -- Taken from: https://github.com/hrsh7th/nvim-cmp/issues/511#issuecomment-1063014008
-  --           vim_item.dup = ({
-  --             nvim_lsp = 0,
-  --           })[source_name] or 0
-  --
-  --           return kind
-  --         end,
-  --       },
-  --       experimental = {
-  --         ghost_text = true,
-  --       },
-  --       sorting = {
-  --         comparators = {
-  --           compare.offset,
-  --           compare.exact,
-  --           compare.score,
-  --           compare.recently_used,
-  --           compare.sort_text,
-  --           compare.length,
-  --         },
-  --       },
-  --     }
-  --   end,
-  --   config = function(_, opts)
-  --     local cmp = require('cmp')
-  --     cmp.setup(opts)
-  --
-  --     -- Set configuration for specific filetype.
-  --     cmp.setup.filetype('gitcommit', {
-  --       sources = cmp.config.sources({
-  --         { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-  --       }, {
-  --         { name = 'buffer' },
-  --       })
-  --     })
-  --
-  --     -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-  --     -- cmp.setup.cmdline('/', {
-  --     --   mapping = cmp.mapping.preset.cmdline(),
-  --     --   sources = {
-  --     --     { name = 'buffer' }
-  --     --   }
-  --     -- })
-  --
-  --     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  --     cmp.setup.cmdline(':', {
-  --       mapping = cmp.mapping.preset.cmdline(),
-  --       sources = cmp.config.sources({
-  --         { name = 'path' }
-  --       }, {
-  --         { name = 'cmdline' }
-  --       })
-  --     })
-  --
-  --     -- If you want insert `(` after select function or method item
-  --     local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  --     cmp.event:on(
-  --       'confirm_done',
-  --       cmp_autopairs.on_confirm_done()
-  --     )
-  --   end
-  -- },
   { -- nvim-lspconfig
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },

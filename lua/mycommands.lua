@@ -115,7 +115,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.api.nvim_create_user_command('RunNpmCommand', myutils.run_program, {})
 
-vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
-vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')
-vim.cmd('hi NvimTreeFolderName guifg=#00afff')
-vim.cmd('hi NvimTreeOpenedFolderName guifg=#00afff')
+-- vim.cmd('hi NvimTreeEmptyFolderName guifg=#00afff')
+-- vim.cmd('hi NvimTreeFolderIcon guifg=#00afff')
+-- vim.cmd('hi NvimTreeFolderName guifg=#00afff')
+-- vim.cmd('hi NvimTreeOpenedFolderName guifg=#00afff')

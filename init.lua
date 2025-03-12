@@ -1,5 +1,7 @@
 require('mysettings')
 
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46_cache/"
+
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -54,7 +56,8 @@ require('lazy').setup('myplugins', {
     },
   },
   ui = {
-    border = "single",
+    border = "none",
+    -- border = "single",
     icons = {
       ft = "",
       lazy = "󰂠 ",
@@ -63,6 +66,10 @@ require('lazy').setup('myplugins', {
     },
   },
 })
+
+for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
+  dofile(vim.g.base46_cache .. v)
+end
 
 vim.api.nvim_create_autocmd('User', {
  pattern = 'VeryLazy',
