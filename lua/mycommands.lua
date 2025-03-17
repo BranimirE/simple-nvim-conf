@@ -41,7 +41,9 @@ vim.api.nvim_create_user_command('ToggleEslintFixAllOnSave', function()
   end
 end, {})
 
-vim.api.nvim_create_user_command('CloseOthers', 'BufferLineCloseOthers', {})
+vim.api.nvim_create_user_command('CloseOthers', function ()
+  require("nvchad.tabufline").closeAllBufs(false)
+end, {})
 
 -- Create 'Format' command to format the document
 vim.api.nvim_create_user_command('Format', myutils.format, { range = '%' })
