@@ -1073,7 +1073,7 @@ return {
     end,
   },
   {
-    "echasnovski/mini.indentscope",
+    "echasnovski/mini.indentscope", -- animate the indent line
     version = '*', -- wait till new 0.7.0 release to put it back on semver
     event = "VeryLazy",
     opts = {
@@ -1113,7 +1113,7 @@ return {
     end,
   },
   {
-    "folke/snacks.nvim",
+    "folke/snacks.nvim", -- Images support
     ft = 'markdown', -- only load on markdown files
     ---@type snacks.Config
     opts = {
@@ -1122,6 +1122,11 @@ return {
       }
     }
   },
-
-
+  {
+    "folke/persistence.nvim", -- Session management
+    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    opts = {
+      need = 0, -- Always save the session
+    }
+  }
 }
