@@ -21,13 +21,6 @@ return {
     "nvchad/volt",
     event = "VeryLazy",
   },
-  -- { -- Status line
-  --   'nvim-lualine/lualine.nvim',
-  --   lazy = false,
-  --   config = function()
-  --     require('myconfig/evil_lualine')
-  --   end
-  -- },
   {                                              -- File tree viewer
     'nvim-tree/nvim-tree.lua',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' }, -- Lazy-load on commands
@@ -373,29 +366,7 @@ return {
           require('mason-lspconfig').setup(opts)
         end,
       },
-      -- {
-      --   'hrsh7th/cmp-nvim-lsp',
-      --   cond = function()
-      --     return myutils.has('nvim-cmp')
-      --   end,
-      -- },
       'nvimdev/lspsaga.nvim',
-      -- { -- LSP progress messages
-      --   'j-hui/fidget.nvim',
-      --   tag = 'legacy',
-      --   config = true
-      -- },
-      -- { -- Show signature when we writte function parameters
-      --   "ray-x/lsp_signature.nvim",
-      --   opts = {
-      --     bind = false, -- If you want to hook lspsaga or other signature handler, pls set to false
-      --     hint_enable = false
-      --   },
-      --   -- config = false
-      --   config = function(_, opts)
-      --     require('lsp_signature').setup(opts)
-      --   end
-      -- },
       {
         'folke/lazydev.nvim',
         ft = 'lua', -- only load on lua files
@@ -717,45 +688,6 @@ return {
       end
     end,
   },
-  -- { -- Smooth scroll for neovim
-  --   'echasnovski/mini.animate',
-  --   version = '*',
-  --   event = 'VeryLazy',
-  --   opts = function()
-  --     -- don't use animate when scrolling with the mouse
-  --     local mouse_scrolled = false
-  --     for _, scroll in ipairs({ "Up", "Down" }) do
-  --       local key = "<ScrollWheel" .. scroll .. ">"
-  --       vim.keymap.set({ "", "i" }, key, function()
-  --         mouse_scrolled = true
-  --         return key
-  --       end, { expr = true })
-  --     end
-  --
-  --     local animate = require("mini.animate")
-  --     return {
-  --       cursor = {
-  --         enable = false
-  --       },
-  --       resize = {
-  --         timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
-  --       },
-  --       scroll = {
-  --         timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
-  --         subscroll = animate.gen_subscroll.equal({
-  --           predicate = function(total_scroll)
-  --             if mouse_scrolled then
-  --               mouse_scrolled = false
-  --               return false
-  --             end
-  --             return total_scroll > 1
-  --           end,
-  --         }),
-  --       },
-  --     }
-  --   end,
-  --   config = true
-  -- },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
     dependencies = { 'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter' },
@@ -869,8 +801,6 @@ return {
   },
   {
     "folke/noice.nvim",
-    -- TODO: Remove the next line once the error is gone
-    -- commit = '9ccd02965382922c33762933c5601318f93e19fb',
     event = "VeryLazy",
     opts = {
       cmdline = {
