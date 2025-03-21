@@ -98,7 +98,7 @@ M = {
       { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>' },
 
       { 'gi',        vim.lsp.buf.implementation },
-      { '<A-d>',      '<cmd>Lspsaga term_toggle lazygit<cr>', mode = { 'n', 't' } },
+      { '<A-d>',      '<cmd>lua require("snacks").lazygit()<cr>', mode = { 'n', 't' } },
       {
         '<A-h>',
         function()

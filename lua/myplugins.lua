@@ -276,7 +276,8 @@ return {
     cmd = 'FzfLua',
     opts = function()
       local actions = require 'fzf-lua.actions'
-      vim.cmd('hi FzfLuaBorder guifg=#141423')
+      -- vim.cmd('hi FzfLuaBorder guifg=#141423')
+      vim.cmd('hi FzfLuaBorder guifg=#171927')
       return {
         fzf_colors = {
           bg = { 'bg', 'Normal' },
@@ -716,45 +717,45 @@ return {
       end
     end,
   },
-  { -- Smooth scroll for neovim
-    'echasnovski/mini.animate',
-    version = '*',
-    event = 'VeryLazy',
-    opts = function()
-      -- don't use animate when scrolling with the mouse
-      local mouse_scrolled = false
-      for _, scroll in ipairs({ "Up", "Down" }) do
-        local key = "<ScrollWheel" .. scroll .. ">"
-        vim.keymap.set({ "", "i" }, key, function()
-          mouse_scrolled = true
-          return key
-        end, { expr = true })
-      end
-
-      local animate = require("mini.animate")
-      return {
-        cursor = {
-          enable = false
-        },
-        resize = {
-          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
-        },
-        scroll = {
-          timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
-          subscroll = animate.gen_subscroll.equal({
-            predicate = function(total_scroll)
-              if mouse_scrolled then
-                mouse_scrolled = false
-                return false
-              end
-              return total_scroll > 1
-            end,
-          }),
-        },
-      }
-    end,
-    config = true
-  },
+  -- { -- Smooth scroll for neovim
+  --   'echasnovski/mini.animate',
+  --   version = '*',
+  --   event = 'VeryLazy',
+  --   opts = function()
+  --     -- don't use animate when scrolling with the mouse
+  --     local mouse_scrolled = false
+  --     for _, scroll in ipairs({ "Up", "Down" }) do
+  --       local key = "<ScrollWheel" .. scroll .. ">"
+  --       vim.keymap.set({ "", "i" }, key, function()
+  --         mouse_scrolled = true
+  --         return key
+  --       end, { expr = true })
+  --     end
+  --
+  --     local animate = require("mini.animate")
+  --     return {
+  --       cursor = {
+  --         enable = false
+  --       },
+  --       resize = {
+  --         timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
+  --       },
+  --       scroll = {
+  --         timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+  --         subscroll = animate.gen_subscroll.equal({
+  --           predicate = function(total_scroll)
+  --             if mouse_scrolled then
+  --               mouse_scrolled = false
+  --               return false
+  --             end
+  --             return total_scroll > 1
+  --           end,
+  --         }),
+  --       },
+  --     }
+  --   end,
+  --   config = true
+  -- },
   { -- Improved folding management
     "kevinhwang91/nvim-ufo",
     dependencies = { 'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter' },
@@ -1114,11 +1115,19 @@ return {
   },
   {
     "folke/snacks.nvim", -- Images support
-    ft = 'markdown', -- only load on markdown files
+    lazy = false,
     ---@type snacks.Config
     opts = {
-      image = {
-        -- leave it empty to use the default settings
+      -- Leave configs  empty to use the default settings
+      image = {}, -- Show images in neovim using kitty images protocol
+      bigfile = {}, -- Detect big files and prevent some plugins to load
+      scroll = {}, -- Smooth scroll
+      lazygit = {}, -- Configure lazygit to use nvim colorscheme colors
+      styles = {
+        float = { -- Configure lazygit height and width
+          height = 0.8,
+          width = 0.8,
+        }
       }
     }
   },
