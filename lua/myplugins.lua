@@ -603,7 +603,7 @@ return {
       {
         'nvimtools/none-ls.nvim',
         -- TODO: Remove the next line once the error is gone
-        commit = '1f2bf17eddfdd45aed254b6922c6c68b933dba9e',
+        -- commit = '1f2bf17eddfdd45aed254b6922c6c68b933dba9e',
         dependencies = {
           'nvimtools/none-ls-extras.nvim'
         },
@@ -865,7 +865,8 @@ return {
     event = "InsertEnter",
 
     -- use a release tag to download pre-built binaries
-    version = 'v0.8.2',
+    -- version = 'v0.8.2',
+    version = '*',
     -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
     -- build = 'cargo build --release',
     -- If you use nix, you can build from source using latest nightly rust with:
@@ -887,7 +888,20 @@ return {
         -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
         -- nerd_font_variant = 'mono'
-        nerd_font_variant = 'normal'
+        nerd_font_variant = 'normal',
+        kind_icons = {
+          Constant = '',
+          Field = '',
+          Property = '',
+          Interface = '',
+          Keyword = '',
+          Type = '',
+          TypeParameter = '',
+          Variable = '',
+          Class = '',
+          Function = '',
+          Method = '',
+        }
       },
       completion = {
         accept = {
@@ -914,22 +928,26 @@ return {
           enabled = vim.g.ai_cmp,
         },
       },
+      fuzzy = { implementation = 'prefer_rust' },
       sources = {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
-        cmdline = function()
-          local type = vim.fn.getcmdtype()
-          -- Search forward and backward
-          if type == '/' or type == '?' then
-            -- return { 'buffer' }
-            return {} -- We do not want suggestions on / and ? search
-          end
-          -- Commands
-          if type == ':' then return { 'cmdline' } end
-          return {}
-        end,
+        -- cmdline = function()
+        --   local type = vim.fn.getcmdtype()
+        --   -- Search forward and backward
+        --   if type == '/' or type == '?' then
+        --     -- return { 'buffer' }
+        --     return {} -- We do not want suggestions on / and ? search
+        --   end
+        --   -- Commands
+        --   if type == ':' then return { 'cmdline' } end
+        --   return {}
+        -- end,
+        per_filetype = {
+          codecompanion = { "codecompanion" },
+        }
         -- min_keyword_length = 2, -- Minimmun chars to trigger completion menu
       },
       -- Experimental signature help support
@@ -1067,5 +1085,27 @@ return {
     opts = {
       need = 0, -- Always save the session
     }
-  }
+  },
+  -- {
+  --   "CopilotC-Nvim/CopilotChat.nvim",
+  --   lazy = false,
+  --   dependencies = {
+  --     { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+  --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+  --   },
+  --   build = "make tiktoken", -- Only on MacOS or Linux
+  --   opts = {
+  --     -- See Configuration section for options
+  --   },
+  --   -- See Commands section for default commands if you want to lazy load on them
+  -- }
+  {
+    "olimorris/codecompanion.nvim",
+    lazy = false,
+    opts = {},
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+  },
 }
