@@ -4,7 +4,7 @@ To make it run in Ubuntu:
 ```bash
 #Install some dependencies
 sudo apt update
-sudo apt install git neovim ripgrep build-essential wget curl unzip fzf
+sudo apt install git ripgrep build-essential wget curl unzip fzf
 
 #Install neovim using bob package manager
 wget https://github.com/MordechaiHadad/bob/releases/download/v4.0.3/bob-linux-x86_64.zip
