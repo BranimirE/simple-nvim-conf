@@ -6,6 +6,11 @@ To make it run in Ubuntu:
 sudo apt update
 sudo apt install git ripgrep build-essential wget curl unzip fzf
 
+#In case bob does not work with the below method, is better to intall it with cargo
+cargo install bob-nvim
+#First is needed to intall rust and cargo with:
+https://itsfoss.com/install-rust-cargo-ubuntu-linux/
+
 #Install neovim using bob package manager
 wget https://github.com/MordechaiHadad/bob/releases/download/v4.0.3/bob-linux-x86_64.zip
 unzip bob-linux-x86_64.zip
