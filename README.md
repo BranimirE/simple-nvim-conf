@@ -37,6 +37,9 @@ tar xf lazygit.tar.gz lazygit
 sudo install lazygit /usr/local/bin
 rm -rf lazygit*
 
+# Install imagemagick for Snacks.nvim Images (show images in neovim with kitty protocol)
+sudo apt install imagemagick
+
 #Clone this repo in $HOME/.config/nvim
 git clone git@github.com:BranimirE/simple-nvim-conf.git
 ln -s "$(pwd)/simple-nvim-conf/" "$HOME/.config/nvim
