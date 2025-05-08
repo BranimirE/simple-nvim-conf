@@ -186,7 +186,7 @@ M = {
       { 'J',          ":m '>+1<CR>gv=gv",               mode = 'v' },     -- Move visual block one line up
       { 'K',          ":m '<-2<CR>gv=gv",               mode = 'v' },     -- Move visual block one line down
       { '<leader>y',  '"+y',                            mode = { 'n', 'v' } }, -- Copy to the systemclipboard
-      { '<leader>d',  '"_d',                            mode = { 'n', 'v' } }, -- Delete without without overwriting the clipboard
+      -- { '<leader>d',  '"_d',                            mode = { 'n', 'v' } }, -- Delete without without overwriting the clipboard
       { '<c-s>', '<esc>:w<cr>',                         mode = { 'n', 'i' } }, -- Mapping Ctrl+s to save the file
       { '<f9>',       '<esc>:RunNpmCommand<cr>',            mode = { 'n', 'i' } }
     }

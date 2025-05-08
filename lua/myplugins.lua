@@ -602,8 +602,6 @@ return {
       'williamboman/mason.nvim',
       {
         'nvimtools/none-ls.nvim',
-        -- TODO: Remove the next line once the error is gone
-        -- commit = '1f2bf17eddfdd45aed254b6922c6c68b933dba9e',
         dependencies = {
           'nvimtools/none-ls-extras.nvim'
         },
@@ -1067,10 +1065,10 @@ return {
     ---@type snacks.Config
     opts = {
       -- Leave configs  empty to use the default settings
-      image = {}, -- Show images in neovim using kitty images protocol
-      bigfile = {}, -- Detect big files and prevent some plugins to load
-      scroll = {}, -- Smooth scroll
-      lazygit = {}, -- Configure lazygit to use nvim colorscheme colors
+      image = { enabled = true }, -- Show images in neovim using kitty images protocol
+      bigfile = { enabled = true }, -- Detect big files and prevent some plugins to load
+      scroll = { enabled = true }, -- Smooth scroll
+      lazygit = { enabled = true }, -- Configure lazygit to use nvim colorscheme colors
       styles = {
         float = { -- Configure lazygit height and width
           height = 0.8,
@@ -1086,26 +1084,206 @@ return {
       need = 0, -- Always save the session
     }
   },
-  -- {
-  --   "CopilotC-Nvim/CopilotChat.nvim",
-  --   lazy = false,
-  --   dependencies = {
-  --     { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
-  --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-  --   },
-  --   build = "make tiktoken", -- Only on MacOS or Linux
-  --   opts = {
-  --     -- See Configuration section for options
-  --   },
-  --   -- See Commands section for default commands if you want to lazy load on them
-  -- }
   {
-    "olimorris/codecompanion.nvim",
-    lazy = false,
-    opts = {},
+    "CopilotC-Nvim/CopilotChat.nvim",
+    cmd = "CopilotChat",
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
+      { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
     },
+    build = "make tiktoken", -- Only on MacOS or Linux
+    opts = {},
   },
+  {
+    "mfussenegger/nvim-dap",
+    cmd = {
+      "DapContinue",
+      "DapLoadLaunchJSON",
+      "DapRestartFrame",
+      "DapSetLogLevel",
+      "DapShowLog",
+      "DapStepInto",
+      "DapStepOut",
+      "DapStepOver",
+      "DapTerminate",
+      "DapToggleBreakpoint",
+      "DapToggleRepl",
+    },
+    dependencies = {
+      {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = {
+          "williamboman/mason.nvim",
+        },
+        opts = {
+          ensure_installed = {
+            -- mappings -> https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
+            "js", -- js-debug-adapter
+            "chrome", -- 'chrome-debug-adapter'
+          }
+        }
+      },
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
+        keys = {
+          { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI toggle" },
+        },
+        opts = {
+          icons = {
+            collapsed = "",
+            current_frame = "",
+            expanded = "",
+          },
+        },
+        config = function(_, opts)
+          local dap = require("dap")
+          local dapui = require("dapui")
+          dapui.setup(opts)
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open({})
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close({})
+          end
+          dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close({})
+          end
+        end,
+      },
+      {
+        "theHamsta/nvim-dap-virtual-text", -- virtual text for the debugger
+        opts = {},
+      }
+    },
+    keys = {
+      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+      { "<leader>dc", function() require("dap").continue() end, desc = "Run/Continue" },
+      -- { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
+      { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
+      { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
+      { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
+      { "<leader>dj", function() require("dap").down() end, desc = "Down" },
+      { "<leader>dk", function() require("dap").up() end, desc = "Up" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
+      { "<leader>do", function() require("dap").step_out() end, desc = "Step Out" },
+      { "<leader>dO", function() require("dap").step_over() end, desc = "Step Over" },
+      { "<leader>dP", function() require("dap").pause() end, desc = "Pause" },
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
+      { "<leader>ds", function() require("dap").session() end, desc = "Session" },
+      { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
+      { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
+    },
+    config = function()
+      local dap = require("dap")
+      -- Set Icons
+      vim.api.nvim_call_function(
+        "sign_define",
+        { "DapBreakpoint", { linehl = "", text = "", texthl = "diffRemoved", numhl = "" } }
+      )
+
+      vim.api.nvim_call_function(
+        "sign_define",
+        { "DapBreakpointCondition", { linehl = "", text = "", texthl = "diffRemoved", numhl = "" } }
+      )
+
+      vim.api.nvim_call_function(
+        "sign_define",
+        { "DapLogPoint", { linehl = "", text = "", texthl = "diffRemoved", numhl = "" } }
+      )
+
+      vim.api.nvim_call_function(
+        "sign_define",
+        { "DapStopped", { linehl = "GitSignsChangeVirtLn", text = "", texthl = "diffChanged", numhl = "" } }
+      )
+
+      vim.api.nvim_call_function(
+        "sign_define",
+        { "DapBreakpointRejected", { linehl = "", text = "", texthl = "", numhl = "" } }
+      )
+
+      -- Setup the adapters
+      if not dap.adapters["pwa-node"] then
+        dap.adapters["pwa-node"] = {
+          type = "server",
+          host = "localhost",
+          port = "${port}",
+          executable = {
+            command = "js-debug-adapter",
+            args = { "${port}" },
+          },
+        }
+      end
+
+      -- The node adapter is not used as its modern alternative is pwa-node
+      if not dap.adapters["node"] then
+        dap.adapters["node"] = function(cb, config)
+          if config.type == "node" then
+            config.type = "pwa-node"
+          end
+          local nativeAdapter = dap.adapters["pwa-node"]
+          if type(nativeAdapter) == "function" then
+            nativeAdapter(cb, config)
+          else
+            cb(nativeAdapter)
+          end
+        end
+      end
+
+      if not dap.adapters["pwa-chrome"] then
+        dap.adapters["pwa-chrome"] = {
+          type = 'executable',
+          command = vim.fn.exepath('chrome-debug-adapter'),
+        }
+      end
+
+      -- Setup compatibility with vscode dap config files
+      local js_filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" }
+      local vscode = require("dap.ext.vscode")
+      local json = require("plenary.json")
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vscode.json_decode = function(str)
+        return vim.json.decode(json.json_strip_comments(str))
+      end
+      vscode.type_to_filetypes["node"] = js_filetypes
+      vscode.type_to_filetypes["pwa-node"] = js_filetypes
+
+      -- Setup configurations
+      for _, language in ipairs(js_filetypes) do
+        if not dap.configurations[language] then
+          dap.configurations[language] = {
+            {
+              type = "pwa-node",
+              request = "launch",
+              name = "Launch current file",
+              program = "${file}",
+              cwd = "${workspaceFolder}",
+            },
+            {
+              type = "pwa-node",
+              request = "attach",
+              name = "Attach to a running process (node --inspect flag is needed)",
+              processId = require("dap.utils").pick_process,
+              cwd = "${workspaceFolder}",
+            },
+            {
+              type = "pwa-chrome",
+              request = "launch",
+              name = "Launch Chrome to debug client side code",
+              -- default vite dev server url
+              url = "http://localhost:5173",
+              -- for TypeScript/Svelte
+              sourceMaps = true,
+              webRoot = "${workspaceFolder}/src",
+              protocol = "inspector",
+              port = 9222,
+              -- skip files from vite's hmr
+              skipFiles = { "**/node_modules/**/*", "**/@vite/*", "**/src/client/*", "**/src/*" },
+            }
+          }
+        end
+      end
+    end,
+  }
 }
