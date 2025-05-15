@@ -337,15 +337,15 @@ return {
     },
     config = true,
   },
-  { -- nvim-lspconfig
+  { -- Set of already configured lsp clients
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       {
-        'williamboman/mason-lspconfig.nvim', -- It need to be setup before nvim-lspconfig
+        'mason-org/mason-lspconfig.nvim', -- It need to be setup before nvim-lspconfig
         dependencies = {
           {
-            'williamboman/mason.nvim',
+            'mason-org/mason.nvim',
             cmd = 'Mason',
             build = ':MasonUpdate',
             opts = function()
@@ -360,7 +360,28 @@ return {
           }
         },
         opts = {
-          automatic_installation = true -- Automatically install the lsp server with mason if it is configured
+          ensure_installed = {
+            'lua_ls',
+            'bashls',
+            'pyright',
+            'vimls',
+            'marksman',
+            'cssls',
+            -- Go to definition and hover for css classes references in js(x)/ts(x) files
+            -- 'cssmodules_ls',
+            'yamlls',
+            'html',
+            'sqlls',
+            'jsonls',
+            'docker_compose_language_service',
+            'dockerls',
+            'angularls',
+            'terraformls',
+            'ansiblels',
+            'vtsls',
+            'eslint'
+          },
+          automatic_enable = true, -- Automatically call to vim.lsp.enable('server-name') for all installed servers
         },
         config = function(_, opts)
           require('mason-lspconfig').setup(opts)
@@ -380,35 +401,25 @@ return {
         dependencies = 'Bilal2453/luvit-meta'
       },
     },
-    config = function()
-      local my_lsp_servers = {
-        'lua_ls',
-        'bashls',
-        'pyright',
-        'vimls',
-        'marksman',
-        'cssls',
-        -- Go to definition and hover for css classes references in js(x)/ts(x) files
-        -- 'cssmodules_ls',
-        'yamlls',
-        'html',
-        'sqlls',
-        'jsonls',
-        'docker_compose_language_service',
-        'dockerls',
-        'angularls',
-        'terraformls',
-        'ansiblels',
-        'vtsls',
-        'eslint'
-      }
-
-      local capabilities = require('myconfig/lsp').client_capabilities
+    config = function ()
       local lspconfig = require('lspconfig')
+      local my_lsp_config = require('./myconfig/lsp')
 
-      local my_lsp_server_config = {
-        yamlls = {
-          capabilities = capabilities(),
+      vim.lsp.config('*', {
+        capabilities = my_lsp_config.client_capabilities()
+      })
+
+      local pyenv_virtualenv_python_path = myutils.get_pyenv_virtual_env_path()
+      if pyenv_virtualenv_python_path ~= nil then
+        vim.lsp.config('pyright', {
+          settings = {
+            python = {
+              pythonPath = pyenv_virtualenv_python_path
+            }
+          }
+        })
+      end
+      vim.lsp.config('yamlls', {
           settings = {
             yaml = {
               validate = true,
@@ -452,9 +463,8 @@ return {
               },
             },
           }
-        },
-        jsonls = {
-          capabilities = capabilities(),
+        })
+        vim.lsp.config('jsonls',{
           settings = {
             json = {
               validate = { enable = true },
@@ -465,9 +475,8 @@ return {
             config.settings.json.schemas = config.settings.json.schemas or {}
             vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
           end,
-        },
-        vtsls = {
-          capabilities = capabilities(),
+        })
+        vim.lsp.config('vtsls', {
           settings = {
             complete_function_calls = true,
             vtsls = {
@@ -508,10 +517,9 @@ return {
             }
           },
           handlers = {
-            -- Remove message "File is a CommonJS module; it may be converted to an ES module."
+            -- Remove the message "File is a CommonJS module; it may be converted to an ES module."
             -- TODO: Migrate this function to myutils such that it can be used for other lsp servers
-            ["textDocument/publishDiagnostics"] = function(err, res, ctx, config)
-              -- myutils.log(vim.inspect(res.diagnostics))
+            ["textDocument/publishDiagnostics"] = function(err, res, ctx)
               local filtered = {}
               for _, diagnostic in ipairs(res.diagnostics) do
                 if diagnostic.source == "ts" and diagnostic.code ~= 80001 then
@@ -520,24 +528,14 @@ return {
               end
 
               res.diagnostics = filtered
-              vim.lsp.diagnostic.on_publish_diagnostics(err, res, ctx, config)
+              vim.lsp.diagnostic.on_publish_diagnostics(err, res, ctx)
             end
           }
-        },
-        pyright = {
-          capabilities = capabilities(),
-          on_new_config = function(config)
-            local pyenv_virtualenv_python_path = myutils.get_pyenv_virtual_env_path()
-            if pyenv_virtualenv_python_path ~= nil then
-              config.settings.python.pythonPath = pyenv_virtualenv_python_path
-            end
-          end,
-        },
-        -- cssmodules_ls = {
+        })
+        -- vim.lsp.config('cssmodules_ls', {
         --   capabilities = vim.tbl_deep_extend("force", capabilities(), { definitionProvider = false }),
-        -- },
-        eslint = {
-          capabilities = capabilities(),
+        -- })
+        vim.lsp.config('eslint', {
           root_dir = function(cur_file_path)
             local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
             if not package_json_dir or not myutils.is_npm_package_installed('eslint', package_json_dir) then
@@ -553,18 +551,7 @@ return {
             'Detecting package.json folder as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
             return lspconfig.util.root_pattern('package.json')(cur_file_path)
           end
-        }
-      }
-
-      for _, server_name in ipairs(my_lsp_servers) do
-        if my_lsp_server_config[server_name] ~= nil then
-          lspconfig[server_name].setup(my_lsp_server_config[server_name])
-        else
-          lspconfig[server_name].setup({
-            capabilities = capabilities(),
-          })
-        end
-      end
+        })
     end
   },
   { -- vtsls wrapper for typescript lsp
@@ -599,7 +586,7 @@ return {
       ensure_installed = { 'stylua', 'shfmt', 'prettier' }
     },
     dependencies = {
-      'williamboman/mason.nvim',
+      'mason-org/mason.nvim',
       {
         'nvimtools/none-ls.nvim',
         dependencies = {
@@ -1113,7 +1100,7 @@ return {
       {
         "jay-babu/mason-nvim-dap.nvim",
         dependencies = {
-          "williamboman/mason.nvim",
+          "mason-org/mason.nvim",
         },
         opts = {
           ensure_installed = {

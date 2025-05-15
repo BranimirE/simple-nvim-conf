@@ -44,12 +44,12 @@ local function on_attach(client, bufnr)
 
   local conditional_lsp_methods = mymappings.conditional_lsp_methods(bufnr)
   for method, mapping in pairs(conditional_lsp_methods) do
-    if client.supports_method(method) then
+    if client.supports_method(method, bufnr) then
       myutils.load_mapping(mapping)
     end
   end
 
-  if client.supports_method(methods.textDocument_documentHighlight) then
+  if client.supports_method(methods.textDocument_documentHighlight, bufnr) then
     local under_cursor_highlights_group =
         vim.api.nvim_create_augroup('branimir/cursor_highlights', { clear = false })
     vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'BufEnter' }, {
@@ -276,18 +276,19 @@ vim.diagnostic.handlers.virtual_text = {
 --   return contents
 -- end
 
+-- TODO: Check if any lsp server register dynamic capabilities
 -- Update mappings when registering dynamic capabilities.
-local register_capability = vim.lsp.handlers[methods.client_registerCapability]
-vim.lsp.handlers[methods.client_registerCapability] = function(err, res, ctx)
-  local client = vim.lsp.get_client_by_id(ctx.client_id)
-  if not client then
-    return
-  end
-
-  on_attach(client, vim.api.nvim_get_current_buf())
-
-  return register_capability(err, res, ctx)
-end
+-- local register_capability = vim.lsp.handlers[methods.client_registerCapability]
+-- vim.lsp.handlers[methods.client_registerCapability] = function(err, res, ctx)
+--   local client = vim.lsp.get_client_by_id(ctx.client_id)
+--   if not client then
+--     return
+--   end
+--
+--   on_attach(client, vim.api.nvim_get_current_buf())
+--
+--   return register_capability(err, res, ctx)
+-- end
 
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'Configure LSP keymaps',
