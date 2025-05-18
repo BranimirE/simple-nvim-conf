@@ -414,144 +414,147 @@ return {
         vim.lsp.config('pyright', {
           settings = {
             python = {
-              pythonPath = pyenv_virtualenv_python_path
+              pythonpath = pyenv_virtualenv_python_path
             }
           }
         })
       end
       vim.lsp.config('yamlls', {
-          settings = {
-            yaml = {
-              validate = true,
-              format = {
-                enable = true,
+        settings = {
+          yaml = {
+            validate = true,
+            format = {
+              enable = true,
+            },
+            hover = true,
+            completion = true,
+            schemastore = {
+              -- you must disable built-in schemastore support if you want to use
+              -- this plugin and its advanced options like `ignore`.
+              enable = true,
+              -- avoid typeerror: cannot read properties of undefined (reading 'length')
+              url = "",   -- important!!! without this nothing works
+            },
+            schemas = {
+              ['https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json'] =
+              '/template.yml',
+            },
+            -- schemas = require('schemastore').yaml.schemas(),
+            customtags = {
+              "!ref",
+              "!getatt",
+              "!fn",
+              "!and",
+              "!if sequence",
+              "!not",
+              "!not sequence",
+              "!equals",
+              "!equals sequence",
+              "!or",
+              "!findinmap sequence",
+              "!base64",
+              "!cidr",
+              "!sub",
+              "!getazs",
+              "!importvalue",
+              "!select sequence",
+              "!split sequence",
+              "!Join sequence",
+            },
+          },
+        }
+      })
+      vim.lsp.config('jsonls', {
+        settings = {
+          json = {
+            validate = { enable = true },
+          },
+        },
+        -- Lazy-load schemas.
+        on_new_config = function(config)
+          config.settings.json.schemas = config.settings.json.schemas or {}
+          vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
+        end,
+      })
+      vim.lsp.config('vtsls', {
+        settings = {
+          complete_function_calls = true,
+          vtsls = {
+            enableMoveToFileCodeAction = true,
+            autoUseWorkspaceTsdk = true,
+            experimental = {
+              maxInlayHintLength = 30,
+              completion = {
+                enableServerSideFuzzyMatch = true,
               },
-              hover = true,
-              completion = true,
-              schemaStore = {
-                -- You must disable built-in schemaStore support if you want to use
-                -- this plugin and its advanced options like `ignore`.
-                enable = true,
-                -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-                url = "", -- IMPORTANT!!! WITHOUT THIS NOTHING WORKS
-              },
-              schemas = {
-                ['https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json'] =
-                '/template.yml',
-              },
-              -- schemas = require('schemastore').yaml.schemas(),
-              customTags = {
-                "!Ref",
-                "!GetAtt",
-                "!Fn",
-                "!And",
-                "!If sequence",
-                "!Not",
-                "!Not sequence",
-                "!Equals",
-                "!Equals sequence",
-                "!Or",
-                "!FindInMap sequence",
-                "!Base64",
-                "!Cidr",
-                "!Sub",
-                "!GetAZs",
-                "!ImportValue",
-                "!Select sequence",
-                "!Split sequence",
-                "!Join sequence",
-              },
+            },
+          },
+          javascript = {
+            updateImportsOnFileMove = { enabled = "always" },
+            suggest = {
+              completeFunctionCalls = true,
+            },
+            inlayHints = {
+              parameterNames = { enabled = 'all' },
+            },
+          },
+          typescript = {
+            updateImportsOnFileMove = { enabled = "always" },
+            suggest = {
+              completeFunctionCalls = true,
+            },
+            inlayHints = {
+              -- parameterNames = { enabled = 'all' },
+              -- variableTypes = { enabled = true },
+              -- functionLikeReturnTypes = { enabled = true },
+              enumMemberValues = { enabled = true },
+              functionLikeReturnTypes = { enabled = true },
+              parameterNames = { enabled = "literals" },
+              parameterTypes = { enabled = true },
+              propertyDeclarationTypes = { enabled = true },
+              variableTypes = { enabled = false },
             },
           }
-        })
-        vim.lsp.config('jsonls',{
-          settings = {
-            json = {
-              validate = { enable = true },
-            },
-          },
-          -- Lazy-load schemas.
-          on_new_config = function(config)
-            config.settings.json.schemas = config.settings.json.schemas or {}
-            vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
-          end,
-        })
-        vim.lsp.config('vtsls', {
-          settings = {
-            complete_function_calls = true,
-            vtsls = {
-              enableMoveToFileCodeAction = true,
-              autoUseWorkspaceTsdk = true,
-              experimental = {
-                maxInlayHintLength = 30,
-                completion = {
-                  enableServerSideFuzzyMatch = true,
-                },
-              },
-            },
-            javascript = {
-              updateImportsOnFileMove = { enabled = "always" },
-              suggest = {
-                completeFunctionCalls = true,
-              },
-              inlayHints = {
-                parameterNames = { enabled = 'all' },
-              },
-            },
-            typescript = {
-              updateImportsOnFileMove = { enabled = "always" },
-              suggest = {
-                completeFunctionCalls = true,
-              },
-              inlayHints = {
-                -- parameterNames = { enabled = 'all' },
-                -- variableTypes = { enabled = true },
-                -- functionLikeReturnTypes = { enabled = true },
-                enumMemberValues = { enabled = true },
-                functionLikeReturnTypes = { enabled = true },
-                parameterNames = { enabled = "literals" },
-                parameterTypes = { enabled = true },
-                propertyDeclarationTypes = { enabled = true },
-                variableTypes = { enabled = false },
-              },
-            }
-          },
-          handlers = {
-            -- Remove the message "File is a CommonJS module; it may be converted to an ES module."
-            -- TODO: Migrate this function to myutils such that it can be used for other lsp servers
-            ["textDocument/publishDiagnostics"] = function(err, res, ctx)
-              local filtered = {}
-              for _, diagnostic in ipairs(res.diagnostics) do
-                if diagnostic.source == "ts" and diagnostic.code ~= 80001 then
-                  table.insert(filtered, diagnostic)
-                end
+        },
+        handlers = {
+          -- Remove the message "File is a CommonJS module; it may be converted to an ES module."
+          -- TODO: Migrate this function to myutils such that it can be used for other lsp servers
+          ["textDocument/publishDiagnostics"] = function(err, res, ctx)
+            local filtered = {}
+            for _, diagnostic in ipairs(res.diagnostics) do
+              if diagnostic.source == "ts" and diagnostic.code ~= 80001 then
+                table.insert(filtered, diagnostic)
               end
-
-              res.diagnostics = filtered
-              vim.lsp.diagnostic.on_publish_diagnostics(err, res, ctx)
-            end
-          }
-        })
-        -- vim.lsp.config('cssmodules_ls', {
-        --   capabilities = vim.tbl_deep_extend("force", capabilities(), { definitionProvider = false }),
-        -- })
-        vim.lsp.config('eslint', {
-          root_dir = function(cur_file_path)
-            local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
-            if not package_json_dir or not myutils.is_npm_package_installed('eslint', package_json_dir) then
-              myutils.log('no eslint found in the package.json file')
-              myutils.log(
-              'checking any eslint config file existence to attach eslint LSP and show related notifications')
-              -- If eslint config file is not find, LSP server is not attached
-              return require('lspconfig.configs.eslint').default_config.root_dir(cur_file_path)
             end
 
-            myutils.log('eslint found in the package.json file')
-            myutils.log(
-            'Detecting package.json folder as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
-            return lspconfig.util.root_pattern('package.json')(cur_file_path)
+            res.diagnostics = filtered
+            vim.lsp.diagnostic.on_publish_diagnostics(err, res, ctx)
           end
-        })
+        }
+      })
+      -- vim.lsp.config('cssmodules_ls', {
+      --   capabilities = vim.tbl_deep_extend("force", capabilities(), { definitionProvider = false }),
+      -- })
+      vim.lsp.config('eslint', {
+        -- root_dir = function(cur_file_path)
+        root_dir = function(bufnr, on_dir)
+          local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
+          local cur_file_path = vim.api.nvim_buf_get_name(bufnr)
+          if not package_json_dir or not myutils.is_npm_package_installed('eslint', package_json_dir) then
+            myutils.log('no eslint found in the package.json file')
+            myutils.log(
+              'checking any eslint config file existence to attach eslint LSP and show related notifications')
+            -- If eslint config file is not find, LSP server is not attached
+            on_dir(require('lspconfig.configs.eslint').default_config.root_dir(cur_file_path))
+          end
+
+          myutils.log('eslint found in the package.json file')
+          myutils.log(
+            'Detecting package.json folder as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
+          local root_path = lspconfig.util.root_pattern('package.json')(cur_file_path)
+          on_dir(root_path)
+        end
+      })
     end
   },
   { -- vtsls wrapper for typescript lsp
@@ -605,6 +608,12 @@ return {
             sources = sources,
             root_dir = require('null-ls.utils').root_pattern('.null-ls-root', 'Makefile', '.git', 'package.json',
               'index.js', 'main.js', 'index.py', 'main.py'),
+            -- on_attach = function(client, bufnr)
+            --   -- Disable hover for null-ls to prevent "No information found" message
+            --   if client.name == "null-ls" then
+            --     client.server_capabilities.hoverProvider = false
+            --   end
+            -- end,
           }
         end
       },
