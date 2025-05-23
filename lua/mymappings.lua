@@ -85,20 +85,17 @@ M = {
 
   lsp = function(bufnr)
     return with_opts({
-      { 'gr', '<cmd>FzfLua lsp_references<cr>'},
-      { 'gt', '<cmd>FzfLua lsp_typedefs<cr>'},
-      -- { '<leader>k',  '<cmd>Lspsaga hover_doc<cr>' },
-      { '<leader>k',  vim.lsp.buf.hover},
-      { '<leader>o',  '<cmd>Lspsaga outline<cr>' },
-      -- { '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<cr>' },
-      { '<leader>cd', vim.diagnostic.open_float},
-      { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<cr>' },
-      { ']e',         '<cmd>Lspsaga diagnostic_jump_next<cr>' },
-      { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<cr>' },
-      { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>' },
-
-      { 'gi',        vim.lsp.buf.implementation },
-      { '<A-d>',      '<cmd>lua require("snacks").lazygit()<cr>', mode = { 'n', 't' } },
+      { 'gr',         '<cmd>FzfLua lsp_references<cr>',                   desc = 'Go to references' },
+      { 'gt',         '<cmd>FzfLua lsp_typedefs<cr>',                     desc = 'Got to type definition' },
+      { '<leader>k',  vim.lsp.buf.hover,                                  desc = 'Hover doc' },
+      { '<leader>o',  '<cmd>Lspsaga outline<cr>',                         desc = 'Show Outline' },
+      { '<leader>cd', vim.diagnostic.open_float,                          desc = 'Show line diagnostics' },
+      { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<cr>',            desc = 'Previous warning/error' },
+      { ']e',         '<cmd>Lspsaga diagnostic_jump_next<cr>',            desc = 'Next warning/error' },
+      { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<cr>', desc = 'Previous error' },
+      { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>', desc = 'Next error' },
+      { 'gi',         vim.lsp.buf.implementation,                         desc = 'Got to the implementation' },
+      { '<A-d>',      '<cmd>lua require("snacks").lazygit()<cr>',         desc = 'Open Lazygit',             mode = { 'n', 't' } },
       {
         '<A-h>',
         function()
@@ -108,7 +105,6 @@ M = {
         mode = { 'n', 't' },
         desc = 'Toggle inlay hints'
       }
-
     }, { noremap = true, silent = true, buffer = bufnr })
   end,
 
@@ -116,24 +112,24 @@ M = {
     local methods = vim.lsp.protocol.Methods
     local mappings = {
       [methods.textDocument_codeAction] = {
-        { '<leader>ca', '<cmd>Lspsaga code_action<cr>' },
-        { '<leader>ca', '<cmd>Lspsaga code_action<cr>', mode = 'v' },
+        { '<leader>ca', '<cmd>Lspsaga code_action<cr>', desc = 'Code actions' },
+        { '<leader>ca', '<cmd>Lspsaga code_action<cr>', desc = 'Code actions', mode = 'v' },
       },
       [methods.textDocument_rename] = {
-        { '<leader>rn', '<cmd>Lspsaga rename<cr>' },
+        { '<leader>rn', '<cmd>Lspsaga rename<cr>', desc = 'Rename' },
       },
       [methods.textDocument_definition] = {
-        { 'gd',         vim.lsp.buf.definition },
-        { '<leader>gd', '<cmd>Lspsaga peek_definition<cr>' },
+        { 'gd',         vim.lsp.buf.definition,             desc = 'Go to definition' },
+        { '<leader>gd', '<cmd>Lspsaga peek_definition<cr>', desc = 'Go to definition (floating)' },
       },
       [methods.textDocument_declaration] = {
-        { 'gD', vim.lsp.buf.declaration }
+        { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration' }
       },
       [methods.textDocument_signatureHelp] = {
-        { 'K',     vim.lsp.buf.signature_help },
+        { 'K', vim.lsp.buf.signature_help, desc = 'Signature help' },
       },
       [methods.textDocument_typeDefinition] = {
-        { '<leader>D', vim.lsp.buf.type_definition },
+        { '<leader>D', vim.lsp.buf.type_definition, desc = 'Go to type definition' },
       }
     }
     for method, mapping in pairs(mappings) do
@@ -144,23 +140,23 @@ M = {
 
   ufo = function()
     return {
-      { 'zR',        function() require('ufo').openAllFolds() end },
-      { 'zM',        function() require('ufo').closeAllFolds() end }
+      { 'zR', function() require('ufo').openAllFolds() end,  desc = 'Open all folds' },
+      { 'zM', function() require('ufo').closeAllFolds() end, desc = 'Close all folds' }
     }
   end,
 
   comment = function()
     return {
-      { 'gc', util.uncomment_block, mode = 'o' }
+      { 'gc', util.uncomment_block, desc = 'Toggle comment', mode = 'o' }
     }
   end,
 
   fzf_lua = function()
     return {
-      { '<leader>ff', '<cmd>FzfLua files<cr>', desc = 'Find files' },
+      { '<leader>ff', '<cmd>FzfLua files<cr>',          desc = 'Find files' },
       { '<leader>fg', '<cmd>FzfLua live_grep_glob<cr>', desc = 'Find Grep' },
-      { '<leader>fg', '<cmd>FzfLua grep_visual<cr>', desc = 'Grep Visual', mode = 'x' },
-      { '<leader>fp', '<cmd>FzfLua resume<cr>', desc = 'Grep Resume' },
+      { '<leader>fg', '<cmd>FzfLua grep_visual<cr>',    desc = 'Grep Visual', mode = 'x' },
+      { '<leader>fp', '<cmd>FzfLua resume<cr>',         desc = 'Grep Resume' },
     }
   end,
 
@@ -173,8 +169,8 @@ M = {
   misc = function()
     return {
       { 'jk',         '<esc>',                          mode = 'i' },      -- Go to normal mode in insert mode
-      { '<leader>bd', util.delete_buffer_keep_layout, desc = 'Delete current buffer and preserve layout)' },                                    -- Close the current buffer
-      { '<c-n>',      '<esc>:NvimTreeToggle<cr>',       silent = true },
+      { '<leader>bd', util.delete_buffer_keep_layout, desc = 'Delete current buffer and preserve layout)' }, -- Close the current buffer
+      { '<c-n>',      '<esc>:NvimTreeToggle<cr>', desc = 'Toggle nvim-tree', silent = true },
       { ',',          '<cmd>nohlsearch<cr>', desc = "Clear highlight search" },                             -- As C-l is used by tmux-navigator, use ',' instead
       { '<',          '<gv',                            mode = 'v' },      -- Avoid exit visual mode on left shifting
       { '>',          '>gv',                            mode = 'v' },      -- Avoid exit visual mode on right shifting
