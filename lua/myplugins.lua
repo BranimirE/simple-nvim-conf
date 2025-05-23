@@ -400,6 +400,10 @@ return {
         },
         dependencies = 'Bilal2453/luvit-meta'
       },
+      {
+        'b0o/schemastore.nvim',
+        ft = 'json'
+      }
     },
     config = function ()
       local lspconfig = require('lspconfig')
@@ -467,14 +471,15 @@ return {
       vim.lsp.config('jsonls', {
         settings = {
           json = {
+            schemas = require('schemastore').json.schemas(),
             validate = { enable = true },
           },
         },
         -- Lazy-load schemas.
-        on_new_config = function(config)
-          config.settings.json.schemas = config.settings.json.schemas or {}
-          vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
-        end,
+        -- on_new_config = function(config)
+        --   config.settings.json.schemas = config.settings.json.schemas or {}
+        --   vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
+        -- end,
       })
       vim.lsp.config('vtsls', {
         settings = {
