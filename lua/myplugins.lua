@@ -428,37 +428,37 @@ return {
             },
             hover = true,
             completion = true,
-            schemastore = {
-              -- you must disable built-in schemastore support if you want to use
+            schemaStore = {
+              -- You must disable built-in schemaStore support if you want to use
               -- this plugin and its advanced options like `ignore`.
               enable = true,
-              -- avoid typeerror: cannot read properties of undefined (reading 'length')
-              url = "",   -- important!!! without this nothing works
+              -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+              url = "", -- IMPORTANT!!! WITHOUT THIS NOTHING WORKS
             },
             schemas = {
               ['https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json'] =
-              '/template.yml',
+                '/template.yml',
             },
             -- schemas = require('schemastore').yaml.schemas(),
-            customtags = {
-              "!ref",
-              "!getatt",
-              "!fn",
-              "!and",
-              "!if sequence",
-              "!not",
-              "!not sequence",
-              "!equals",
-              "!equals sequence",
-              "!or",
-              "!findinmap sequence",
-              "!base64",
-              "!cidr",
-              "!sub",
-              "!getazs",
-              "!importvalue",
-              "!select sequence",
-              "!split sequence",
+            customTags = {
+              "!Ref",
+              "!GetAtt",
+              "!Fn",
+              "!And",
+              "!If sequence",
+              "!Not",
+              "!Not sequence",
+              "!Equals",
+              "!Equals sequence",
+              "!Or",
+              "!FindInMap sequence",
+              "!Base64",
+              "!Cidr",
+              "!Sub",
+              "!GetAZs",
+              "!ImportValue",
+              "!Select sequence",
+              "!Split sequence",
               "!Join sequence",
             },
           },
