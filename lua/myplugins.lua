@@ -414,7 +414,7 @@ return {
         vim.lsp.config('pyright', {
           settings = {
             python = {
-              pythonpath = pyenv_virtualenv_python_path
+              pythonPath = pyenv_virtualenv_python_path
             }
           }
         })
