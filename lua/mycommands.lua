@@ -70,12 +70,12 @@ vim.api.nvim_create_autocmd('BufEnter', {
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('LspFormatting', {}),
   callback = function()
+    if myconfig.ESLINT_FIX_ALL_ON_SAVE then
+      vim.cmd('CustomEslintFixAll')
+    end
     if myconfig.FORMAT_ON_SAVE then
       -- We want the formatting finish before BufWrite, so async: false
       myutils.format(nil, false)
-    end
-    if myconfig.ESLINT_FIX_ALL_ON_SAVE then
-      vim.cmd('EslintFixAll')
     end
 
   end

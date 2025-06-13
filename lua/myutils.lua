@@ -585,7 +585,7 @@ function M.play_sound(path)
   end
 
   if not M.file_exists(path) then
-    print('File not found!')
+    print('Couldn\'t play sound. File not found!')
     return
   end
 
@@ -615,8 +615,9 @@ function M.notify(title, message)
       local cur = string.sub(message, idx, idx)
       display = display .. cur
 
-      if cur ~= ' ' then
-        M.play_sound(vim.loop.os_homedir() .. '/sounds/tick.ogg')
+      local audio_path = vim.loop.os_homedir() .. '/sounds/tick.ogg'
+      if cur ~= ' ' and M.file_exists(audio_path) then
+        M.play_sound(audio_path)
       end
 
       local next

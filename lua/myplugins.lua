@@ -558,7 +558,10 @@ return {
             'Detecting package.json folder as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
           local root_path = lspconfig.util.root_pattern('package.json')(cur_file_path)
           on_dir(root_path)
-        end
+        end,
+        on_init = function(client)
+          vim.api.nvim_create_user_command("CustomEslintFixAll", function() my_lsp_config.eslint_fix_all({ client = client, sync = true }) end, {})
+        end,
       })
     end
   },
