@@ -404,7 +404,6 @@ end
 
 function M.format(cmd_opts, is_async)
   M.log('Formating!!')
-  M.notify('Format', 'Formatting !!!')
   if is_async == nil then
     is_async = true -- Default value for async will be true
   end

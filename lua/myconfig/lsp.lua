@@ -323,11 +323,13 @@ M.eslint_fix_all = function(opts)
     request = function(buf, method, params) client:request(method, params, nil, buf) end
   end
 
+  local uri = vim.uri_from_bufnr(bufnr)
+  vim.notify('Run EslintFixAll on '..string.gsub(uri, 'file://', ''))
   request(bufnr, "workspace/executeCommand", {
     command = "eslint.applyAllFixes",
     arguments = {
       {
-        uri = vim.uri_from_bufnr(bufnr),
+        uri = uri,
         version = vim.lsp.util.buf_versions[bufnr],
       },
     },
