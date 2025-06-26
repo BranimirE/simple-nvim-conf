@@ -3,6 +3,7 @@
 
 local methods = vim.lsp.protocol.Methods
 local myutils = require('myutils')
+local myconfig = require('myconfig')
 local diagnostic_icons = {
   ERROR = '',
   WARN = '',
@@ -56,7 +57,11 @@ local function on_attach(client, bufnr)
       group = under_cursor_highlights_group,
       desc = 'Highlight references under the cursor',
       buffer = bufnr,
-      callback = vim.lsp.buf.document_highlight,
+      callback = function ()
+        if myconfig.REFERENCES_ON_CURSOR_HOLD then
+          vim.lsp.buf.document_highlight()
+        end
+      end
     })
     vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter', 'BufLeave' }, {
       group = under_cursor_highlights_group,

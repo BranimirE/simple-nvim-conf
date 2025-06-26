@@ -41,6 +41,14 @@ vim.api.nvim_create_user_command('ToggleEslintFixAllOnSave', function()
   end
 end, {})
 
+vim.api.nvim_create_user_command('EnableReferencesOnCursorHold', function ()
+  myconfig.REFERENCES_ON_CURSOR_HOLD = true
+end, {})
+
+vim.api.nvim_create_user_command('DisableReferencesOnCursorHold', function ()
+  myconfig.REFERENCES_ON_CURSOR_HOLD = false
+end, {})
+
 vim.api.nvim_create_user_command('CloseOthers', function ()
   require("nvchad.tabufline").closeAllBufs(false)
 end, {})
