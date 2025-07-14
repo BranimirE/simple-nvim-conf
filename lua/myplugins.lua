@@ -1077,9 +1077,18 @@ return {
         float = { -- Configure lazygit height and width
           height = 0.8,
           width = 0.8,
+          relative = "editor"
         }
+      },
+      toggle = { enabled = true,
+        which_key = true,
+        notify = true,
       }
-    }
+    },
+    config = function (_, opts)
+      require('snacks').setup(opts)
+      require('myconfig').setup_toggles()
+    end
   },
   {
     "folke/persistence.nvim", -- Session management
