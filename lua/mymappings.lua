@@ -154,6 +154,11 @@ M = {
   fzf_lua = function()
     return {
       { '<leader>ff', '<cmd>FzfLua files<cr>',          desc = 'Find files' },
+      { '<leader>ff', function ()
+        local text = util.get_visual_selection()
+        print('Searching for '..text)
+        require('fzf-lua').files({query = text})
+      end,          desc = 'Find files visual', mode = 'v' },
       { '<leader>fg', '<cmd>FzfLua live_grep<cr>', desc = 'Find Grep' },
       { '<leader>fg', '<cmd>FzfLua grep_visual<cr>',    desc = 'Grep Visual', mode = 'x' },
       { '<leader>fp', '<cmd>FzfLua resume<cr>',         desc = 'Grep Resume' },
