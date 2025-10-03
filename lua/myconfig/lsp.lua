@@ -35,40 +35,73 @@ M.client_capabilities = function()
   )
 end
 
+local ATTACHED_AUTOCMD = {}
+local function get_registered_lsp_method_autcmds(client_id, bufnr)
+  if not ATTACHED_AUTOCMD[bufnr] then
+    ATTACHED_AUTOCMD[bufnr] = {}
+  end
+  if not ATTACHED_AUTOCMD[bufnr][client_id] then
+    ATTACHED_AUTOCMD[bufnr][client_id] = {}
+  end
+  return ATTACHED_AUTOCMD[bufnr][client_id]
+end
+local function register_lsp_method_autocmds(client_id, bufnr, autocmd_id, ref)
+  local t = get_registered_lsp_method_autcmds(client_id, bufnr)
+  table.insert(t, {id = autocmd_id, ref = ref})
+end
+
+local function clear_lsp_method_autocmd(client_id, bufnr)
+  if not ATTACHED_AUTOCMD[bufnr] then
+    ATTACHED_AUTOCMD[bufnr] = {}
+  end
+  ATTACHED_AUTOCMD[bufnr][client_id] = {}
+end
+
 --- Sets up LSP keymaps and autocommands for the given buffer.
+--- This function it is called by each lsp client that tries to attach
 ---@param client vim.lsp.Client
 ---@param bufnr integer
 local function on_attach(client, bufnr)
+  local client_id = client.id
   local mymappings = require('mymappings')
 
   myutils.load_mapping(mymappings.lsp(bufnr))
 
   local conditional_lsp_methods = mymappings.conditional_lsp_methods(bufnr)
   for method, mapping in pairs(conditional_lsp_methods) do
-    if client.supports_method(method, bufnr) then
+    if client:supports_method(method, bufnr) then
       myutils.load_mapping(mapping)
     end
   end
 
-  if client.supports_method(methods.textDocument_documentHighlight, bufnr) then
+  if client:supports_method(methods.textDocument_documentHighlight, bufnr) then
+    myutils.log("Method "..methods.textDocument_documentHighlight.." is supported by "..client.name.."("..client_id.."). Creating highlight autocmds")
+
     local under_cursor_highlights_group =
         vim.api.nvim_create_augroup('branimir/cursor_highlights', { clear = false })
-    vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'BufEnter' }, {
-      group = under_cursor_highlights_group,
-      desc = 'Highlight references under the cursor',
-      buffer = bufnr,
-      callback = function ()
-        if myconfig.REFERENCES_ON_CURSOR_HOLD then
-          vim.lsp.buf.document_highlight()
+
+    register_lsp_method_autocmds(client_id, bufnr,
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'BufEnter' }, {
+        group = under_cursor_highlights_group,
+        desc = 'Highlight references under the cursor',
+        buffer = bufnr,
+        callback = function ()
+          if myconfig.REFERENCES_ON_CURSOR_HOLD then
+            vim.lsp.buf.document_highlight()
+          end
         end
-      end
-    })
-    vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter', 'BufLeave' }, {
-      group = under_cursor_highlights_group,
-      desc = 'Clear highlight references',
-      buffer = bufnr,
-      callback = vim.lsp.buf.clear_references,
-    })
+      }),
+      "Highlight references"
+    )
+    register_lsp_method_autocmds(client_id, bufnr,
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter', 'BufLeave' }, {
+        group = under_cursor_highlights_group,
+        desc = 'Clear highlight references',
+        buffer = bufnr,
+        callback = vim.lsp.buf.clear_references,
+      }),
+      "Clear references"
+    )
   end
 
   local buf_file_name = vim.fn.bufname(bufnr)
@@ -88,33 +121,52 @@ local function on_attach(client, bufnr)
       end
     end, 500)
 
-    vim.api.nvim_create_autocmd('InsertEnter', {
-      group = inlay_hints_group,
-      desc = 'Enable inlay hints',
-      buffer = bufnr,
-      callback = function()
-        if nvim_major_version == 0 and nvim_minor_version < 10 then
-          ---@diagnostic disable-next-line: param-type-mismatch
-          vim.lsp.inlay_hint.enable(bufnr, false)
-        else
-          vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-        end
-      end,
-    })
-    vim.api.nvim_create_autocmd('InsertLeave', {
-      group = inlay_hints_group,
-      desc = 'Disable inlay hints',
-      buffer = bufnr,
-      callback = function()
-        if nvim_major_version == 0 and nvim_minor_version < 10 then
-          ---@diagnostic disable-next-line: param-type-mismatch
-          vim.lsp.inlay_hint.enable(bufnr, true)
-        else
-          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-        end
-      end,
-    })
+    register_lsp_method_autocmds(client_id, bufnr,
+      vim.api.nvim_create_autocmd('InsertEnter', {
+        group = inlay_hints_group,
+        desc = 'Enable inlay hints',
+        buffer = bufnr,
+        callback = function()
+          if nvim_major_version == 0 and nvim_minor_version < 10 then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            vim.lsp.inlay_hint.enable(bufnr, false)
+          else
+            vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+          end
+        end,
+      }),
+      "InsertEnter Enable inlay hints"
+    )
+    register_lsp_method_autocmds(client_id, bufnr,
+      vim.api.nvim_create_autocmd('InsertLeave', {
+        group = inlay_hints_group,
+        desc = 'Disable inlay hints',
+        buffer = bufnr,
+        callback = function()
+          if nvim_major_version == 0 and nvim_minor_version < 10 then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            vim.lsp.inlay_hint.enable(bufnr, true)
+          else
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+          end
+        end,
+      }),
+      "InsertLeave disable inlay hints"
+    )
   end
+end
+
+---@param client vim.lsp.Client
+---@param bufnr integer
+local function on_detach(client, bufnr)
+  local client_id = client.id
+  local autocmd_ids = get_registered_lsp_method_autcmds(client_id, bufnr)
+  ---@diagnostic disable-next-line: unused-local
+  for index, autocmd_record in ipairs(autocmd_ids) do
+    myutils.log("Removing autocmd \""..autocmd_record.ref.."\" from buffer="..bufnr.." clientId="..client_id)
+    vim.api.nvim_del_autocmd(autocmd_record.id)
+  end
+  clear_lsp_method_autocmd(client_id, bufnr)
 end
 
 local signs = {
@@ -296,7 +348,7 @@ vim.diagnostic.handlers.virtual_text = {
 -- end
 
 vim.api.nvim_create_autocmd('LspAttach', {
-  desc = 'Configure LSP keymaps',
+  desc = 'Configure LSP attach',
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
 
@@ -305,7 +357,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
       return
     end
 
+    myutils.log("Attaching "..client.name.." lsp (clientId="..client.id..") to buffer "..args.buf)
     on_attach(client, args.buf)
+  end,
+})
+
+-- Clean lsp configuration in case it is suddenly stopped(exited unexpectedly)
+vim.api.nvim_create_autocmd('LspDetach', {
+  desc = 'Configure LSP detach',
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+    if not client then
+      return
+    end
+
+    myutils.log("Detaching "..client.name.." lsp for buffer "..args.buf)
+    on_detach(client, args.buf)
   end,
 })
 

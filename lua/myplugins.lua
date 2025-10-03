@@ -1071,7 +1071,12 @@ return {
       -- Leave configs  empty to use the default settings
       image = { enabled = true }, -- Show images in neovim using kitty images protocol
       bigfile = { enabled = true }, -- Detect big files and prevent some plugins to load
-      scroll = { enabled = true }, -- Smooth scroll
+      scroll = { enabled = true, -- Smooth scroll
+        animate = {
+          duration = { step = 30, total = 150 },
+          easing = "linear",
+        },
+      },
       lazygit = { enabled = true }, -- Configure lazygit to use nvim colorscheme colors
       styles = {
         float = { -- Configure lazygit height and width
