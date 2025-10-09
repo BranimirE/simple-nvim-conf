@@ -54,10 +54,10 @@ return {
         -- maintain cursor on the first letter of the file name
         hijack_cursor = true,
         git = {
-          ignore = false -- hide files/dirs in gitignore?
+          ignore = true -- hide files/dirs in gitignore?
         },
         view = {
-          adaptive_size = true,
+          adaptive_size = false,
         }
       }
     end

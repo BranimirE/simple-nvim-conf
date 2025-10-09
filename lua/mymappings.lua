@@ -76,10 +76,10 @@ M = {
 
   gitsigns = function(gs, bufnr)
     return with_opts({
-      { ']c',         util.next_hunk(gs),             expr = true },
-      { '[c',         util.prev_hunk(gs),             expr = true },
-      { '<leader>hd', gs.diffthis },                    -- Diff with the current changes
-      { '<leader>hD', function() gs.diffthis('~') end } -- Diff with the last commit
+      { ']c',         util.next_hunk(gs),             expr = true, desc = 'Go to next diff hunk' },
+      { '[c',         util.prev_hunk(gs),             expr = true, desc = 'Go to prev diff hunk' },
+      { '<leader>hd', gs.diffthis, desc = 'Diff with the current changes' },                    -- Diff with the current changes
+      { '<leader>hD', function() gs.diffthis('~') end, desc = 'Diff with the last commit' } -- Diff with the last commit
     }, { buffer = bufnr })
   end,
 

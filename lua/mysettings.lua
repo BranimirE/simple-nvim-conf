@@ -53,6 +53,9 @@ opt.shortmess:append {
     w = true,
     s = true,
 }
+
+opt.fillchars:append { diff = "╱" }
+
 -- opt.scrolloff = 8 -- Always have at least 8 lines above and below the highlighted line when we scroll
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
 -- Open all the folding that are closed by default when a file is opened
