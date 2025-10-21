@@ -318,7 +318,7 @@ return {
           },
           -- Include .github files but continue excluding .git/ files
           rg_opts =
-          "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -g '!.git/*' -e",
+          "--column --line-number --no-heading --color=always --sort=path --smart-case --max-columns=4096 --hidden -g '!.git/*' -e",
         }
       }
     end
