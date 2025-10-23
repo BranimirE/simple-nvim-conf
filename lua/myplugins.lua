@@ -543,8 +543,8 @@ return {
       vim.lsp.config('eslint', {
         -- root_dir = function(cur_file_path)
         root_dir = function(bufnr, on_dir)
-          local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
           local cur_file_path = vim.api.nvim_buf_get_name(bufnr)
+          local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
           if not package_json_dir or not myutils.is_npm_package_installed('eslint', package_json_dir) then
             myutils.log('no eslint found in the package.json file')
             myutils.log(

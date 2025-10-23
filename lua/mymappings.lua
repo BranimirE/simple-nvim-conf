@@ -4,15 +4,6 @@ local with_opts = util.with_opts
 
 -- Default mode is normal('n') mode
 M = {
-  telescope = function()
-    return with_opts({
-      { '<leader>fg', util.telescope_auto_input(util.get_last_search, true) },
-      { '<leader>fg', util.telescope_auto_input(util.get_visual_selection, false), mode = 'v' },
-      { '<leader>fb', '<cmd>Telescope buffers<cr>' },
-      { '<leader>ff', '<cmd>Telescope find_files<cr>' },
-    }, { noremap = true, silent = true })
-  end,
-
   nvim_tree = function(nvim_tree_api, bufnr)
     return with_opts({
       { 'l',    nvim_tree_api.node.open.edit,              desc = 'nvim-tree: Open file' },
@@ -62,18 +53,6 @@ M = {
     return mapping
   end,
 
-  nvim_cmp = function(cmp)
-    return {
-      { '<C-b>',     cmp.mapping.scroll_docs(-4) },
-      { '<C-f>',     cmp.mapping.scroll_docs(4) },
-      { '<C-Space>', cmp.mapping.complete() },
-      { '<C-e>',     cmp.mapping.abort() },
-      { '<CR>',      cmp.mapping.confirm({ select = false }) }, -- select = false to confirm explicitly selected items
-      { '<tab>',     util.smart_tab(cmp),                    mode = { 'i', 's' } },
-      { '<s-tab>',   util.shift_smart_tab(cmp),              mode = { 'i', 's' } },
-    }
-  end,
-
   gitsigns = function(gs, bufnr)
     return with_opts({
       { ']c',         util.next_hunk(gs),             expr = true, desc = 'Go to next diff hunk' },
@@ -85,17 +64,12 @@ M = {
 
   lsp = function(bufnr)
     return with_opts({
-      { 'gr',         '<cmd>FzfLua lsp_references<cr>',                   desc = 'Go to references' },
-      { 'gt',         '<cmd>FzfLua lsp_typedefs<cr>',                     desc = 'Got to type definition' },
-      { '<leader>k',  vim.lsp.buf.hover,                                  desc = 'Hover doc' },
       { '<leader>o',  '<cmd>Lspsaga outline<cr>',                         desc = 'Show Outline' },
       { '<leader>cd', vim.diagnostic.open_float,                          desc = 'Show line diagnostics' },
       { '[e',         '<cmd>Lspsaga diagnostic_jump_prev<cr>',            desc = 'Previous warning/error' },
       { ']e',         '<cmd>Lspsaga diagnostic_jump_next<cr>',            desc = 'Next warning/error' },
       { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<cr>', desc = 'Previous error' },
       { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>', desc = 'Next error' },
-      { 'gi',         vim.lsp.buf.implementation,                         desc = 'Got to the implementation' },
-      { '<A-d>',      '<cmd>lua require("snacks").lazygit()<cr>',         desc = 'Open Lazygit',             mode = { 'n', 't' } },
       {
         '<A-h>',
         function()
@@ -109,6 +83,14 @@ M = {
   end,
 
   conditional_lsp_methods = function(bufnr)
+    -- Remove default mappings to prevent wait time on 'gr' mapping
+    -- without this gr will wait 'timeoutlen' ms before being triggered
+    pcall(vim.keymap.del, "n", "grr", { buffer = bufnr })       -- go to references
+    pcall(vim.keymap.del,'n', 'grt', { buffer = bufnr })        -- go to type definition
+    pcall(vim.keymap.del,'n', 'gri', { buffer = bufnr })        -- go to implementation
+    pcall(vim.keymap.del, {'x','n'}, 'gra', { buffer = bufnr }) -- code action
+    pcall(vim.keymap.del,'n', 'grn', { buffer = bufnr })        -- rename
+
     local methods = vim.lsp.protocol.Methods
     local mappings = {
       [methods.textDocument_codeAction] = {
@@ -125,12 +107,21 @@ M = {
       [methods.textDocument_declaration] = {
         { 'gD', vim.lsp.buf.declaration, desc = 'Go to declaration' }
       },
+      [methods.textDocument_typeDefinition] = {
+        { 'gt', '<cmd>FzfLua lsp_typedefs<cr>', desc = 'Go to type definition' },
+      },
+      [methods.textDocument_references] = {
+        { 'gr', '<cmd>FzfLua lsp_references<cr>', desc = 'Go to references' },
+      },
+      [methods.textDocument_implementation] = {
+        { 'gi',  '<cmd>FzfLua lsp_implementations<cr>', desc = 'Go to implementation' },
+      },
       [methods.textDocument_signatureHelp] = {
         { 'K', vim.lsp.buf.signature_help, desc = 'Signature help' },
       },
-      [methods.textDocument_typeDefinition] = {
-        { '<leader>D', vim.lsp.buf.type_definition, desc = 'Go to type definition' },
-      }
+      [methods.textDocument_hover] = {
+        { '<leader>k',  vim.lsp.buf.hover,                                  desc = 'Hover doc' },
+      },
     }
     for method, mapping in pairs(mappings) do
       mappings[method] = with_opts(mapping, { noremap = true, silent = true, buffer = bufnr })
@@ -183,13 +174,14 @@ M = {
       { '<down>',     util.move_with_arrows('<down>'), silent = true },   -- Use down arrow to navigate down in quickfix list.
       { '<right>',    '<cmd>tabnext<cr>',              silent = true },   -- Go to next tab. TODO: enable only if there is more than 1 tab opened
       { '<left>',     '<cmd>tabprevious<cr>',          silent = true },   -- Go to previous tab. TODO: The same as above
-      { '<f10>', '<cmd>Trouble workspace_diagnostics<cr>', silent = true }, -- Open diagnostics with F9
+      { '<f10>',      '<cmd>Trouble workspace_diagnostics<cr>', silent = true }, -- Open diagnostics with F9
       { 'J',          ":m '>+1<CR>gv=gv",               mode = 'v' },     -- Move visual block one line up
       { 'K',          ":m '<-2<CR>gv=gv",               mode = 'v' },     -- Move visual block one line down
-      { '<leader>y',  '"+y',                            mode = { 'n', 'v' } }, -- Copy to the systemclipboard
+      { '<leader>y',  '"+y',                            mode = { 'n', 'v' }, desc = "Copy to system clipboard" }, -- Copy to the systemclipboard
       -- { '<leader>d',  '"_d',                            mode = { 'n', 'v' } }, -- Delete without without overwriting the clipboard
-      { '<c-s>', '<esc>:w<cr>',                         mode = { 'n', 'i' } }, -- Mapping Ctrl+s to save the file
-      { '<f9>',       '<esc>:RunNpmCommand<cr>',            mode = { 'n', 'i' } }
+      { '<c-s>',      '<esc>:w<cr>',                         mode = { 'n', 'i' } }, -- Mapping Ctrl+s to save the file
+      { '<f9>',       '<esc>:RunNpmCommand<cr>',            mode = { 'n', 'i' } },
+      { '<A-d>',      '<cmd>lua require("snacks").lazygit()<cr>', desc = 'Open Lazygit',                              mode = { 'n', 't' } },
     }
   end,
 

@@ -66,32 +66,6 @@ function M.shift_smart_tab(cmp)
   end
 end
 
-function M.telescope_auto_input(source_input_fn, clean_hl_search)
-  return function()
-    local text = source_input_fn()
-    if clean_hl_search then
-      vim.cmd(M.t('nohlsearch')) -- Hide current highlighted search(if it exists)
-    end
-    -- Reference: https://github.com/nvim-telescope/telescope.nvim/issues/1939
-    require('telescope.builtin').live_grep({
-      default_text = text,
-      on_complete = {
-        function(picker)
-          local mode = vim.fn.mode()
-          local keys = mode ~= 'n' and '<esc>' or ''
-          M.feedkey(keys .. '^2lv$<C-g>', 'n')
-
-          -- should you have more callbacks, just pop the first one
-          table.remove(picker._completion_callbacks, 1)
-
-          local prompt_bufnr = picker.prompt_bufnr
-          vim.keymap.set('s', '<cr>', '<esc>', { buffer = prompt_bufnr })
-        end,
-      }
-    })
-  end
-end
-
 function M.opts_parser(keys)
   local opts = {}
   for k, v in pairs(keys) do
@@ -203,7 +177,8 @@ end
 function M.is_buffer_type_visible(buffer_type)
   local buffers = vim.api.nvim_list_bufs()
   for _, buffer in ipairs(buffers) do
-    local buf_filetype = vim.api.nvim_buf_get_option(buffer, 'filetype')
+    -- local buf_filetype = vim.api.nvim_buf_get_option(buffer, 'filetype')
+    local buf_filetype = vim.api.nvim_get_option_value('filetype', { buf = buffer })
     if buf_filetype == buffer_type then
       return true
     end
