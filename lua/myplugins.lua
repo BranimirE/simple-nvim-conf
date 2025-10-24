@@ -31,7 +31,6 @@ return {
           local api = require('nvim-tree.api')
           api.config.mappings.default_on_attach(bufnr)
           myutils.load_mapping(mymappings.nvim_tree(api, bufnr))
-          myutils.sync_nvim_tree_lsp_rename(api)
         end,
         renderer = {
           root_folder_label = false,
@@ -60,6 +59,21 @@ return {
           adaptive_size = false,
         }
       }
+    end,
+    config = function (_, opts)
+      require('nvim-tree').setup(opts)
+      local nt_api = require('nvim-tree.api')
+      myutils.sync_nvim_tree_lsp_rename(nt_api)
+      -- Remove status line for nvim-tree
+      nt_api.events.subscribe(nt_api.events.Event.TreeOpen, function()
+        local tree_winid = nt_api.tree.winid()
+        if tree_winid ~= nil then
+          -- '' does not work as it set the global status line
+          vim.api.nvim_set_option_value('statusline', ' ', {win = tree_winid})
+          -- make the non-focused empty statusline background looks similar to nvim-tree background
+          vim.api.nvim_set_hl(0, 'StatusLineNC', { link = 'NvimTreeNormal' })
+        end
+      end)
     end
   },
   { -- Tmux switch panels keys integration

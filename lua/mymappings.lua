@@ -70,15 +70,6 @@ M = {
       { ']e',         '<cmd>Lspsaga diagnostic_jump_next<cr>',            desc = 'Next warning/error' },
       { '[E',         '<cmd>Lspsaga diagnostic_jump_prev severity=1<cr>', desc = 'Previous error' },
       { ']E',         '<cmd>Lspsaga diagnostic_jump_next severity=1<cr>', desc = 'Next error' },
-      {
-        '<A-h>',
-        function()
-          local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-          vim.lsp.inlay_hint.enable(not is_enabled)
-        end,
-        mode = { 'n', 't' },
-        desc = 'Toggle inlay hints'
-      }
     }, { noremap = true, silent = true, buffer = bufnr })
   end,
 
@@ -101,7 +92,7 @@ M = {
         { '<leader>rn', '<cmd>Lspsaga rename<cr>', desc = 'Rename' },
       },
       [methods.textDocument_definition] = {
-        { 'gd',         vim.lsp.buf.definition,             desc = 'Go to definition' },
+        { 'gd',         '<cmd>FzfLua lsp_definitions<cr>',  desc = 'Go to definition' },
         { '<leader>gd', '<cmd>Lspsaga peek_definition<cr>', desc = 'Go to definition (floating)' },
       },
       [methods.textDocument_declaration] = {
@@ -114,13 +105,24 @@ M = {
         { 'gr', '<cmd>FzfLua lsp_references<cr>', desc = 'Go to references' },
       },
       [methods.textDocument_implementation] = {
-        { 'gi',  '<cmd>FzfLua lsp_implementations<cr>', desc = 'Go to implementation' },
+        { 'gi', '<cmd>FzfLua lsp_implementations<cr>', desc = 'Go to implementation' },
       },
       [methods.textDocument_signatureHelp] = {
         { 'K', vim.lsp.buf.signature_help, desc = 'Signature help' },
       },
       [methods.textDocument_hover] = {
-        { '<leader>k',  vim.lsp.buf.hover,                                  desc = 'Hover doc' },
+        { '<leader>k', vim.lsp.buf.hover, desc = 'Hover doc' },
+      },
+      [methods.textDocument_inlayHint] = {
+        {
+          '<A-h>',
+          function()
+            local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+            vim.lsp.inlay_hint.enable(not is_enabled)
+          end,
+          mode = { 'n', 't' },
+          desc = 'Toggle inlay hints'
+        }
       },
     }
     for method, mapping in pairs(mappings) do
