@@ -196,10 +196,10 @@ function M.move_with_arrows(direction)
       end
       return
     end
-    if M.is_buffer_type_visible('Trouble') then
+    if M.is_buffer_type_visible('trouble') then
       local trouble = require('trouble')
       if direction == '<up>' then
-        trouble.previous({ skip_groups = true, jump = true })
+        trouble.prev({ skip_groups = true, jump = true })
       else
         trouble.next({ skip_groups = true, jump = true })
       end
