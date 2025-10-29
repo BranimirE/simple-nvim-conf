@@ -2,6 +2,16 @@ local M = {}
 local util = require('myutils')
 local with_opts = util.with_opts
 
+-- Remove default mappings to prevent wait time on 'gr' mapping
+-- without this gr will wait 'timeoutlen' ms before being triggered
+util.log("Removing default keymaps")
+pcall(vim.keymap.del, "n", "grr")       -- go to references
+pcall(vim.keymap.del,'n', 'grt')        -- go to type definition
+pcall(vim.keymap.del,'n', 'gri')        -- go to implementation
+pcall(vim.keymap.del, {'x','n'}, 'gra') -- code action
+pcall(vim.keymap.del,'n', 'grn')        -- rename
+util.log("Default keymaps removed")
+
 -- Default mode is normal('n') mode
 M = {
   nvim_tree = function(nvim_tree_api, bufnr)
@@ -74,14 +84,6 @@ M = {
   end,
 
   conditional_lsp_methods = function(bufnr)
-    -- Remove default mappings to prevent wait time on 'gr' mapping
-    -- without this gr will wait 'timeoutlen' ms before being triggered
-    pcall(vim.keymap.del, "n", "grr", { buffer = bufnr })       -- go to references
-    pcall(vim.keymap.del,'n', 'grt', { buffer = bufnr })        -- go to type definition
-    pcall(vim.keymap.del,'n', 'gri', { buffer = bufnr })        -- go to implementation
-    pcall(vim.keymap.del, {'x','n'}, 'gra', { buffer = bufnr }) -- code action
-    pcall(vim.keymap.del,'n', 'grn', { buffer = bufnr })        -- rename
-
     local methods = vim.lsp.protocol.Methods
     local mappings = {
       [methods.textDocument_codeAction] = {

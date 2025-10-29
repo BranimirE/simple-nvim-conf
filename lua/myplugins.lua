@@ -562,18 +562,19 @@ return {
           local cur_file_path = vim.api.nvim_buf_get_name(bufnr)
           local package_json_dir = lspconfig.util.root_pattern('package.json')(cur_file_path)
           if not package_json_dir or not myutils.is_npm_package_installed('eslint', package_json_dir) then
-            myutils.log('no eslint found in the package.json file')
+            myutils.log('Eslint did not find the package.json file, so eslint package isn\'t installed')
             myutils.log(
-              'checking any eslint config file existence to attach eslint LSP and show related notifications')
-            -- If eslint config file is not find, LSP server is not attached
+              'Checking any eslint config file existence to attach eslint LSP and show related notifications')
+            -- If any eslint config file is not found, the LSP server is not attached (expected!)
+            -- if it is found, it will show that eslint library is not installed
             on_dir(require('lspconfig.configs.eslint').default_config.root_dir(cur_file_path))
+            return
           end
 
-          myutils.log('eslint found in the package.json file')
+          myutils.log('Eslint found the package.json file')
           myutils.log(
-            'Detecting package.json folder as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
-          local root_path = lspconfig.util.root_pattern('package.json')(cur_file_path)
-          on_dir(root_path)
+            'Using package.json folder \''..package_json_dir..'\'as root_dir to attach eslint LSP server, so accurate messages are shown regarding eslint installation and config file')
+          on_dir(package_json_dir)
         end,
         on_init = function(client)
           vim.api.nvim_create_user_command("CustomEslintFixAll", function() my_lsp_config.eslint_fix_all({ client = client, sync = true }) end, {})
