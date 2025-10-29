@@ -495,12 +495,14 @@ return {
         --   vim.list_extend(config.settings.json.schemas, require('schemastore').json.schemas())
         -- end,
       })
+      -- Configuration schema: https://github.com/yioneko/vtsls/blob/main/packages/service/configuration.schema.json
       vim.lsp.config('vtsls', {
         settings = {
           complete_function_calls = true,
           vtsls = {
             enableMoveToFileCodeAction = true,
-            autoUseWorkspaceTsdk = true,
+            autoUseWorkspaceTsdk = false, -- It will use Vtsls bundled typescript version instead of node_modules typescript package
+                                          -- Use :VtsExec select_ts_version to select the node_modules typescript
             experimental = {
               maxInlayHintLength = 30,
               completion = {
