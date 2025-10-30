@@ -36,6 +36,7 @@ opt.list = true -- Enable list mode. It shows invisible chars as visible chars(u
 opt.listchars:append [[tab:→ ,trail:•]] -- Replace some default listchars
 opt.pumheight = 12 -- Completion menu max height
 opt.showmode = false
+opt.laststatus = 3 -- Set only 1 global status line, instead of a statusline for each window
 
 opt.expandtab = true
 opt.shiftwidth = 2

@@ -200,39 +200,39 @@ return {
       vim.notify = notify
     end,
   },
-  { -- Vertical lines on indentation
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
-    commit = 'e7a4442e055ec953311e77791546238d1eaae507',
-    event = { 'BufReadPost', 'BufNewFile' },
-    ---@module "ibl"
-    ---@type ibl.config
-    opts = {
-      indent = {
-        char = '▏',
-      },
-      scope = {
-        show_start = false,
-        show_end = false,
-      },
-      whitespace = {
-        remove_blankline_trail = false,
-      },
-    },
-    config = function(_, opts)
-      local hooks = require('ibl.hooks')
-      -- so we can detect if the line is only composed by trailing whitespaces(tabs or spaces)
-      hooks.register(
-        hooks.type.WHITESPACE,
-        hooks.builtin.hide_first_space_indent_level
-      )
-      hooks.register(
-        hooks.type.WHITESPACE,
-        hooks.builtin.hide_first_tab_indent_level
-      )
-      require('ibl').setup(opts)
-    end
-  },
+  -- { -- Vertical lines on indentation
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   main = 'ibl',
+  --   commit = 'e7a4442e055ec953311e77791546238d1eaae507',
+  --   event = { 'BufReadPost', 'BufNewFile' },
+  --   ---@module "ibl"
+  --   ---@type ibl.config
+  --   opts = {
+  --     indent = {
+  --       char = '▏',
+  --     },
+  --     scope = {
+  --       show_start = false,
+  --       show_end = false,
+  --     },
+  --     whitespace = {
+  --       remove_blankline_trail = false,
+  --     },
+  --   },
+  --   config = function(_, opts)
+  --     local hooks = require('ibl.hooks')
+  --     -- so we can detect if the line is only composed by trailing whitespaces(tabs or spaces)
+  --     hooks.register(
+  --       hooks.type.WHITESPACE,
+  --       hooks.builtin.hide_first_space_indent_level
+  --     )
+  --     hooks.register(
+  --       hooks.type.WHITESPACE,
+  --       hooks.builtin.hide_first_tab_indent_level
+  --     )
+  --     require('ibl').setup(opts)
+  --   end
+  -- },
   { -- Git signs on the number column and git blame as virtual text
     'lewis6991/gitsigns.nvim',
     dependencies = {
@@ -1359,4 +1359,12 @@ return {
   --     },
   --   },
   -- }
+  {
+    'b0o/incline.nvim',
+    config = function()
+      require('incline').setup()
+    end,
+    -- Optional: Lazy load Incline
+    event = 'VeryLazy',
+  },
 }
