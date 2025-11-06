@@ -873,13 +873,6 @@ return {
     -- optional: provides snippets for the snippet source
     dependencies = {
       "rafamadriz/friendly-snippets",
-      -- add blink.compat to dependencies
-      {
-        "saghen/blink.compat",
-        optional = true, -- make optional so it's only enabled if any extras need it
-        opts = {},
-        version = "*",
-      },
     },
     event = "InsertEnter",
 
@@ -894,11 +887,6 @@ return {
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
-      -- snippets = {
-      --   expand = function(snippet, _)
-      --     return LazyVim.cmp.expand(snippet)
-      --   end,
-      -- },
       appearance = {
         -- Sets the fallback highlight groups to nvim-cmp's highlight groups
         -- Useful for when your theme doesn't support blink.cmp
@@ -947,11 +935,8 @@ return {
           enabled = vim.g.ai_cmp,
         },
       },
-      fuzzy = { implementation = 'prefer_rust' },
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
       sources = {
-        -- adding any nvim-cmp sources here will enable them
-        -- with blink.compat
-        compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
         -- cmdline = function()
         --   local type = vim.fn.getcmdtype()
@@ -988,7 +973,6 @@ return {
     },
     opts_extend = {
       "sources.completion.enabled_providers",
-      "sources.compat",
       "sources.default",
     },
     ---@param opts blink.cmp.Config | { sources: { compat: string[] } }

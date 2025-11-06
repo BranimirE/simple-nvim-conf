@@ -45,8 +45,8 @@ opt.tabstop = 2
 opt.softtabstop = 2
 opt.relativenumber = true
 
-opt.updatetime = 300 -- It is also used for CursorHold
--- opt.timeoutlen = 500
+opt.updatetime = 200 -- Time without typing before writing thw swap file. Also is used for CursorHold
+opt.timeoutlen = 300 -- Time to wait for a mapped sequence to complete
 -- opt.ttimeoutlen = 10
 
 opt.shortmess:append {
@@ -55,7 +55,7 @@ opt.shortmess:append {
     s = true,
 }
 
-opt.fillchars:append { diff = "╱" }
+opt.fillchars:append { diff = "╱" } -- Fill out  /// characters on empty space on diffs
 
 -- opt.scrolloff = 8 -- Always have at least 8 lines above and below the highlighted line when we scroll
 -- TODO: Avoid that when we return to a buffer it opens the folds that we closed previously
