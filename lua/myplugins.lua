@@ -818,7 +818,7 @@ return {
     config = true,
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   },
-  {
+  { -- Better notifications and improve markdown rendering
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
@@ -854,7 +854,7 @@ return {
       "rcarriga/nvim-notify",
     }
   },
-  {
+  { -- Show mapping shorcuts
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {},
@@ -868,7 +868,7 @@ return {
       },
     },
   },
-  {
+  { -- Autocompletion plugin
     'saghen/blink.cmp',
     -- optional: provides snippets for the snippet source
     dependencies = {
@@ -1024,8 +1024,8 @@ return {
       require("blink.cmp").setup(opts)
     end,
   },
-  {
-    "echasnovski/mini.indentscope", -- animate the indent line
+  { -- Animate the current scope ident line
+    "echasnovski/mini.indentscope",
     version = '*', -- wait till new 0.7.0 release to put it back on semver
     event = "VeryLazy",
     opts = {
@@ -1064,7 +1064,7 @@ return {
       })
     end,
   },
-  {
+  { -- Utilities miniplugins
     "folke/snacks.nvim", -- Images support
     lazy = false,
     ---@type snacks.Config
@@ -1096,8 +1096,8 @@ return {
       require('myconfig').setup_toggles()
     end
   },
-  {
-    "folke/persistence.nvim", -- Session management
+  { -- Session management
+    "folke/persistence.nvim",
     event = "BufReadPre", -- this will only start session saving when an actual file was opened
     opts = {
       need = 0, -- Always save the session
@@ -1343,7 +1343,7 @@ return {
   --     },
   --   },
   -- }
-  {
+  { -- Show the name of the file in the top-right corner
     'b0o/incline.nvim',
     config = function()
       require('incline').setup()
