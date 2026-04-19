@@ -114,7 +114,10 @@ return {
         event = 'InsertEnter',
         opts = {}
       },
-      'nvim-treesitter/nvim-treesitter-textobjects', -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
+      { -- Add function and class selectors vaf = 'visual around function', '=if' = Format inner function
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        branch = 'main',
+      },
     },
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
@@ -169,13 +172,13 @@ return {
         },
       },
     },
-    main = 'nvim-treesitter.configs'
+    -- main = 'nvim-treesitter.configs'
   },
   { -- Notifications windows
     'rcarriga/nvim-notify',
     event = 'VeryLazy',
     opts = {
-      background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
+      -- background_colour = '#000000', -- WARN: Remove this line if the colorscheme is not transparent
       level = vim.log.levels.DEBUG,
       stages = "slide",
     },
@@ -351,7 +354,7 @@ return {
     },
     config = true,
   },
-  { -- Set of already configured lsp clients
+  { --  Set of already configured lsp clients
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
@@ -611,7 +614,7 @@ return {
     'jay-babu/mason-null-ls.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     opts = {
-      ensure_installed = { 'stylua', 'shfmt', 'prettier' }
+      ensure_installed = { 'stylua', 'shfmt', 'prettier', 'mmdc' }
     },
     dependencies = {
       'mason-org/mason.nvim',
@@ -665,21 +668,21 @@ return {
     },
     cmd = { 'Trouble' },                       -- Lazy-load on commands
   },
-  {                                            -- Force vim motion operators instead of pressing lots of j's and k's movements keys
-    'm4xshen/hardtime.nvim',
-    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
-    opts = {
-      disable_mouse = false, -- We do not want to disable the mouse scroll button
-      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
-      disabled_keys = {
-        ['<Up>'] = {},
-        ['<Down>'] = {},
-        ['<Left>'] = {},
-        ['<Right>'] = {},
-      }
-    },
-    event = { 'BufReadPost', 'BufNewFile' },
-  },
+  -- {                                            -- Force vim motion operators instead of pressing lots of j's and k's movements keys
+  --   'm4xshen/hardtime.nvim',
+  --   dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+  --   opts = {
+  --     disable_mouse = false, -- We do not want to disable the mouse scroll button
+  --     disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'Trouble' },
+  --     disabled_keys = {
+  --       ['<Up>'] = {},
+  --       ['<Down>'] = {},
+  --       ['<Left>'] = {},
+  --       ['<Right>'] = {},
+  --     }
+  --   },
+  --   event = { 'BufReadPost', 'BufNewFile' },
+  -- },
   {                -- Change surrounds more easily
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
@@ -1350,5 +1353,53 @@ return {
     end,
     -- Optional: Lazy load Incline
     event = 'VeryLazy',
+  },
+  {
+    "3rd/diagram.nvim",
+    dependencies = {
+      {
+        "3rd/image.nvim",
+        opts = {
+          max_width = nil,
+          max_height = nil,
+          max_width_window_percentage = 90,
+          max_height_window_percentage = nil,
+        }
+      },     -- you'd probably want to configure image.nvim manually instead of doing this
+    },
+    opts = {                         -- you can just pass {}, defaults below
+      events = {
+        render_buffer = { "InsertLeave", "BufWinEnter", "TextChanged" },
+        clear_buffer = { "BufLeave" },
+      },
+      renderer_options = {
+        mermaid = {
+          background = nil, -- nil | "transparent" | "white" | "#hex"
+          theme = nil,    -- nil | "default" | "dark" | "forest" | "neutral"
+          scale = 1,      -- nil | 1 (default) | 2  | 3 | ...
+          width = nil,    -- nil | 800 | 400 | ...
+          height = nil,   -- nil | 600 | 300 | ...
+          cli_args = nil, -- nil | { "--no-sandbox" } | { "-p", "/path/to/puppeteer" } | ...
+        },
+        plantuml = {
+          charset = nil,
+          cli_args = nil, -- nil | { "-Djava.awt.headless=true" } | ...
+        },
+        d2 = {
+          theme_id = nil,
+          dark_theme_id = nil,
+          scale = nil,
+          layout = nil,
+          sketch = nil,
+          cli_args = nil, -- nil | { "--pad", "0" } | ...
+        },
+        gnuplot = {
+          size = nil,   -- nil | "800,600" | ...
+          font = nil,   -- nil | "Arial,12" | ...
+          theme = nil,  -- nil | "light" | "dark" | custom theme string
+          cli_args = nil, -- nil | { "-p" } | { "-c", "config.plt" } | ...
+        },
+      }
+    },
   },
 }
