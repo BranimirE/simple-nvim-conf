@@ -80,13 +80,6 @@ return {
     'christoomey/vim-tmux-navigator',
     lazy = false
   },
-  { -- Autoclose ()[]{}
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    opts = {
-      check_ts = true -- check treesitter for autopairing
-    }
-  },
   { -- Comment plugin
     'numToStr/Comment.nvim',
     keys = mymappings.comment(),
@@ -635,19 +628,6 @@ return {
       end
     end,
   },
-  { -- Improved folding management
-    "kevinhwang91/nvim-ufo",
-    -- dependencies = { 'kevinhwang91/promise-async', 'nvim-treesitter/nvim-treesitter' },
-    dependencies = { 'kevinhwang91/promise-async', 'romus204/tree-sitter-manager.nvim' },
-    event = { 'BufRead', 'BufWinEnter', 'BufNewFile' },
-    keys = mymappings.ufo(),
-    opts = {
-      ---@diagnostic disable-next-line: unused-local
-      provider_selector = function(bufnr, filetype, buftype)
-        return { 'treesitter', 'indent' }
-      end
-    }
-  },
   { -- Fix vim's behaviour put current line in the middle of the screen when switch between buffers
     'BranimirE/fix-auto-scroll.nvim',
     config = true,
@@ -739,14 +719,6 @@ return {
         soft_header = "-"
       },
     },
-  },
-  { -- Improve view markdown files
-    'MeanderingProgrammer/render-markdown.nvim',
-    opts = {},
-    ft = 'markdown',                                                                -- only load on markdown files
-    config = true,
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-    dependencies = { 'romus204/tree-sitter-manager.nvim', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   },
   { -- Better notifications and improve markdown rendering
     "folke/noice.nvim",
