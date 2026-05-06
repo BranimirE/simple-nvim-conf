@@ -29,7 +29,7 @@ return {
       return {
         on_attach = function(bufnr)
           local api = require('nvim-tree.api')
-          api.config.mappings.default_on_attach(bufnr)
+          api.map.on_attach.default(bufnr)
           myutils.load_mapping(mymappings.nvim_tree(api, bufnr))
         end,
         renderer = {

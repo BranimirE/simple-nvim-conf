@@ -1,5 +1,6 @@
 local M = {}
 local util = require('myutils')
+local myutils = require('myutils')
 local with_opts = util.with_opts
 
 -- Remove default mappings to prevent wait time on 'gr' mapping
@@ -10,6 +11,7 @@ pcall(vim.keymap.del,'n', 'grt')        -- go to type definition
 pcall(vim.keymap.del,'n', 'gri')        -- go to implementation
 pcall(vim.keymap.del, {'x','n'}, 'gra') -- code action
 pcall(vim.keymap.del,'n', 'grn')        -- rename
+pcall(vim.keymap.del,'n', 'grx')        -- remove mapping for vim.lsp.codelens.run()
 util.log("Default keymaps removed")
 
 -- Default mode is normal('n') mode
@@ -119,6 +121,7 @@ M = {
         {
           '<A-h>',
           function()
+            myutils.log("running toggle inlay_hint ")
             local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
             vim.lsp.inlay_hint.enable(not is_enabled)
           end,
