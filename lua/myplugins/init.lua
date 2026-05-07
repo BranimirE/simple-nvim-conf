@@ -451,7 +451,7 @@ return {
               -- functionLikeReturnTypes = { enabled = true },
               enumMemberValues = { enabled = true },
               functionLikeReturnTypes = { enabled = true },
-              parameterNames = { enabled = "literals" },
+              parameterNames = { enabled = "all", suppressWhenArgumentMatchesName = true },
               parameterTypes = { enabled = true },
               propertyDeclarationTypes = { enabled = true },
               variableTypes = { enabled = false },

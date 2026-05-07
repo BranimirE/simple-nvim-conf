@@ -104,56 +104,56 @@ local function on_attach(client, bufnr)
     )
   end
 
-  local buf_file_name = vim.fn.bufname(bufnr)
-  if client.supports_method(methods.textDocument_inlayHint) and not buf_file_name:match("%.js$") and not buf_file_name:match("%.jsx") then
-    local inlay_hints_group = vim.api.nvim_create_augroup('branimir/toggle_inlay_hints', { clear = false })
-    local nvim_major_version = vim.version().major
-    local nvim_minor_version = vim.version().minor
-    -- Initial inlay hint display.
-    -- Idk why but without the delay inlay hints aren't displayed at the very start.
-    vim.defer_fn(function()
-      local mode = vim.api.nvim_get_mode().mode
-      if nvim_major_version == 0 and nvim_minor_version < 10 then
-        ---@diagnostic disable-next-line: param-type-mismatch
-        vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
-      else
-        vim.lsp.inlay_hint.enable(mode == 'n' or mode == 'v', { bufnr = bufnr })
-      end
-    end, 500)
-
-    register_lsp_method_autocmds(client_id, bufnr,
-      vim.api.nvim_create_autocmd('InsertEnter', {
-        group = inlay_hints_group,
-        desc = 'Enable inlay hints',
-        buffer = bufnr,
-        callback = function()
-          if nvim_major_version == 0 and nvim_minor_version < 10 then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            vim.lsp.inlay_hint.enable(bufnr, false)
-          else
-            vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-          end
-        end,
-      }),
-      "InsertEnter Enable inlay hints"
-    )
-    register_lsp_method_autocmds(client_id, bufnr,
-      vim.api.nvim_create_autocmd('InsertLeave', {
-        group = inlay_hints_group,
-        desc = 'Disable inlay hints',
-        buffer = bufnr,
-        callback = function()
-          if nvim_major_version == 0 and nvim_minor_version < 10 then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            vim.lsp.inlay_hint.enable(bufnr, true)
-          else
-            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-          end
-        end,
-      }),
-      "InsertLeave disable inlay hints"
-    )
-  end
+  -- local buf_file_name = vim.fn.bufname(bufnr)
+  -- if client.supports_method(methods.textDocument_inlayHint) and not buf_file_name:match("%.js$") and not buf_file_name:match("%.jsx") then
+  --   local inlay_hints_group = vim.api.nvim_create_augroup('branimir/toggle_inlay_hints', { clear = false })
+  --   local nvim_major_version = vim.version().major
+  --   local nvim_minor_version = vim.version().minor
+  --   -- Initial inlay hint display.
+  --   -- Idk why but without the delay inlay hints aren't displayed at the very start.
+  --   vim.defer_fn(function()
+  --     local mode = vim.api.nvim_get_mode().mode
+  --     if nvim_major_version == 0 and nvim_minor_version < 10 then
+  --       ---@diagnostic disable-next-line: param-type-mismatch
+  --       vim.lsp.inlay_hint.enable(bufnr, mode == 'n' or mode == 'v')
+  --     else
+  --       vim.lsp.inlay_hint.enable(mode == 'n' or mode == 'v', { bufnr = bufnr })
+  --     end
+  --   end, 500)
+  --
+  --   register_lsp_method_autocmds(client_id, bufnr,
+  --     vim.api.nvim_create_autocmd('InsertEnter', {
+  --       group = inlay_hints_group,
+  --       desc = 'Enable inlay hints',
+  --       buffer = bufnr,
+  --       callback = function()
+  --         if nvim_major_version == 0 and nvim_minor_version < 10 then
+  --           ---@diagnostic disable-next-line: param-type-mismatch
+  --           vim.lsp.inlay_hint.enable(bufnr, false)
+  --         else
+  --           vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+  --         end
+  --       end,
+  --     }),
+  --     "InsertEnter Enable inlay hints"
+  --   )
+  --   register_lsp_method_autocmds(client_id, bufnr,
+  --     vim.api.nvim_create_autocmd('InsertLeave', {
+  --       group = inlay_hints_group,
+  --       desc = 'Disable inlay hints',
+  --       buffer = bufnr,
+  --       callback = function()
+  --         if nvim_major_version == 0 and nvim_minor_version < 10 then
+  --           ---@diagnostic disable-next-line: param-type-mismatch
+  --           vim.lsp.inlay_hint.enable(bufnr, true)
+  --         else
+  --           vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  --         end
+  --       end,
+  --     }),
+  --     "InsertLeave disable inlay hints"
+  --   )
+  -- end
 end
 
 ---@param client vim.lsp.Client
@@ -225,127 +225,6 @@ vim.diagnostic.handlers.virtual_text = {
   end,
   hide = hide_handler,
 }
-
--- local md_namespace = vim.api.nvim_create_namespace 'branimir/lsp_float'
---
--- --- Adds extra inline highlights to the given buffer.
--- ---@param buf integer
--- local function add_inline_highlights(buf)
---   for l, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
---     for pattern, hl_group in pairs {
---       ['@%S+'] = '@parameter',
---       ['^%s*(Parameters:)'] = '@text.title',
---       ['^%s*(Return:)'] = '@text.title',
---       ['^%s*(See also:)'] = '@text.title',
---       ['{%S-}'] = '@parameter',
---       ['|%S-|'] = '@text.reference',
---     } do
---       local from = 1 ---@type integer?
---       while from do
---         local to
---         from, to = line:find(pattern, from)
---         if from then
---           vim.api.nvim_buf_set_extmark(buf, md_namespace, l - 1, from - 1, {
---             end_col = to,
---             hl_group = hl_group,
---           })
---         end
---         from = to and to + 1 or nil
---       end
---     end
---   end
--- end
---
--- --- LSP handler that adds extra inline highlights, keymaps, and window options.
--- --- Code inspired from `noice`.
--- ---@param handler fun(err: any, result: any, ctx: any, config: any): integer?, integer?
--- ---@param focusable boolean
--- ---@return fun(err: any, result: any, ctx: any, config: any)
--- local function enhanced_float_handler(handler, focusable)
---   return function(err, result, ctx, config)
---     local bufnr, winnr = handler(
---       err,
---       result,
---       ctx,
---       vim.tbl_deep_extend('force', config or {}, {
---         border = 'rounded',
---         focusable = focusable,
---         max_height = math.floor(vim.o.lines * 0.5),
---         max_width = math.floor(vim.o.columns * 0.6),
---       })
---     )
---
---     if not bufnr or not winnr then
---       return
---     end
---
---     -- Conceal everything.
---     vim.wo[winnr].concealcursor = 'n'
---
---     -- Extra highlights.
---     add_inline_highlights(bufnr)
---
---     -- Add keymaps for opening links.
---     if focusable and not vim.b[bufnr].markdown_keys then
---       vim.keymap.set('n', '<leader>l', function()
---         -- Vim help links.
---         local url = (vim.fn.expand '<cWORD>' --[[@as string]]):match '|(%S-)|'
---         if url then
---           return vim.cmd.help(url)
---         end
---
---         -- Markdown links.
---         local col = vim.api.nvim_win_get_cursor(0)[2] + 1
---         local from, to
---         from, to, url = vim.api.nvim_get_current_line():find '%[.-%]%((%S-)%)'
---         if from and col >= from and col <= to then
---           vim.system({ 'firefox', url }, nil, function(res)
---             if res.code ~= 0 then
---               vim.notify('Failed to open URL' .. url, vim.log.levels.ERROR)
---             end
---           end)
---         end
---       end, { buffer = bufnr, silent = true })
---       vim.b[bufnr].markdown_keys = true
---     end
---   end
--- end
--- vim.lsp.handlers[methods.textDocument_hover] = enhanced_float_handler(vim.lsp.handlers.hover, true)
--- vim.lsp.handlers[methods.textDocument_signatureHelp] = enhanced_float_handler(vim.lsp.handlers.signature_help, false)
-
-
--- --- HACK: Override `vim.lsp.util.stylize_markdown` to use Treesitter.
--- ---@param bufnr integer
--- ---@param contents string[]
--- ---@param opts table
--- ---@return string[]
--- ---@diagnostic disable-next-line: duplicate-set-field
--- vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
---   contents = vim.lsp.util._normalize_markdown(contents, {
---     width = vim.lsp.util._make_floating_popup_size(contents, opts),
---   })
---   vim.bo[bufnr].filetype = 'markdown'
---   vim.treesitter.start(bufnr)
---   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
---
---   add_inline_highlights(bufnr)
---
---   return contents
--- end
-
--- TODO: Check if any lsp server register dynamic capabilities
--- Update mappings when registering dynamic capabilities.
--- local register_capability = vim.lsp.handlers[methods.client_registerCapability]
--- vim.lsp.handlers[methods.client_registerCapability] = function(err, res, ctx)
---   local client = vim.lsp.get_client_by_id(ctx.client_id)
---   if not client then
---     return
---   end
---
---   on_attach(client, vim.api.nvim_get_current_buf())
---
---   return register_capability(err, res, ctx)
--- end
 
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'Configure LSP attach',
